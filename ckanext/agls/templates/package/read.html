@@ -1,0 +1,123 @@
+{% ckan_extends %}
+{% block package_additional_info %}
+<section class="additional-info" prefix="dc: http://purl.org/dc/elements/1.1/ dcat: http://www.w3.org/ns/dcat#
+         dcam: http://purl.org/dc/dcam/
+         aglsterms: http://www.agls.gov.au/agls/terms/
+         agentterms: http://www.agls.gov.au/agls/agentterms/
+         availterms: http://www.agls.gov.au/agls/availterms/
+         adminterms: http://www.agls.gov.au/agls/adminterms/
+         dct: http://purl.org/dc/terms/">
+    <h3>{{ _('Additional Info') }}</h3>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th scope="col">{{ _('Field') }}</th>
+            <th scope="col">{{ _('Value') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+
+
+        {# Add our custom field to the dataset read page. #}
+        {% if pkg.get('metadata_created') %}
+        <tr>
+            <th scope="row" class="dataset-label">Date Published</th>
+            <td class="dataset-details" property="dct:issued">{{ pkg.metadata_created.split("T")[0] }}</td>
+        </tr>
+        {% endif %}
+        {% if pkg.get('metadata_updated') %}
+        <tr>
+            <th scope="row" class="dataset-label">Date Updated</th>
+            <td class="dataset-details" property="dct:updated">{{ pkg.metadata_updated.split("T")[0] }}</td>
+        </tr>
+        {% endif %}
+        {% if pkg.get('agency_program') %}
+        <tr>
+            <th scope="row" class="dataset-label">Agency Program</th>
+            <td class="dataset-details"> {{ pkg.agency_program }}</td>
+        </tr>
+        {% endif %}
+        {% if pkg.get('url') %}
+        <tr>
+            <th scope="row" class="dataset-label">{{ _('Source') }}</th>
+            <td class="dataset-details" property="dct:source">{{ h.link_to(pkg.get('url'),
+                pkg.get('url'), rel='dct:source', target='_blank') }}
+            </td>
+        </tr>
+        {% endif %}
+
+        {% if pkg.get('contact_point') %}
+        <tr>
+            <th scope="row" class="dataset-label">Contact Point</th>
+            <td class="dataset-details" property="dcat:contactPoint"> {{ h.mail_to(email_address=pkg.contact_point,
+                name=pkg.contact_point) }}</td>
+        </tr>
+        {% endif %}
+        {% if pkg.get('spatial_coverage') %}
+
+        <tr>
+            <th scope="row" class="dataset-label">Geospatial Coverage</th>
+            <td class="dataset-details" property="dct:spatial"> {{ pkg.spatial_coverage }}</td>
+        </tr>
+        {% endif %}
+        {% if pkg.get('granularity') %}
+
+        <tr>
+            <th scope="row" class="dataset-label">Data Granularity</th>
+            <td class="dataset-details"> {{ pkg.granularity }}</td>
+        </tr>
+        {% endif %}
+        {% if pkg.get('jurisdiction') %}
+        <tr>
+            <th scope="row" class="dataset-label">Government Jurisdiction</th>
+            <td class="dataset-details" property="aglsterms:AglsJuri"> {{ pkg.jurisdiction }}</td>
+        </tr>
+        {% endif %}
+        {% if pkg.get('temporal_coverage') %}
+        <tr>
+            <th scope="row" class="dataset-label">Temporal Coverage</th>
+            <td class="dataset-details" property="dct:temporal"> {{ pkg.temporal_coverage }}</td>
+        </tr>
+        {% endif %}
+        {% if pkg.get('data_state') %}
+        <tr>
+            <th scope="row" class="dataset-label">Data State</th>
+            <td class="dataset-details"> {{ pkg.data_state }}</td>
+        </tr>
+        {% endif %}
+        {% if pkg.get('update_freq') %}
+
+        <tr>
+            <th scope="row" class="dataset-label">Update Frequency</th>
+            <td class="dataset-details"> {{ pkg.update_freq }}</td>
+        </tr>
+        {% endif %}
+
+{% set email =h.get_last_active_user(c.pkg_dict['id']).get('email','') %}
+        <tr>
+            <th scope="row" class="dataset-label">{{ _('Maintainer') }}</th>
+            <td class="dataset-details" property="dc:contributor">{{
+		  h.mail_to(email_address=(email or ' '), name=h.get_last_active_user(c.pkg_dict['id']).get("display_name",'')) }}
+            </td>
+        </tr>
+        <tr>
+            <th scope="row" class="dataset-label">Publisher/Agency</th>
+            <td class="dataset-details" property="dc:publisher">{{ c.pkg_dict['organization']['title']}}
+            </td>
+        </tr>
+        <tr>
+            <th scope="row" class="dataset-label">Type</th>
+            <td class="dataset-details" property="dc:type">Dataset</td>
+        </tr>
+        <tr>
+            <th scope="row" class="dataset-label">Language</th>
+            <td class="dataset-details" property="dc:language">English</td>
+        </tr>
+
+        </tbody>
+    </table>
+</section>
+
+
+{% endblock %}
+

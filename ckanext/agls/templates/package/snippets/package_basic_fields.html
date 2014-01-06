@@ -1,0 +1,41 @@
+{% ckan_extends %}
+
+{% block package_basic_fields_org  %}
+
+{{ super() }}
+
+
+{{ form.input('agency_program', label=_('Agency Program'), id='field-agency_program',
+placeholder=_('Name of the Agency Program that generated the data if relevant'),
+value=data.agency_program, error=errors.agency_program, classes=['control-medium']) }}
+
+{{ form.input('contact_point', label=_('Contact Point'), id='field-contact_point',
+placeholder=_('Email address for questions about content of dataset'),
+value=data.contact_point, error=errors.contact_point, classes=['control-medium']) }}
+
+{{ form.input('spatial_coverage', label=_('Geospatial Coverage'), id='field-spatial_coverage',
+placeholder=_('The geographical area covered by the data. Eg: Whole of Australia, New South Wales, Canberra'),
+value=data.spatial_coverage, error=errors.spatial_coverage, classes=['control-medium']) }}
+
+{{ form.input('granularity', label=_('Data Granularity'), id='field-granularity',
+placeholder=_('Granularity in time, place etc. Eg: incidents reports on daily basis by location.'),
+value=data.granularity, error=errors.granularity, classes=['control-medium']) }}
+
+{{ form.input('jurisdiction', label=_('Government Jurisdiction'), id='field-jurisdiction',
+placeholder=_('New South Wales, Glenorchy City Council, Federal'),
+value=data.jurisdiction, error=errors.jurisdiction, classes=['control-medium']) }}
+
+{{ form.input('temporal_coverage', label=_('Temporal Coverage'), id='field-temporal_coverage',
+placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
+value=data.temporal_coverage, error=errors.temporal_coverage, classes=['control-medium']) }}
+
+{{ form.select('data_state', label=_('Data State'), options= [{'value': 'active', 'text': 'Active'}, {'value': 'inactive', 'text': 'Inactive'}],
+selected='Active', error=errors.data_state) }}
+
+{{ form.input('update_freq', label=_('Update Frequency'), id='field-update_freq',
+placeholder=_('How often the dataset is updated. Eg: Daily, Weekly, Never'),
+value=data.update_freq, error=errors.update_freq, classes=['control-medium']) }}
+
+{% endblock %}
+
+
