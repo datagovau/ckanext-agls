@@ -95,7 +95,16 @@ class AGLSPlugin(plugins.SingletonPlugin,
             'data_state': [tk.get_converter('convert_from_extras'),
                            tk.get_validator('ignore_empty')],
             'update_freq': [tk.get_converter('convert_from_extras'),
-                            tk.get_validator('ignore_empty')]
+                            tk.get_validator('ignore_empty')],
+            #harvesting fields
+            #'spatial_harvester': [tk.get_converter('convert_from_extras'),
+            #                   tk.get_validator('ignore_missing')],
+            #'harvest_object_id': [tk.get_converter('convert_from_extras'),
+            #                   tk.get_validator('ignore_missing')],
+            #'harvest_source_id': [tk.get_converter('convert_from_extras'),
+            #                   tk.get_validator('ignore_missing')],
+            #'harvest_source_title': [tk.get_converter('convert_from_extras'),
+            #                   tk.get_validator('ignore_missing')],
         })
         return schema
 
@@ -121,7 +130,17 @@ class AGLSPlugin(plugins.SingletonPlugin,
             'data_state': [tk.get_converter('convert_to_extras'),
                            tk.get_validator('not_empty')],
             'update_freq': [tk.get_converter('convert_to_extras'),
-                            tk.get_validator('not_empty')]
+                            tk.get_validator('not_empty')],
+            #harvesting fields
+            #'spatial_harvester': [tk.get_validator('ignore_missing'),
+            #                   tk.get_converter('convert_to_extras')],
+            #'harvest_object_id': [tk.get_validator('ignore_missing'),
+            #                   tk.get_converter('convert_to_extras')],
+            #'harvest_source_id': [tk.get_validator('ignore_missing'),
+            #                   tk.get_converter('convert_to_extras')],
+            #'harvest_source_title': [tk.get_validator('ignore_missing'),
+            #                   tk.get_converter('convert_to_extras')],
+
         })
         return schema
 

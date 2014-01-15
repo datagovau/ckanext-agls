@@ -45,6 +45,13 @@
             </td>
         </tr>
         {% endif %}
+        {% if  h.get_pkg_dict_extra(c.pkg_dict, 'spatial_harvester','') != '' %}
+        <tr>
+            <th scope="row" class="dataset-label">XML Metadata Document</th>
+            <td class="dataset-details">{{ h.link_to("View",h.url_for(controller='HarvestMetadataApi', action='display_xml_original', id=h.get_pkg_dict_extra(c.pkg_dict, 'harvest_object_id'))) }}
+            </td>
+        </tr>
+        {% endif %}
 
         {% if pkg.get('contact_point') %}
         <tr>
