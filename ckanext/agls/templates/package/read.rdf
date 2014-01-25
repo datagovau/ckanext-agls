@@ -74,13 +74,6 @@
                 <foaf:name>${ c.pkg_dict['organization']['title'] }</foaf:name>
             </rdf:Description>
         </dct:creator>
-        <dct:contributor>
-            <rdf:Description>
-                <foaf:name>${h.get_last_active_user(c.pkg_dict['id'])["display_name"]}</foaf:name>
-                <foaf:mbox py:if="h.get_last_active_user(c.pkg_dict['id']).get('email', None)"
-                           rdf:resource="mailto:${h.get_last_active_user(c.pkg_dict['id'])['email']}"/>
-            </rdf:Description>
-        </dct:contributor>
 
         <py:for each="extra_dict in c.pkg_dict.get('extras',[])">
             <dct:relation>

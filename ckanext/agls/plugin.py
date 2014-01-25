@@ -10,18 +10,6 @@ from pylons import config
 from sqlalchemy import orm
 import ckan.model
 
-#parse the activity feed for last active non-system user
-def get_last_active_user(id):
-    system_user = lib.helpers.get_action('user_show',{'id': config.get('ckan.site_id', 'ckan_site_user')})
-    user_list = [x for x in lib.helpers.get_action('package_activity_list',{'id':id}) if x['user_id'] != system_user['id']]
-    user = None
-    if len(user_list) > 0:
-    	user = user_list[0].get('user_id', None)
-    if user is None:
-	return system_user
-    else:
-	return lib.helpers.get_action('user_show',{'id':user})
-
 class AGLSPlugin(plugins.SingletonPlugin,
                                 tk.DefaultDatasetForm):
     '''An example IDatasetForm CKAN plugin.
@@ -31,7 +19,6 @@ class AGLSPlugin(plugins.SingletonPlugin,
     '''
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IDatasetForm, inherit=False)
-    plugins.implements(plugins.ITemplateHelpers, inherit=False)
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -44,8 +31,6 @@ class AGLSPlugin(plugins.SingletonPlugin,
         tk.add_resource('theme/public', 'ckanext-agls')
         # config['licenses_group_url'] = 'http://%(ckan.site_url)/licenses.json'
 
-    def get_helpers(self):
-        return {'get_last_active_user': get_last_active_user}
 
     def is_fallback(self):
         # Return True to register this plugin as the default handler for

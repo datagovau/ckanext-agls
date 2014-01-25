@@ -100,13 +100,6 @@
         </tr>
         {% endif %}
 
-{% set email =h.get_last_active_user(c.pkg_dict['id']).get('email','') %}
-        <tr>
-            <th scope="row" class="dataset-label">{{ _('Maintainer') }}</th>
-            <td class="dataset-details" property="dc:contributor">{{
-		  h.mail_to(email_address=(email or ' '), name=h.get_last_active_user(c.pkg_dict['id']).get("display_name",'')) }}
-            </td>
-        </tr>
         <tr>
             <th scope="row" class="dataset-label">Publisher/Agency</th>
             <td class="dataset-details" property="dc:publisher">{{ c.pkg_dict['organization']['title']}}
