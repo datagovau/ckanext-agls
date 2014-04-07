@@ -32,9 +32,17 @@ value=data.temporal_coverage, error=errors.temporal_coverage, classes=['control-
 {{ form.select('data_state', label=_('Data State'), options= [{'value': 'active', 'text': 'Active'}, {'value': 'inactive', 'text': 'Inactive'}],
 selected='Active', error=errors.data_state) }}
 
-{{ form.input('update_freq', label=_('Update Frequency'), id='field-update_freq',
-placeholder=_('How often the dataset is updated. Eg: Daily, Weekly, Never'),
-value=data.update_freq, error=errors.update_freq, classes=['control-medium']) }}
+{{ form.select('update_freq', label=_('Update Frequency'), options= [
+{'value': 'Not Known', 'text': 'Not Known/Specified'},
+{'value': 'Annually', 'text': 'Yearly/Annually'},
+{'value': 'Bi-annually'},
+{'value': 'Quarterly'},
+{'value': 'Monthly'},
+{'value': 'Daily'},
+{'value': 'Continual', 'text': 'Continual/Ongoing'},
+{'value': 'As required'},
+{'value': 'Not Planned', 'text': 'Not Planned/Never'}
+], error=errors.update_freq,is_required=true) }}
 
 {% endblock %}
 
