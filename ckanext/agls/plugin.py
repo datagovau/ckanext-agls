@@ -37,6 +37,12 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IDatasetForm, inherit=False)
     plugins.implements(plugins.ITemplateHelpers)
+    plugins.implements(plugins.IRoutes, inherit=True)
+
+    def before_map(self, map):
+        map.connect('/dataset/{id}/gmd',
+                    controller='ckanext.agls.controller:AGLSController', action='gmd')
+        return map
 
     def get_helpers(self):
         return {'country_codes': country_codes}
@@ -103,7 +109,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
             'update_freq': [tk.get_converter('convert_from_extras'),
                             tk.get_validator('ignore_empty')],
             # harvesting fields
-            #'spatial_harvester': [tk.get_converter('convert_from_extras'),
+            # 'spatial_harvester': [tk.get_converter('convert_from_extras'),
             #                   tk.get_validator('ignore_missing')],
             #'harvest_object_id': [tk.get_converter('convert_from_extras'),
             #                   tk.get_validator('ignore_missing')],
@@ -138,7 +144,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
             'update_freq': [tk.get_converter('convert_to_extras'),
                             tk.get_validator('not_empty')],
             # harvesting fields
-            #'spatial_harvester': [tk.get_validator('ignore_missing'),
+            # 'spatial_harvester': [tk.get_validator('ignore_missing'),
             #                   tk.get_converter('convert_to_extras')],
             #'harvest_object_id': [tk.get_validator('ignore_missing'),
             #                   tk.get_converter('convert_to_extras')],
