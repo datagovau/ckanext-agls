@@ -1,0 +1,22 @@
+{% ckan_extends %}
+
+{% block custom_fields %}
+
+    {{ form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction',
+placeholder=_('Jurisdiction of organisation'),
+value=data.jurisdiction, error=errors.jurisdiction, classes=['control-medium']) }}
+
+    {{ form.input('website', label=_('Website'), id='field-website',
+placeholder=_('Website/homepage of organisation'),
+value=data.website, error=errors.website, classes=['control-medium']) }}
+
+    {{ form.input('email', label=_('Email'), id='field-email',
+placeholder=_('Email contact for general open data enquiries'),
+value=data.email, error=errors.email, classes=['control-medium']) }}
+
+    {{ form.input('telephone', label=_('Telephone'), id='field-telephone',
+placeholder=_('Telephone contact for general open data enquiries'),
+value=data.telephone, error=errors.telephone, classes=['control-medium']) }}
+
+    {{ super() }}
+{% endblock %}
