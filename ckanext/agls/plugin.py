@@ -1,17 +1,34 @@
-import logging
-
 import ckan.plugins as plugins
-import ckan.lib as lib
-import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.plugins.toolkit as tk
-import ckan.model as model
-from pylons import config
 
-from sqlalchemy import orm
-import ckan.model
+# vocab setup
+# "Geospatial Topic" and "Field(s) of Research" are tag vocabularies.
+def create_country_codes():
+    user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    try:
+        data = {'id': 'country_codes'}
+        tk.get_action('vocabulary_show')(context, data)
+    except tk.ObjectNotFound:
+        data = {'name': 'country_codes'}
+        vocab = tk.get_action('vocabulary_create')(context, data)
+        for tag in (u'uk', u'ie', u'de', u'fr', u'es'):
+            data = {'name': tag, 'vocabulary_id': vocab['id']}
+            tk.get_action('tag_create')(context, data)
 
-class AGLSPlugin(plugins.SingletonPlugin,
-                                tk.DefaultDatasetForm):
+
+def country_codes():
+    create_country_codes()
+    try:
+        tag_list = tk.get_action('tag_list')
+        country_codes = tag_list(data_dict={'vocabulary_id': 'country_codes'})
+        return country_codes
+    except tk.ObjectNotFound:
+        return None
+
+
+class AGLSDatasetPlugin(plugins.SingletonPlugin,
+                        tk.DefaultDatasetForm):
     '''An example IDatasetForm CKAN plugin.
 
     Uses a tag vocabulary to add a custom metadata field to datasets.
@@ -19,6 +36,10 @@ class AGLSPlugin(plugins.SingletonPlugin,
     '''
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IDatasetForm, inherit=False)
+    plugins.implements(plugins.ITemplateHelpers)
+
+    def get_helpers(self):
+        return {'country_codes': country_codes}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -44,17 +65,17 @@ class AGLSPlugin(plugins.SingletonPlugin,
 
 
     def create_package_schema(self):
-        schema = super(AGLSPlugin, self).create_package_schema()
+        schema = super(AGLSDatasetPlugin, self).create_package_schema()
         schema = self._modify_package_schema(schema)
         return schema
 
     def update_package_schema(self):
-        schema = super(AGLSPlugin, self).update_package_schema()
+        schema = super(AGLSDatasetPlugin, self).update_package_schema()
         schema = self._modify_package_schema(schema)
         return schema
 
     def show_package_schema(self):
-        schema = super(AGLSPlugin, self).show_package_schema()
+        schema = super(AGLSDatasetPlugin, self).show_package_schema()
 
         # Don't show vocab tags mixed in with normal 'free' tags
         # (e.g. on dataset pages, or on the search page)
@@ -81,7 +102,7 @@ class AGLSPlugin(plugins.SingletonPlugin,
                            tk.get_validator('ignore_empty')],
             'update_freq': [tk.get_converter('convert_from_extras'),
                             tk.get_validator('ignore_empty')],
-            #harvesting fields
+            # harvesting fields
             #'spatial_harvester': [tk.get_converter('convert_from_extras'),
             #                   tk.get_validator('ignore_missing')],
             #'harvest_object_id': [tk.get_converter('convert_from_extras'),
@@ -116,7 +137,7 @@ class AGLSPlugin(plugins.SingletonPlugin,
                            tk.get_validator('not_empty')],
             'update_freq': [tk.get_converter('convert_to_extras'),
                             tk.get_validator('not_empty')],
-            #harvesting fields
+            # harvesting fields
             #'spatial_harvester': [tk.get_validator('ignore_missing'),
             #                   tk.get_converter('convert_to_extras')],
             #'harvest_object_id': [tk.get_validator('ignore_missing'),
@@ -128,4 +149,3 @@ class AGLSPlugin(plugins.SingletonPlugin,
 
         })
         return schema
-

@@ -2,21 +2,24 @@
 
 {% block custom_fields %}
 
-    {{ form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction',
+    {{  form.hidden('extras__0__key','jurisdiction') }}
+    {{ form.input('extras__0__value', label=_('Jurisdiction'), id='field-jurisdiction',
 placeholder=_('Jurisdiction of organisation'),
-value=data.jurisdiction, error=errors.jurisdiction, classes=['control-medium']) }}
+value=h.get_pkg_dict_extra(data,'jurisdiction'), error=errors['extras__0__key'] or errors['extras__0__value'], classes=['control-medium']) }}
 
-    {{ form.input('website', label=_('Website'), id='field-website',
+    {{  form.hidden('extras__1__key','website') }}
+    {{ form.input('extras__1__value', label=_('Website'), id='field-website',
 placeholder=_('Website/homepage of organisation'),
-value=data.website, error=errors.website, classes=['control-medium']) }}
+value=h.get_pkg_dict_extra(data,'website'), error=errors['extras__1__key'] or errors['extras__1__value'], classes=['control-medium']) }}
 
-    {{ form.input('email', label=_('Email'), id='field-email',
+    {{  form.hidden('extras__2__key','email') }}
+    {{ form.input('extras__2__value', label=_('Email'), id='field-email',
 placeholder=_('Email contact for general open data enquiries'),
-value=data.email, error=errors.email, classes=['control-medium']) }}
+value=h.get_pkg_dict_extra(data,'email'), error=errors['extras__2__key'] or errors['extras__2__value'], classes=['control-medium']) }}
 
-    {{ form.input('telephone', label=_('Telephone'), id='field-telephone',
+    {{  form.hidden('extras__3__key','telephone') }}
+    {{ form.input('extras__3__value', label=_('Telephone'), id='field-telephone',
 placeholder=_('Telephone contact for general open data enquiries'),
-value=data.telephone, error=errors.telephone, classes=['control-medium']) }}
+value=h.get_pkg_dict_extra(data,'telephone'), error=errors['extras__3__key'] or errors['extras__3__value'], classes=['control-medium']) }}
 
-    {{ super() }}
 {% endblock %}
