@@ -3,26 +3,54 @@ import ckan.plugins.toolkit as tk
 
 # vocab setup
 # "Geospatial Topic" and "Field(s) of Research" are tag vocabularies.
-def create_country_codes():
+def create_geospatial_topics():
     user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
     context = {'user': user['name']}
     try:
-        data = {'id': 'country_codes'}
+        data = {'id': 'geospatial_topics'}
         tk.get_action('vocabulary_show')(context, data)
     except tk.ObjectNotFound:
-        data = {'name': 'country_codes'}
+        data = {'name': 'geospatial_topics'}
         vocab = tk.get_action('vocabulary_create')(context, data)
-        for tag in (u'uk', u'ie', u'de', u'fr', u'es'):
+        for tag in ('farming', 'biota', 'boundaries', 'climatology / meteorology / atmosphere', 'economy', 'elevation', 'environment',
+                    'geoscientific information', 'health', 'imagery / base maps / earth cover', 'intelligence / military',
+        'inland waters', 'location', 'oceans', 'planning / cadastre', 'society', 'transportation', 'utilities / communication'):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             tk.get_action('tag_create')(context, data)
 
 
-def country_codes():
-    create_country_codes()
+def geospatial_topics():
+    create_geospatial_topics()
     try:
         tag_list = tk.get_action('tag_list')
-        country_codes = tag_list(data_dict={'vocabulary_id': 'country_codes'})
-        return country_codes
+        geospatial_topics = tag_list(data_dict={'vocabulary_id': 'geospatial_topics'})
+        return geospatial_topics
+    except tk.ObjectNotFound:
+        return None
+
+def create_fields_of_research():
+    user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    try:
+        data = {'id': 'fields_of_research'}
+        tk.get_action('vocabulary_show')(context, data)
+    except tk.ObjectNotFound:
+        data = {'name': 'fields_of_research'}
+        vocab = tk.get_action('vocabulary_create')(context, data)
+        # TODO load from CSV
+        for tag in ('farming', 'biota', 'boundaries', 'climatology / meteorology / atmosphere', 'economy', 'elevation', 'environment',
+                    'geoscientific information', 'health', 'imagery / base maps / earth cover', 'intelligence / military',
+                    'inland waters', 'location', 'oceans', 'planning / cadastre', 'society', 'transportation', 'utilities / communication'):
+            data = {'name': tag, 'vocabulary_id': vocab['id']}
+            tk.get_action('tag_create')(context, data)
+
+
+def fields_of_research():
+    create_fields_of_research()
+    try:
+        tag_list = tk.get_action('tag_list')
+        fields_of_research = tag_list(data_dict={'vocabulary_id': 'fields_of_research'})
+        return fields_of_research
     except tk.ObjectNotFound:
         return None
 
@@ -45,7 +73,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         return map
 
     def get_helpers(self):
-        return {'country_codes': country_codes}
+        return {} #'fields_of_research': fields_of_research()}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
