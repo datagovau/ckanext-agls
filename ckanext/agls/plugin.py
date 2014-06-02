@@ -1,6 +1,7 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-
+import csv
+import os
 # vocab setup
 # "Geospatial Topic" and "Field(s) of Research" are tag vocabularies.
 def create_geospatial_topics():
@@ -9,12 +10,12 @@ def create_geospatial_topics():
     try:
         data = {'id': 'geospatial_topics'}
         tk.get_action('vocabulary_show')(context, data)
-    except tk.ObjectNotFound:
+    except (TypeError,tk.ObjectNotFound):
         data = {'name': 'geospatial_topics'}
         vocab = tk.get_action('vocabulary_create')(context, data)
-        for tag in ('farming', 'biota', 'boundaries', 'climatology / meteorology / atmosphere', 'economy', 'elevation', 'environment',
-                    'geoscientific information', 'health', 'imagery / base maps / earth cover', 'intelligence / military',
-        'inland waters', 'location', 'oceans', 'planning / cadastre', 'society', 'transportation', 'utilities / communication'):
+        for tag in ('farming', 'biota', 'boundaries', 'climatology meteorology and atmosphere', 'economy', 'elevation', 'environment',
+                    'geoscientific information', 'health', 'imagery base maps earth cover', 'intelligence and military',
+                    'inland waters', 'location', 'oceans', 'planning and cadastre', 'society', 'transportation', 'utilities and communication'):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             tk.get_action('tag_create')(context, data)
 
@@ -34,16 +35,16 @@ def create_fields_of_research():
     try:
         data = {'id': 'fields_of_research'}
         tk.get_action('vocabulary_show')(context, data)
-    except tk.ObjectNotFound:
+    except (TypeError,tk.ObjectNotFound):
+        print "Loading ABS Fields of Research for the first time, please wait..."
         data = {'name': 'fields_of_research'}
         vocab = tk.get_action('vocabulary_create')(context, data)
-        # TODO load from CSV
-        for tag in ('farming', 'biota', 'boundaries', 'climatology / meteorology / atmosphere', 'economy', 'elevation', 'environment',
-                    'geoscientific information', 'health', 'imagery / base maps / earth cover', 'intelligence / military',
-                    'inland waters', 'location', 'oceans', 'planning / cadastre', 'society', 'transportation', 'utilities / communication'):
-            data = {'name': tag, 'vocabulary_id': vocab['id']}
-            tk.get_action('tag_create')(context, data)
-
+        with open(os.path.dirname(os.path.abspath(__file__))+'/ABS Fields Of Research.csv', 'rb') as csvfile:
+            forcsv = csv.reader(csvfile)
+            for row in forcsv:
+                data = {'name': row[1].strip().replace(',','')[:100], 'vocabulary_id': vocab['id']}
+                tk.get_action('tag_create')(context, data)
+        print "ABS Fields of Research loaded"
 
 def fields_of_research():
     create_fields_of_research()
@@ -73,7 +74,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         return map
 
     def get_helpers(self):
-        return {} #'fields_of_research': fields_of_research()}
+        return {'fields_of_research': fields_of_research(), 'geospatial_topics': geospatial_topics()}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -114,6 +115,14 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         # Don't show vocab tags mixed in with normal 'free' tags
         # (e.g. on dataset pages, or on the search page)
         schema['tags']['__extras'].append(tk.get_converter('free_tags_only'))
+        schema.update({
+            'geospatial_topics': [
+                tk.get_converter('convert_from_tags')('geospatial_topics'),
+                tk.get_validator('ignore_missing')],
+            'fields_of_research': [
+                tk.get_converter('convert_from_tags')('fields_of_research'),
+                tk.get_validator('ignore_missing')]
+        })
 
         # Add our custom_text field to the dataset schema.
         # ignore_missing == optional
@@ -181,5 +190,15 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
             #'harvest_source_title': [tk.get_validator('ignore_missing'),
             #                   tk.get_converter('convert_to_extras')],
 
+        })
+        schema.update({
+            'geospatial_topics': [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_to_tags')('geospatial_topics')
+            ],
+            'fields_of_research':[
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_to_tags')('fields_of_research')
+            ],
         })
         return schema

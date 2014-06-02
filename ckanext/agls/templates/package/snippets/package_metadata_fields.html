@@ -7,6 +7,34 @@ won't work. #}
 {% block custom_fields %}
 {% endblock %}
 
+{% block package_metadata_fields %}
+
+    <div class="control-group">
+        <label class="control-label" for="field-field_of_research">{{ _("Field of Research") }}</label>
+        <div class="controls">
+            <select id="field-field_of_research" name="field_of_research" data-module="autocomplete">
+                {% for field_of_research in h.fields_of_research()  %}
+                    <option value="{{ field_of_research }}" {% if field_of_research in data.get('field_of_research', []) %}selected="selected"{% endif %}>{{ field_of_research }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="field-geospatial_topic">{{ _("Geospatial Topic") }}</label>
+        <div class="controls">
+            <select id="field-geospatial_topic" name="geospatial_topic" data-module="autocomplete">
+                {% for geospatial_topic in h.geospatial_topics()  %}
+                    <option value="{{ geospatial_topic }}" {% if geospatial_topic in data.get('geospatial_topic', []) %}selected="selected"{% endif %}>{{ geospatial_topic }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    {{ super() }}
+
+{% endblock %}
+
 {# https://github.com/okfn/ckan/blob/master/ckan/templates/macros/form.html documents the macros for fields #}
 
 {# hide author/maintainer fields #}
