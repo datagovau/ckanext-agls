@@ -10,7 +10,7 @@ Installation
 
 To install this package, from your CKAN virtualenv, run the following from your CKAN base folder (e.g. ``pyenv/``)::
 
-  pip install -e git+https://github.com/okfn/ckanext-datagovau#egg=ckanext-datagovau
+  pip install -e git+https://github.com/datagovau/ckanext-agls#egg=ckanext-agls
 
-Then activate it by setting ``ckan.plugins = datagovau`` in your main ``ini``-file.
+Then activate it by setting ``ckan.plugins = agls`` in your main ``ini``-file.
 

@@ -21,6 +21,6 @@ setup(
 	entry_points=\
 	"""
         [ckan.plugins]
-	agls=ckanext.agls.plugin:AGLSPlugin
+	agls=ckanext.agls.plugin:AGLSDatasetPlugin
 	""",
 )

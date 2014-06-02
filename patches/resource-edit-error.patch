@@ -1,0 +1,14 @@
+diff --git a/ckan/logic/action/create.py b/ckan/logic/action/create.py 
+index 83500a2..885c0e9 100644 
+--- a/ckan/logic/action/create.py 
++++ b/ckan/logic/action/create.py 
+@@ -269,7 +269,10 @@ def resource_create(context, data_dict): 
+         _get_action('package_update')(context, pkg_dict) 
+         context.pop('defer_commit') 
+     except ValidationError, e: 
+- errors = e.error_dict['resources'][-1] 
++ if 'resources' in e.error_dict: 
++ errors = e.error_dict['resources'][-1] 
++ else: 
++ errors = "Please ensure the details of the dataset are complete before trying to add files " + str(e.error_dict) 
+         raise ValidationError(errors)

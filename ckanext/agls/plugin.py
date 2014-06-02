@@ -1,17 +1,63 @@
-import logging
-
 import ckan.plugins as plugins
-import ckan.lib as lib
-import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.plugins.toolkit as tk
-import ckan.model as model
-from pylons import config
+import csv
+import os
+# vocab setup
+# "Geospatial Topic" and "Field(s) of Research" are tag vocabularies.
+def create_geospatial_topics():
+    user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    try:
+        data = {'id': 'geospatial_topics'}
+        tk.get_action('vocabulary_show')(context, data)
+    except (TypeError,tk.ObjectNotFound):
+        data = {'name': 'geospatial_topics'}
+        vocab = tk.get_action('vocabulary_create')(context, data)
+        for tag in ('Farming', 'Biota', 'Boundaries', 'Climatology Meteorology and Atmosphere', 'Economy', 'Elevation', 'Environment',
+                    'Geoscientific information', 'Health', 'Imagery base maps and Earth cover', 'Intelligence and Military',
+                    'Inland waters', 'Location', 'Oceans', 'Planning and Cadastre', 'Society', 'Transportation', 'Utilities and Communication'):
+            data = {'name': tag, 'vocabulary_id': vocab['id']}
+            tk.get_action('tag_create')(context, data)
 
-from sqlalchemy import orm
-import ckan.model
 
-class AGLSPlugin(plugins.SingletonPlugin,
-                                tk.DefaultDatasetForm):
+def geospatial_topics():
+    create_geospatial_topics()
+    try:
+        tag_list = tk.get_action('tag_list')
+        geospatial_topics = tag_list(data_dict={'vocabulary_id': 'geospatial_topics'})
+        return geospatial_topics
+    except tk.ObjectNotFound:
+        return None
+
+def create_fields_of_research():
+    user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    try:
+        data = {'id': 'fields_of_research'}
+        tk.get_action('vocabulary_show')(context, data)
+    except (TypeError,tk.ObjectNotFound):
+        print "Loading ABS Fields of Research for the first time, please wait..."
+        data = {'name': 'fields_of_research'}
+        vocab = tk.get_action('vocabulary_create')(context, data)
+        with open(os.path.dirname(os.path.abspath(__file__))+'/ABS Fields Of Research.csv', 'rb') as csvfile:
+            forcsv = csv.reader(csvfile)
+            for row in forcsv:
+                data = {'name': row[1].strip().replace(',','')[:100], 'vocabulary_id': vocab['id']}
+                tk.get_action('tag_create')(context, data)
+        print "ABS Fields of Research loaded"
+
+def fields_of_research():
+    create_fields_of_research()
+    try:
+        tag_list = tk.get_action('tag_list')
+        fields_of_research = tag_list(data_dict={'vocabulary_id': 'fields_of_research'})
+        return fields_of_research
+    except tk.ObjectNotFound:
+        return None
+
+
+class AGLSDatasetPlugin(plugins.SingletonPlugin,
+                        tk.DefaultDatasetForm):
     '''An example IDatasetForm CKAN plugin.
 
     Uses a tag vocabulary to add a custom metadata field to datasets.
@@ -19,6 +65,16 @@ class AGLSPlugin(plugins.SingletonPlugin,
     '''
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IDatasetForm, inherit=False)
+    plugins.implements(plugins.ITemplateHelpers)
+    plugins.implements(plugins.IRoutes, inherit=True)
+
+    def before_map(self, map):
+        map.connect('/dataset/{id}/gmd',
+                    controller='ckanext.agls.controller:AGLSController', action='gmd')
+        return map
+
+    def get_helpers(self):
+        return {'fields_of_research': fields_of_research(), 'geospatial_topics': geospatial_topics()}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -44,17 +100,17 @@ class AGLSPlugin(plugins.SingletonPlugin,
 
 
     def create_package_schema(self):
-        schema = super(AGLSPlugin, self).create_package_schema()
+        schema = super(AGLSDatasetPlugin, self).create_package_schema()
         schema = self._modify_package_schema(schema)
         return schema
 
     def update_package_schema(self):
-        schema = super(AGLSPlugin, self).update_package_schema()
+        schema = super(AGLSDatasetPlugin, self).update_package_schema()
         schema = self._modify_package_schema(schema)
         return schema
 
     def show_package_schema(self):
-        schema = super(AGLSPlugin, self).show_package_schema()
+        schema = super(AGLSDatasetPlugin, self).show_package_schema()
 
         # Don't show vocab tags mixed in with normal 'free' tags
         # (e.g. on dataset pages, or on the search page)
@@ -75,14 +131,18 @@ class AGLSPlugin(plugins.SingletonPlugin,
                             tk.get_validator('ignore_empty')],
             'jurisdiction': [tk.get_converter('convert_from_extras'),
                              tk.get_validator('ignore_empty')],
-            'temporal_coverage': [tk.get_converter('convert_from_extras'),
+            'temporal_coverage_from': [tk.get_converter('convert_from_extras'),
                                   tk.get_validator('ignore_empty')],
+            'temporal_coverage_to': [tk.get_converter('convert_from_extras'),
+                                       tk.get_validator('ignore_missing')],
             'data_state': [tk.get_converter('convert_from_extras'),
                            tk.get_validator('ignore_empty')],
             'update_freq': [tk.get_converter('convert_from_extras'),
                             tk.get_validator('ignore_empty')],
-            #harvesting fields
-            #'spatial_harvester': [tk.get_converter('convert_from_extras'),
+            'data_model': [tk.get_converter('convert_from_extras'),
+                            tk.get_validator('ignore_missing')],
+            # harvesting fields
+            # 'spatial_harvester': [tk.get_converter('convert_from_extras'),
             #                   tk.get_validator('ignore_missing')],
             #'harvest_object_id': [tk.get_converter('convert_from_extras'),
             #                   tk.get_validator('ignore_missing')],
@@ -90,6 +150,12 @@ class AGLSPlugin(plugins.SingletonPlugin,
             #                   tk.get_validator('ignore_missing')],
             #'harvest_source_title': [tk.get_converter('convert_from_extras'),
             #                   tk.get_validator('ignore_missing')],
+            'geospatial_topic': [
+                tk.get_converter('convert_from_tags')('geospatial_topics'),
+                tk.get_validator('ignore_missing')],
+            'field_of_research': [
+                tk.get_converter('convert_from_tags')('fields_of_research'),
+                tk.get_validator('ignore_missing')]
         })
         return schema
 
@@ -110,14 +176,18 @@ class AGLSPlugin(plugins.SingletonPlugin,
                             tk.get_validator('not_empty')],
             'jurisdiction': [tk.get_converter('convert_to_extras'),
                              tk.get_validator('not_empty')],
-            'temporal_coverage': [tk.get_converter('convert_to_extras'),
+            'temporal_coverage_from': [tk.get_converter('convert_to_extras'),
                                   tk.get_validator('not_empty')],
+            'temporal_coverage_to': [tk.get_validator('ignore_missing'),
+                                     tk.get_converter('convert_to_extras')],
             'data_state': [tk.get_converter('convert_to_extras'),
                            tk.get_validator('not_empty')],
             'update_freq': [tk.get_converter('convert_to_extras'),
                             tk.get_validator('not_empty')],
-            #harvesting fields
-            #'spatial_harvester': [tk.get_validator('ignore_missing'),
+            'data_models': [tk.get_validator('ignore_missing'),
+                            tk.get_converter('convert_to_extras')],
+            # harvesting fields
+            # 'spatial_harvester': [tk.get_validator('ignore_missing'),
             #                   tk.get_converter('convert_to_extras')],
             #'harvest_object_id': [tk.get_validator('ignore_missing'),
             #                   tk.get_converter('convert_to_extras')],
@@ -126,6 +196,13 @@ class AGLSPlugin(plugins.SingletonPlugin,
             #'harvest_source_title': [tk.get_validator('ignore_missing'),
             #                   tk.get_converter('convert_to_extras')],
 
+            'geospatial_topic': [
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_to_tags')('geospatial_topics')
+            ],
+            'field_of_research':[
+                tk.get_validator('ignore_missing'),
+                tk.get_converter('convert_to_tags')('fields_of_research')
+            ],
         })
         return schema
-

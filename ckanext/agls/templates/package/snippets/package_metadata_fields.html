@@ -7,10 +7,54 @@ won't work. #}
 {% block custom_fields %}
 {% endblock %}
 
+{% block package_metadata_fields %}
+{#     {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+            {{ form.input('field_of_research', id='field-field_of_research', label=_('Field of Research'), placeholder=_('eg. economy, mental health, government'), value=field_of_research, error=errors.field_of_research, classes=['control-full'], attrs=tag_attrs) }}
+
+
+            {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+            {{ form.input('geospatial_topic', id='field-geospatial_topic', label=_('Geospatial Topic'), placeholder=_('eg. economy, mental health, government'), value=geospatial_topic, error=errors.geospatial_topic, classes=['control-full'], attrs=tag_attrs) }}
+ #}
+    <div class="control-group control-medium">
+        <label class="control-label" for="field-field_of_research">{{ _("Field of Research") }}</label>
+        <div class="controls">
+            <select id="field-field_of_research" name="field_of_research" multiple data-module="autocomplete">
+                {% for field_of_research in h.fields_of_research  %}
+                    <option value="{{ field_of_research }}" {% if field_of_research in data.get('fields_of_research', []) %}selected="selected"{% endif %}>{{ field_of_research }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="control-group control-medium">
+        <label class="control-label" for="field-geospatial_topic">{{ _("Geospatial Topic") }}</label>
+        <div class="controls">
+            <select id="field-geospatial_topic" name="geospatial_topic"  multiple data-module="autocomplete">
+                {% for geospatial_topic in h.geospatial_topics  %}
+                    <option value="{{ geospatial_topic }}" {% if geospatial_topic in data.get('geospatial_topic', []) %}selected="selected"{% endif %}>{{ geospatial_topic }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+<script>
+    $("#field-geospatial_topic").chosen();
+    $("#field-field_of_research").chosen();
+</script>
+
+    {{ form.markdown('data_models', label=_('Data Models'), id='field-data-models',
+placeholder=_('Information on any relevant data models, ontologies, taxonomies etc specific to this dataset.'),
+value=data.update_freq, error=errors.update_freq, classes=['control-large']) }}
+    {{ super() }}
+
+{% endblock %}
+
 {# https://github.com/okfn/ckan/blob/master/ckan/templates/macros/form.html documents the macros for fields #}
 
-{# hide author/maintainer fields #}
+{# hide author/maintainer fields
+TODO Autofill with author name #}
 {% block package_metadata_author %}
+
+    {{ form.hidden('author', 'value') }}
 {% endblock %}
 
 {% block package_metadata_fields_maintainer %}
