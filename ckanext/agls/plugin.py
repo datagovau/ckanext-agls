@@ -13,9 +13,9 @@ def create_geospatial_topics():
     except (TypeError,tk.ObjectNotFound):
         data = {'name': 'geospatial_topics'}
         vocab = tk.get_action('vocabulary_create')(context, data)
-        for tag in ('farming', 'biota', 'boundaries', 'climatology meteorology and atmosphere', 'economy', 'elevation', 'environment',
-                    'geoscientific information', 'health', 'imagery base maps earth cover', 'intelligence and military',
-                    'inland waters', 'location', 'oceans', 'planning and cadastre', 'society', 'transportation', 'utilities and communication'):
+        for tag in ('Farming', 'Biota', 'Boundaries', 'Climatology Meteorology and Atmosphere', 'Economy', 'Elevation', 'Environment',
+                    'Geoscientific information', 'Health', 'Imagery base maps and Earth cover', 'Intelligence and Military',
+                    'Inland waters', 'Location', 'Oceans', 'Planning and Cadastre', 'Society', 'Transportation', 'Utilities and Communication'):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             tk.get_action('tag_create')(context, data)
 
@@ -115,14 +115,6 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         # Don't show vocab tags mixed in with normal 'free' tags
         # (e.g. on dataset pages, or on the search page)
         schema['tags']['__extras'].append(tk.get_converter('free_tags_only'))
-        schema.update({
-            'geospatial_topics': [
-                tk.get_converter('convert_from_tags')('geospatial_topics'),
-                tk.get_validator('ignore_missing')],
-            'fields_of_research': [
-                tk.get_converter('convert_from_tags')('fields_of_research'),
-                tk.get_validator('ignore_missing')]
-        })
 
         # Add our custom_text field to the dataset schema.
         # ignore_missing == optional
@@ -145,6 +137,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                            tk.get_validator('ignore_empty')],
             'update_freq': [tk.get_converter('convert_from_extras'),
                             tk.get_validator('ignore_empty')],
+            'data_model': [tk.get_converter('convert_from_extras'),
+                            tk.get_validator('ignore_missing')],
             # harvesting fields
             # 'spatial_harvester': [tk.get_converter('convert_from_extras'),
             #                   tk.get_validator('ignore_missing')],
@@ -154,6 +148,12 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
             #                   tk.get_validator('ignore_missing')],
             #'harvest_source_title': [tk.get_converter('convert_from_extras'),
             #                   tk.get_validator('ignore_missing')],
+            'geospatial_topic': [
+                tk.get_converter('convert_from_tags')('geospatial_topics'),
+                tk.get_validator('ignore_missing')],
+            'field_of_research': [
+                tk.get_converter('convert_from_tags')('fields_of_research'),
+                tk.get_validator('ignore_missing')]
         })
         return schema
 
@@ -180,6 +180,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                            tk.get_validator('not_empty')],
             'update_freq': [tk.get_converter('convert_to_extras'),
                             tk.get_validator('not_empty')],
+            'data_models': [tk.get_validator('ignore_missing'),
+                            tk.get_converter('convert_to_extras')],
             # harvesting fields
             # 'spatial_harvester': [tk.get_validator('ignore_missing'),
             #                   tk.get_converter('convert_to_extras')],
@@ -190,13 +192,11 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
             #'harvest_source_title': [tk.get_validator('ignore_missing'),
             #                   tk.get_converter('convert_to_extras')],
 
-        })
-        schema.update({
-            'geospatial_topics': [
+            'geospatial_topic': [
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_tags')('geospatial_topics')
             ],
-            'fields_of_research':[
+            'field_of_research':[
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_tags')('fields_of_research')
             ],
