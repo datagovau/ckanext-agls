@@ -25,17 +25,22 @@ value=data.granularity, error=errors.granularity, classes=['control-medium']) }}
 placeholder=_('New South Wales, Glenorchy City Council, Federal'),
 value=data.jurisdiction, error=errors.jurisdiction, classes=['control-medium']) }}
 
-{{ form.input('temporal_coverage', label=_('Temporal Coverage'), id='field-temporal_coverage',
+{{ form.input('temporal_coverage_from', label=_('Temporal Coverage'), id='field-temporal_coverage',
 placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
-value=data.temporal_coverage, error=errors.temporal_coverage, classes=['control-medium']) }}
+value=data.temporal_coverage_from, error=errors.temporal_coverage_from, classes=['control-medium']) }}
 
-{{ form.select('data_state', label=_('Data State'), options= [{'value': 'active', 'text': 'Active'}, {'value': 'inactive', 'text': 'Inactive'}],
+    {{ form.input('temporal_coverage_to', label=_('Temporal Coverage'), id='field-temporal_coverage',
+placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
+value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['control-medium']) }}
+
+    {{ form.select('data_state', label=_('Data State'), options= [{'value': 'active', 'text': 'Active'}, {'value': 'inactive', 'text': 'Inactive'}],
 selected='Active', error=errors.data_state) }}
 
 {{ form.input('update_freq', label=_('Update Frequency'), id='field-update_freq',
 placeholder=_('How often the dataset is updated. Eg: Daily, Weekly, Never'),
 value=data.update_freq, error=errors.update_freq, classes=['control-medium']) }}
 
+    {{ form.checkbox('contact_info', checked=false, label='Expose User Contact Information', value=contact_info) }}
 {% endblock %}
 
 

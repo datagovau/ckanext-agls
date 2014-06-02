@@ -40,14 +40,21 @@ won't work. #}
     $("#field-geospatial_topic").chosen();
     $("#field-field_of_research").chosen();
 </script>
+
+    {{ form.markdown('data_models', label=_('Data Models'), id='field-data-models',
+placeholder=_('Information on any relevant data models, ontologies, taxonomies etc specific to this dataset.'),
+value=data.update_freq, error=errors.update_freq, classes=['control-large']) }}
     {{ super() }}
 
 {% endblock %}
 
 {# https://github.com/okfn/ckan/blob/master/ckan/templates/macros/form.html documents the macros for fields #}
 
-{# hide author/maintainer fields #}
+{# hide author/maintainer fields
+TODO Autofill with author name #}
 {% block package_metadata_author %}
+
+    {{ form.hidden('author', 'value') }}
 {% endblock %}
 
 {% block package_metadata_fields_maintainer %}

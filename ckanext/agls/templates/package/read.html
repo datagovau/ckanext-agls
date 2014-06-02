@@ -6,6 +6,7 @@
          agentterms: http://www.agls.gov.au/agls/agentterms/
          availterms: http://www.agls.gov.au/agls/availterms/
          adminterms: http://www.agls.gov.au/agls/adminterms/
+         v: http://www.w3.org/2006/vcard/ns#
          dct: http://purl.org/dc/terms/">
     <h3>{{ _('Additional Info') }}</h3>
     <table class="table table-striped table-bordered table-condensed">
@@ -56,10 +57,22 @@
         {% if pkg.get('contact_point') %}
         <tr>
             <th scope="row" class="dataset-label">Contact Point</th>
-            <td class="dataset-details" property="dcat:contactPoint"> {{ h.mail_to(email_address=pkg.contact_point,
-                name=pkg.contact_point) }}</td>
+            <td class="dataset-details" property="dcat:contactPoint">
+                <div about="http://" typeof="v:VCard">
+                    <span property="v:fn">{{  pkg.organization.title }}</span>
+                    <div rel="v:tel">
+                        <div typeof="v:Tel v:Home">
+                            <span property="rdf:value"></span>
+                        </div>
+                    </div>
+                    <span property="v:email"> {{ h.mail_to(email_address=pkg.contact_point,
+                name=pkg.contact_point) }}</span>
+                </div>
+            </td>
         </tr>
         {% endif %}
+
+
         {% if pkg.get('spatial_coverage') %}
 
         <tr>
