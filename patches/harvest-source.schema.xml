@@ -1,0 +1,3 @@
+    <dynamicField name="extras_*" type="text" indexed="true" stored="true" multiValued="false" setMissingFirst="true"/>
+    <dynamicField name="vocab_*" type="string" indexed="true" stored="true" multiValued="true" setMissingFirst="true"/>
+    <dynamicField name="*" type="string" indexed="true"  stored="false" setMissingFirst="true"/>
