@@ -14,3 +14,7 @@ To install this package, from your CKAN virtualenv, run the following from your 
 
 Then activate it by setting ``ckan.plugins = agls`` in your main ``ini``-file.
 
+Notes
+===========
+
+https://github.com/geonetwork/schema-plugins/blob/master/iso19139.anzlic/templates/ANZLICMinimum.xml

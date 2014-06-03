@@ -1,4 +1,24 @@
 {% ckan_extends %}
+
+
+{% block package_description %}
+
+        <span class="label label-inverse" style="float: right;">
+        <img src="/json-icon.png"/>
+                <a style="color: #1878C0;" href="/api/3/action/{{ h.url_for('package_show', id=c.pkg.id) }}">JSON</a>
+      </span>&nbsp;
+    <span class="label label-inverse" style="float: right;margin-right: 10px;">
+<img src="/rdf-icon.png"/>
+        <a style="color: #1878C0;" href="{{ h.url_for('dataset_read', id=c.pkg.id) }}.rdf">RDF</a>
+      </span>&nbsp;
+    <span class="label label-inverse" style="float: right; margin-right: 10px;margin-left: 10px;">
+        <i class="icon-file-alt"></i>
+        <a style="color: #1878C0;" href="{{ h.url_for('dataset_read', id=c.pkg.id) }}/gmd">ISO19115/ISO19139 XML</a>
+      </span>
+
+    {{ super() }}
+{% endblock %}
+
 {% block package_additional_info %}
 <section class="additional-info" prefix="dc: http://purl.org/dc/elements/1.1/ dcat: http://www.w3.org/ns/dcat#
          dcam: http://purl.org/dc/dcam/

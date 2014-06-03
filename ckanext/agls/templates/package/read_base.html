@@ -2,7 +2,10 @@
 
 {% block links -%}
 {{ super() }}
-<link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
+    <link rel="alternate" type="application/json" href="{{ h.url_for('/api/3/action/package_show', id=c.pkg.id, qualified=True) }}"/>
+    <link rel="alternate" type="application/vnd.iso.19139+xml" href="{{ h.url_for(controller='package', action='read', id=pkg.id, qualified=True) }}/gmd"/>
+
+    <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
 <link rel="schema.AGLSTERMS" href="http://www.agls.gov.au/agls/terms/" />
 
 {% endblock -%}
