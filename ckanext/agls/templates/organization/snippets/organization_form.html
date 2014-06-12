@@ -3,9 +3,19 @@
 {% block custom_fields %}
 
     {{  form.hidden('extras__0__key','jurisdiction') }}
-    {{ form.input('extras__0__value', label=_('Jurisdiction'), id='field-jurisdiction',
-placeholder=_('Jurisdiction of organisation'),
-value=h.get_pkg_dict_extra(data,'jurisdiction'), error=errors['extras__0__key'] or errors['extras__0__value'], classes=['control-medium']) }}
+    {{ form.select('extras__0__value', label=_('Jurisdiction'), id='field-jurisdiction',
+options= [
+        {'value': 'Commonwealth of Australia'},
+        {'value': 'Australian Capital Territory'},
+        {'value': 'South Australia'},
+        {'value': 'New South Wales'},
+        {'value': 'Victoria'},
+        {'value': 'Northern Territory'},
+        {'value': 'Queensland'},
+        {'value': 'Local Council'},
+        {'value': 'Western Australian Government'}
+        ],
+selected=h.get_pkg_dict_extra(data,'jurisdiction'), error=errors['extras__0__key'] or errors['extras__0__value'], classes=['control-medium']) }}
 
     {{  form.hidden('extras__1__key','website') }}
     {{ form.input('extras__1__value', label=_('Website'), id='field-website',

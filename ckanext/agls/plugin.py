@@ -1,7 +1,20 @@
 import ckan.plugins as plugins
+import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import csv
 import os
+
+def get_group_select_list():
+    result = []
+    user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    groups = logic.get_action('group_list')(context, {})
+    print groups
+    for group in groups:
+        print group
+        result.append({'value':group})
+    return result
+
 # vocab setup
 # "Geospatial Topic" and "Field(s) of Research" are tag vocabularies.
 def create_geospatial_topics():
@@ -74,7 +87,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         return map
 
     def get_helpers(self):
-        return {'fields_of_research': fields_of_research(), 'geospatial_topics': geospatial_topics()}
+        return {'fields_of_research': fields_of_research(), 'geospatial_topics': geospatial_topics(), 'get_group_select_list': get_group_select_list()}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -121,14 +134,11 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         # ignore_empty == mandatory but not for viewing
         # !!! always convert_from_extras first
         schema.update({
-            'agency_program': [tk.get_converter('convert_from_extras'),
-                               tk.get_validator('ignore_missing')],
+
             'contact_point': [tk.get_converter('convert_from_extras'),
                               tk.get_validator('ignore_empty')],
             'spatial_coverage': [tk.get_converter('convert_from_extras'),
                                  tk.get_validator('ignore_empty')],
-            'granularity': [tk.get_converter('convert_from_extras'),
-                            tk.get_validator('ignore_empty')],
             'jurisdiction': [tk.get_converter('convert_from_extras'),
                              tk.get_validator('ignore_empty')],
             'temporal_coverage_from': [tk.get_converter('convert_from_extras'),
@@ -166,14 +176,11 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         # not_empty == mandatory, enforced here while modifying
 
         schema.update({
-            'agency_program': [tk.get_validator('ignore_missing'),
-                               tk.get_converter('convert_to_extras')],
             'contact_point': [tk.get_converter('convert_to_extras'),
                               tk.get_validator('not_empty')],
             'spatial_coverage': [tk.get_converter('convert_to_extras'),
                                  tk.get_validator('not_empty')],
-            'granularity': [tk.get_converter('convert_to_extras'),
-                            tk.get_validator('not_empty')],
+
             'jurisdiction': [tk.get_converter('convert_to_extras'),
                              tk.get_validator('not_empty')],
             'temporal_coverage_from': [tk.get_converter('convert_to_extras'),
