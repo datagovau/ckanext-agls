@@ -36,10 +36,7 @@ won't work. #}
             </select>
         </div>
     </div>
-<script>
-    $("#field-geospatial_topic").chosen();
-    $("#field-field_of_research").chosen();
-</script>
+
 
     {{ form.markdown('data_models', label=_('Data Models'), id='field-data-models',
 placeholder=_('Information on any relevant data models, ontologies, taxonomies etc specific to this dataset.'),
@@ -59,4 +56,28 @@ TODO Autofill with author name #}
 
 {% block package_metadata_fields_maintainer %}
 {% endblock %}
+{% block package_metadata_fields_url %}
+{% endblock %}
 
+{% block package_metadata_fields_version %}
+{% endblock %}
+
+{% block dataset_fields %}
+    {% if data.groups %}
+        <div class="control-group">
+            <label class="control-label">Groups/Themes</label>
+            <div class="controls">
+                {% for group in data.groups %}
+                    <label class="checkbox" for="field-group-{{ loop.index0 }}">
+                        <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{ loop.index0 }}__id" value="{{ group.id }}" checked="checked" />
+                        {{ group.title }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    {% set group_name = 'groups__%s__id' % data.groups|length %}
+    {% set group_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/group/autocomplete?q=?', 'data-module-key': 'id', 'data-module-label': 'title'} %}
+    {{ form.input(group_name, label=_('Add Group/Theme'), id="field-group", value=data[group_name], classes=['control-medium'], attrs=group_attrs) }}
+    {# form.select(group_name, label=_('Add Group/Theme'), id="field-group", selected=data[group_name], classes=['control-medium'], options=h.get_group_select_list) #}
+{% endblock %}

@@ -10,5 +10,5 @@ index 83500a2..885c0e9 100644
 + if 'resources' in e.error_dict: 
 + errors = e.error_dict['resources'][-1] 
 + else: 
-+ errors = "Please ensure the details of the dataset are complete before trying to add files " + str(e.error_dict) 
++ errors = "Please ensure the metadata details of the dataset are completed and saved before trying to add files/resources " + str(e.error_dict)
          raise ValidationError(errors)

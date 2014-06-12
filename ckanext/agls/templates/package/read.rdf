@@ -110,17 +110,6 @@
                 <rdf:value>${ c.pkg_dict.get('update_freq') }</rdf:value>
             </rdf:Description>
         </dct:relation>
-        <dct:relation py:if="c.pkg_dict.get('agency_program')">
-            <rdf:Description>
-                <rdfs:label>Agency Program</rdfs:label>
-                <rdf:value>${ c.pkg_dict.get('agency_program') }</rdf:value>
-            </rdf:Description>
-        </dct:relation>
-        <dct:relation py:if="c.pkg_dict.get('granularity')">
-            <rdf:Description>
-                <rdfs:label>Data Granularity</rdfs:label>
-                <rdf:value>${ c.pkg_dict.get('granularity') }</rdf:value>
-            </rdf:Description>
-        </dct:relation>
+
     </dcat:Dataset>
 </rdf:RDF>

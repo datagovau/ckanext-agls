@@ -52,12 +52,7 @@
             <td class="dataset-details" property="dct:updated">{{ pkg.metadata_updated.split("T")[0] }}</td>
         </tr>
         {% endif %}
-        {% if pkg.get('agency_program') %}
-        <tr>
-            <th scope="row" class="dataset-label">Agency Program</th>
-            <td class="dataset-details"> {{ pkg.agency_program }}</td>
-        </tr>
-        {% endif %}
+
         {% if pkg.get('url') %}
         <tr>
             <th scope="row" class="dataset-label">{{ _('Source') }}</th>
@@ -98,13 +93,6 @@
         <tr>
             <th scope="row" class="dataset-label">Geospatial Coverage</th>
             <td class="dataset-details" property="dct:spatial"> {{ pkg.spatial_coverage }}</td>
-        </tr>
-        {% endif %}
-        {% if pkg.get('granularity') %}
-
-        <tr>
-            <th scope="row" class="dataset-label">Data Granularity</th>
-            <td class="dataset-details"> {{ pkg.granularity }}</td>
         </tr>
         {% endif %}
         {% if pkg.get('jurisdiction') %}
