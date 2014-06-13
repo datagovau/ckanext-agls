@@ -9,9 +9,8 @@ def get_group_select_list():
     user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
     context = {'user': user['name']}
     groups = logic.get_action('group_list')(context, {})
-    print groups
+
     for group in groups:
-        print group
         result.append({'value':group})
     return result
 
