@@ -1,5 +1,10 @@
 {% ckan_extends %}
 
+{% block package_basic_fields_tags %}
+    {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+    {{ form.input('tag_string', id='field-tags', label=_('Keywords'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
+{% endblock %}
+
 {% block package_basic_fields_org %}
 
     {{ super() }}
@@ -14,19 +19,7 @@ value=data.contact_point, error=errors.contact_point, classes=['control-medium']
 placeholder=_('The geographical area covered by the data. Eg: Whole of Australia, New South Wales, Canberra'),
 value=data.spatial_coverage, error=errors.spatial_coverage, classes=['control-medium']) }}
 
-    {{ form.select('jurisdiction', label=_('Government Jurisdiction'), id='field-jurisdiction',
-options= [
-        {'value': 'Commonwealth of Australia'},
-        {'value': 'Australian Capital Territory'},
-        {'value': 'South Australia'},
-        {'value': 'New South Wales'},
-        {'value': 'Victoria'},
-        {'value': 'Northern Territory'},
-        {'value': 'Queensland'},
-        {'value': 'Local Council'},
-        {'value': 'Western Australian Government'}
-        ],
-selected=data.jurisdiction, error=errors.jurisdiction, classes=['control-medium']) }}
+    {{ form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction', value=data.jurisdiction or org.jurisdiction, error=errors.jurisdiction, classes=['control-medium']) }}
 
     {{ form.input('temporal_coverage_from', label=_('Temporal Coverage From'), id='field-temporal_coverage-from',
 placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
