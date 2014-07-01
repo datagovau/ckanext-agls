@@ -37,6 +37,48 @@
         </tr>
         </thead>
         <tbody>
+        <tr>
+            <th scope="row" class="dataset-label">Title</th>
+            <td class="dataset-details" property="dc:type">{{ pkg.title }}</td>
+        </tr>
+        <tr>
+            <th scope="row" class="dataset-label">Type</th>
+            <td class="dataset-details" property="dc:type">Dataset</td>
+        </tr>
+        Keyword
+        Theme
+
+        <tr>
+            <th scope="row" class="dataset-label">Language</th>
+            <td class="dataset-details" property="dc:language">English</td>
+        </tr>
+
+        <tr>
+            <th scope="row" class="dataset-label">Licence</th>
+            <td class="dataset-details">  {% if 'license_url' in pkg %}
+    <a href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg.license_title }}</a>
+  {% else %}
+    <span property="dc:rights">{{ pkg.license_title }}</span>
+  {% endif %}</td>
+        </tr>
+        {% if pkg.get('data_state') %}
+            <tr>
+                <th scope="row" class="dataset-label">Data Status</th>
+                <td class="dataset-details"> {{ pkg.data_state }}</td>
+            </tr>
+        {% endif %}
+        {% if pkg.get('update_freq') %}
+
+            <tr>
+                <th scope="row" class="dataset-label">Update Frequency</th>
+                <td class="dataset-details"> {{ pkg.update_freq }}</td>
+            </tr>
+        {% endif %}
+            <tr>
+                <th scope="row" class="dataset-label">{{ _('Landing Page') }}</th>
+                <td class="dataset-details" property="dct:source">{{ h.url_for(controller='package', action='read', id=pkg.id, qualified=True) }}
+                </td>
+            </tr>
 
 
         {# Add our custom field to the dataset read page. #}
@@ -53,14 +95,7 @@
         </tr>
         {% endif %}
 
-        {% if pkg.get('url') %}
-        <tr>
-            <th scope="row" class="dataset-label">{{ _('Source') }}</th>
-            <td class="dataset-details" property="dct:source">{{ h.link_to(pkg.get('url'),
-                pkg.get('url'), rel='dct:source', target='_blank') }}
-            </td>
-        </tr>
-        {% endif %}
+
         {% if  h.get_pkg_dict_extra(c.pkg_dict, 'spatial_harvester','') != '' %}
         <tr>
             <th scope="row" class="dataset-label">XML Metadata Document</th>
@@ -107,33 +142,15 @@
             <td class="dataset-details" property="dct:temporal"> {{ pkg.temporal_coverage }}</td>
         </tr>
         {% endif %}
-        {% if pkg.get('data_state') %}
-        <tr>
-            <th scope="row" class="dataset-label">Data State</th>
-            <td class="dataset-details"> {{ pkg.data_state }}</td>
-        </tr>
-        {% endif %}
-        {% if pkg.get('update_freq') %}
 
-        <tr>
-            <th scope="row" class="dataset-label">Update Frequency</th>
-            <td class="dataset-details"> {{ pkg.update_freq }}</td>
-        </tr>
-        {% endif %}
+
 
         <tr>
             <th scope="row" class="dataset-label">Publisher/Agency</th>
-            <td class="dataset-details" property="dc:publisher">{{ c.pkg_dict['organization']['title']}}
+            <td class="dataset-details" property="dc:publisher">{{ pkg.organization.title}}
             </td>
         </tr>
-        <tr>
-            <th scope="row" class="dataset-label">Type</th>
-            <td class="dataset-details" property="dc:type">Dataset</td>
-        </tr>
-        <tr>
-            <th scope="row" class="dataset-label">Language</th>
-            <td class="dataset-details" property="dc:language">English</td>
-        </tr>
+
             {% if pkg.get('field_of_research') %}
                 <tr>
                     <th scope="row" class="dataset-label">Fields of Research</th>
