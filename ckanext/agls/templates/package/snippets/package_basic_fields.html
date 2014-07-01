@@ -15,19 +15,27 @@
 placeholder=_('Email address for questions about content of dataset'),
 value=data.contact_point, error=errors.contact_point, classes=['control-medium']) }}
 
-    {{ form.input('spatial_coverage', label=_('Geospatial Coverage'), id='field-spatial_coverage',
+    {% call form.input('spatial_coverage', label=_('Geospatial Coverage'), id='field-spatial_coverage',
 placeholder=_('The geographical area covered by the data. Eg: Whole of Australia, New South Wales, Canberra'),
-value=data.spatial_coverage, error=errors.spatial_coverage, classes=['control-medium']) }}
+value=data.spatial_coverage, error=errors.spatial_coverage, classes=['control-medium']) %}
+        <br/>
+    Please input one of the following: 1) a point/polygon/bounding box; 2) an administrative boundary API; or 3) a reference ID from the <a href="http://www.ga.gov.au/place-names/">Gazatteer</a>.
+        </span>
+    {% endcall %}
 
-    {{ form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction', value=data.jurisdiction or org.jurisdiction, error=errors.jurisdiction, classes=['control-medium']) }}
+    {{ form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction', value=data.jurisdiction or data.organization.jurisdiction, error=errors.jurisdiction, classes=['control-medium']) }}
 
     {{ form.input('temporal_coverage_from', label=_('Temporal Coverage From'), id='field-temporal_coverage-from',
 placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
 value=data.temporal_coverage_from, error=errors.temporal_coverage_from, classes=['control-medium']) }}
 
-    {{ form.input('temporal_coverage_to', label=_('Temporal Coverage To'), id='field-temporal_coverage-to',
+    {% call form.input('temporal_coverage_to', label=_('Temporal Coverage To'), id='field-temporal_coverage-to',
 placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
-value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['control-medium']) }}
+value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['control-medium']) %}
+    <br/>
+    Where a dataset refers to only a single point in time please only complete the <b>'Temporal Coverage From'</b>.
+    </span>
+    {% endcall %}
 
     {{ form.select('data_state', label=_('Data Status'), options= [{'value': 'active', 'text': 'Active'}, {'value': 'inactive', 'text': 'Inactive'}],
 selected='Active', error=errors.data_state) }}
@@ -36,7 +44,10 @@ selected='Active', error=errors.data_state) }}
 placeholder=_('How often the dataset is updated. Eg: Daily, Weekly, Never'),
 value=data.update_freq, error=errors.update_freq, classes=['control-medium']) }}
 
-    {{ form.checkbox('contact_info', checked=false, label='Expose User Contact Information', value=contact_info) }}
+    {% call form.checkbox('contact_info', checked=false, label='Expose User Contact Information', value=contact_info) %}
+<br/>
+Whether the user contact details should be public as well as the organisation contact details.
+</span>
+{% endcall %}
+
 {% endblock %}
-
-
