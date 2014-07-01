@@ -4,6 +4,7 @@ import ckan.plugins.toolkit as tk
 import csv
 import os
 
+
 def get_group_select_list():
     result = []
     user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
@@ -11,8 +12,9 @@ def get_group_select_list():
     groups = logic.get_action('group_list')(context, {})
 
     for group in groups:
-        result.append({'value':group})
+        result.append({'value': group})
     return result
+
 
 # vocab setup
 # "Geospatial Topic" and "Field(s) of Research" are tag vocabularies.
@@ -22,12 +24,15 @@ def create_geospatial_topics():
     try:
         data = {'id': 'geospatial_topics'}
         tk.get_action('vocabulary_show')(context, data)
-    except (TypeError,tk.ObjectNotFound):
+    except (TypeError, tk.ObjectNotFound):
         data = {'name': 'geospatial_topics'}
         vocab = tk.get_action('vocabulary_create')(context, data)
-        for tag in ('Farming', 'Biota', 'Boundaries', 'Climatology Meteorology and Atmosphere', 'Economy', 'Elevation', 'Environment',
-                    'Geoscientific information', 'Health', 'Imagery base maps and Earth cover', 'Intelligence and Military',
-                    'Inland waters', 'Location', 'Oceans', 'Planning and Cadastre', 'Society', 'Transportation', 'Utilities and Communication'):
+        for tag in ('Farming', 'Biota', 'Boundaries', 'Climatology Meteorology and Atmosphere', 'Economy', 'Elevation',
+                    'Environment',
+                    'Geoscientific information', 'Health', 'Imagery base maps and Earth cover',
+                    'Intelligence and Military',
+                    'Inland waters', 'Location', 'Oceans', 'Planning and Cadastre', 'Society', 'Transportation',
+                    'Utilities and Communication'):
             data = {'name': tag, 'vocabulary_id': vocab['id']}
             tk.get_action('tag_create')(context, data)
 
@@ -41,22 +46,24 @@ def geospatial_topics():
     except tk.ObjectNotFound:
         return None
 
+
 def create_fields_of_research():
     user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
     context = {'user': user['name']}
     try:
         data = {'id': 'fields_of_research'}
         tk.get_action('vocabulary_show')(context, data)
-    except (TypeError,tk.ObjectNotFound):
+    except (TypeError, tk.ObjectNotFound):
         print "Loading ABS Fields of Research for the first time, please wait..."
         data = {'name': 'fields_of_research'}
         vocab = tk.get_action('vocabulary_create')(context, data)
-        with open(os.path.dirname(os.path.abspath(__file__))+'/ABS Fields Of Research.csv', 'rb') as csvfile:
+        with open(os.path.dirname(os.path.abspath(__file__)) + '/ABS Fields Of Research.csv', 'rb') as csvfile:
             forcsv = csv.reader(csvfile)
             for row in forcsv:
-                data = {'name': row[1].strip().replace(',','')[:100], 'vocabulary_id': vocab['id']}
+                data = {'name': row[1].strip().replace(',', '')[:100], 'vocabulary_id': vocab['id']}
                 tk.get_action('tag_create')(context, data)
         print "ABS Fields of Research loaded"
+
 
 def fields_of_research():
     create_fields_of_research()
@@ -86,7 +93,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         return map
 
     def get_helpers(self):
-        return {'fields_of_research': fields_of_research(), 'geospatial_topics': geospatial_topics(), 'get_group_select_list': get_group_select_list()}
+        return {'fields_of_research': fields_of_research(), 'geospatial_topics': geospatial_topics(),
+                'get_group_select_list': get_group_select_list()}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -141,18 +149,18 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
             'jurisdiction': [tk.get_converter('convert_from_extras'),
                              tk.get_validator('ignore_empty')],
             'temporal_coverage_from': [tk.get_converter('convert_from_extras'),
-                                  tk.get_validator('ignore_empty')],
+                                       tk.get_validator('ignore_empty')],
             'temporal_coverage_to': [tk.get_converter('convert_from_extras'),
-                                       tk.get_validator('ignore_missing')],
+                                     tk.get_validator('ignore_missing')],
             'data_state': [tk.get_converter('convert_from_extras'),
                            tk.get_validator('ignore_empty')],
             'update_freq': [tk.get_converter('convert_from_extras'),
                             tk.get_validator('ignore_empty')],
             'data_model': [tk.get_converter('convert_from_extras'),
-                            tk.get_validator('ignore_missing')],
+                           tk.get_validator('ignore_missing')],
             # harvesting fields
             # 'spatial_harvester': [tk.get_converter('convert_from_extras'),
-            #                   tk.get_validator('ignore_missing')],
+            # tk.get_validator('ignore_missing')],
             #'harvest_object_id': [tk.get_converter('convert_from_extras'),
             #                   tk.get_validator('ignore_missing')],
             #'harvest_source_id': [tk.get_converter('convert_from_extras'),
@@ -183,7 +191,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
             'jurisdiction': [tk.get_converter('convert_to_extras'),
                              tk.get_validator('not_empty')],
             'temporal_coverage_from': [tk.get_converter('convert_to_extras'),
-                                  tk.get_validator('not_empty')],
+                                       tk.get_validator('not_empty')],
             'temporal_coverage_to': [tk.get_validator('ignore_missing'),
                                      tk.get_converter('convert_to_extras')],
             'data_state': [tk.get_converter('convert_to_extras'),
@@ -194,7 +202,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                             tk.get_converter('convert_to_extras')],
             # harvesting fields
             # 'spatial_harvester': [tk.get_validator('ignore_missing'),
-            #                   tk.get_converter('convert_to_extras')],
+            # tk.get_converter('convert_to_extras')],
             #'harvest_object_id': [tk.get_validator('ignore_missing'),
             #                   tk.get_converter('convert_to_extras')],
             #'harvest_source_id': [tk.get_validator('ignore_missing'),
@@ -206,7 +214,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_tags')('geospatial_topics')
             ],
-            'field_of_research':[
+            'field_of_research': [
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_tags')('fields_of_research')
             ],

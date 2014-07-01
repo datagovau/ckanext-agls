@@ -1,33 +1,33 @@
 {% ckan_extends %}
 
 {% block links -%}
-{{ super() }}
-<link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
-<link rel="schema.AGLSTERMS" href="http://www.agls.gov.au/agls/terms/" />
+    {{ super() }}
+    <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+    <link rel="schema.AGLSTERMS" href="http://www.agls.gov.au/agls/terms/"/>
 
 {% endblock -%}
 
 {% block head_extras -%}
-{{ super() }}
-<meta name="DCTERMS.Language" scheme="RFC3066" content="en" />
-<meta name="DCTERMS.Type" scheme="AGLSTERMS.Document" content="dataset" />
-<meta name="DCTERMS.Creator" scheme="AGLSTERMS.AglsAgent" content="{{ pkg['organization']['title'] }}" />
-<meta name="DCTERMS.Modified" scheme="DCTERMS.ISO8601" content="{{res['revision_timestamp']}}" />
-<meta name="DCTERMS.Published" scheme="DCTERMS.ISO8601" content="{{res['created']}}" />
-<meta name="DCTERMS.Source.URI" content="{{pkg.url}}" />
-<meta name="DCTERMS.License" content="{{pkg['license_url']}}" />
-<meta name="DCTERMS.Coverage.Temporal" content="{{pkg.temporal_coverage}}" />
-<meta name="DCTERMS.Coverage.Spatial" content="{{pkg.spatial_coverage}}" />
-<meta name="AGLSTERMS.Jurisdiction" scheme="AGLSTERMS.AglsJuri" content="{{pkg.jurisdiction}}" />
-<meta name="DCAT.Theme" scheme="VO" content="{% for x in pkg.groups %}{{x['title']}},{% endfor %}" />
-<meta name="DCAT.byteSize" content="{{res.get('size')}}" />
-<meta name="DCAT.mediaType" content="{{res.get('mimetype')}}" />
-<meta name="DCTERMS.Identifier" content="{{res.get('url')}}" />
-<meta name="DCTERMS.Title" content="{{res['name']}}" />
-<meta name="DCTERMS.Description" scheme="" content="{{res['description']}}" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="DCTERMS.Format" content="{{res.format}}" />
-<meta name="DCTERMS.File.Size" content="{{res.size}}" />
+    {{ super() }}
+    <meta name="DCTERMS.Language" scheme="RFC3066" content="en"/>
+    <meta name="DCTERMS.Type" scheme="AGLSTERMS.Document" content="dataset"/>
+    <meta name="DCTERMS.Creator" scheme="AGLSTERMS.AglsAgent" content="{{ pkg['organization']['title'] }}"/>
+    <meta name="DCTERMS.Modified" scheme="DCTERMS.ISO8601" content="{{ res['revision_timestamp'] }}"/>
+    <meta name="DCTERMS.Published" scheme="DCTERMS.ISO8601" content="{{ res['created'] }}"/>
+    <meta name="DCTERMS.Source.URI" content="{{ pkg.url }}"/>
+    <meta name="DCTERMS.License" content="{{ pkg['license_url'] }}"/>
+    <meta name="DCTERMS.Coverage.Temporal" content="{{ pkg.temporal_coverage }}"/>
+    <meta name="DCTERMS.Coverage.Spatial" content="{{ pkg.spatial_coverage }}"/>
+    <meta name="AGLSTERMS.Jurisdiction" scheme="AGLSTERMS.AglsJuri" content="{{ pkg.jurisdiction }}"/>
+    <meta name="DCAT.Theme" scheme="VO" content="{% for x in pkg.groups %}{{ x['title'] }},{% endfor %}"/>
+    <meta name="DCAT.byteSize" content="{{ res.get('size') }}"/>
+    <meta name="DCAT.mediaType" content="{{ res.get('mimetype') }}"/>
+    <meta name="DCTERMS.Identifier" content="{{ res.get('url') }}"/>
+    <meta name="DCTERMS.Title" content="{{ res['name'] }}"/>
+    <meta name="DCTERMS.Description" scheme="" content="{{ res['description'] }}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="DCTERMS.Format" content="{{ res.format }}"/>
+    <meta name="DCTERMS.File.Size" content="{{ res.size }}"/>
 
 {% endblock -%}
 

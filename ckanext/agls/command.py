@@ -23,11 +23,13 @@ class InitDB(CkanCommand):
         self._load_config()
 
         import ckan.model as model
+
         model.Session.remove()
         model.Session.configure(bind=model.meta.engine)
         log = logging.getLogger('ckanext.agls')
 
         import agls_model
+
         agls_model.init_tables()
         log.info("DB tables are setup")
 
