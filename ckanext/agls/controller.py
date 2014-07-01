@@ -10,16 +10,16 @@ import ckan.lib.package_saver as package_saver
 import ckan.lib.helpers as h
 import ckan.lib.render
 
-
 from genshi.template import MarkupTemplate
 from genshi.template.text import NewTextTemplate
 import ckan.lib.base as base
+
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
 
-class AGLSController(PackageController):
 
+class AGLSController(PackageController):
     @jsonp.jsonpify
     def geo_autocomplete(self):
         q = request.params.get('q', '')
@@ -84,7 +84,7 @@ class AGLSController(PackageController):
         else:
             ctype, format, loader = self._content_type_from_accept()
 
-        #response.headers['Content-Type'] = ctype
+        # response.headers['Content-Type'] = ctype
         response.headers['Content-Type'] = 'application/vnd.iso.19139+xml'
         package_type = self._get_package_type(id.split('@')[0])
         context = {'model': model, 'session': model.Session,
@@ -108,7 +108,7 @@ class AGLSController(PackageController):
                     base.abort(400, _('Invalid revision format: %r') % e.args)
         elif len(split) > 2:
             base.abort(400, _('Invalid revision format: %r') %
-                  'Too many "@" symbols')
+                       'Too many "@" symbols')
 
         # check if package exists
         try:

@@ -62,9 +62,10 @@ def get_table(name):
         cached_tables[name] = table
     return cached_tables[name]
 
+
 def add_data(values):
     item = model.Session.query(AGLS_Gazetteer). \
-    filter(AGLS_Gazetteer.objectid==values['objectid'])
+        filter(AGLS_Gazetteer.objectid == values['objectid'])
     if not item:
         model.Session.add(AGLS_Gazetteer(**values))
         model.Session.commit()

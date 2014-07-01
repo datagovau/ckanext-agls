@@ -13,7 +13,7 @@ won't work. #}
             {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
             {{ form.input('geospatial_topic', id='field-geospatial_topic', label=_('Geospatial Topic'), placeholder=_('eg. economy, mental health, government'), value=geospatial_topic, error=errors.geospatial_topic, classes=['control-full'], attrs=tag_attrs) }}
  #}
-    <div class="control-group control-medium">
+    <div class="control-group control-full">
         <label class="control-label" for="field-field_of_research">{{ _("Field of Research") }}</label>
 
         <div class="controls">
@@ -23,50 +23,53 @@ won't work. #}
                             {% if field_of_research in data.get('fields_of_research', []) %}selected="selected"{% endif %}>{{ field_of_research }}</option>
                 {% endfor %}
             </select>
-        <br/>
-            The Australian and New Zealand Standard Research Classification (ANZSRC), 2008 defined <a href="http://www.abs.gov.au/AUSSTATS/abs@.nsf/0/6BB427AB9696C225CA2574180004463E?opendocument">field or fields of research</a> relevant to the dataset.
+            <br/>
+            The Australian and New Zealand Standard Research Classification (ANZSRC), 2008 defined <a
+                href="http://www.abs.gov.au/AUSSTATS/abs@.nsf/0/6BB427AB9696C225CA2574180004463E?opendocument">field or
+            fields of research</a> relevant to the dataset.
         </div>
 
     </div>
 
-    <div class="control-group control-medium">
+    <div class="control-group control-full">
         <label class="control-label" for="field-geospatial_topic">{{ _("Geospatial Topic") }}</label>
 
         <div class="controls">
-    <!--[if lt IE 9]>
+            <!--[if lt IE 9]>
             <select id="field-geospatial_topic" name="geospatial_topic" multiple>
             <![endif]-->
             <!--[if gte IE 8]> -->
             <select id="field-geospatial_topic" name="geospatial_topic" multiple data-module="autocomplete">
-            <!-- <![endif]-->
+                <!-- <![endif]-->
                 {% for geospatial_topic in h.geospatial_topics %}
                     <option value="{{ geospatial_topic }}"
                             {% if geospatial_topic in data.get('geospatial_topic', []) %}selected="selected"{% endif %}>{{ geospatial_topic }}</option>
                 {% endfor %}
             </select>
         </div>
-        The high level <a href="https://www2.landgate.wa.gov.au/interragatorplus/help/index.html?iso_19115_topic_categories.htm">ISO19115</a> topics. Optional but recommended.
+        The high level <a
+            href="https://www2.landgate.wa.gov.au/interragatorplus/help/index.html?iso_19115_topic_categories.htm">ISO19115</a>
+        topics. Optional but recommended.
     </div>
 
 
-    {%  call form.markdown('data_models', label=_('Data Models'), id='field-data-models',
+    {% call form.markdown('data_models', label=_('Data Models'), id='field-data-models',
 placeholder=_('Information on any relevant data models, ontologies, taxonomies etc specific to this dataset.'),
 value=data.update_freq, error=errors.update_freq, classes=['control-full']) %}
 
 
-    Please add any links to information on relevant data models, ontologies, taxonomies etc specific to your dataset. You can upload data models to the <link>data.gov.au data model repository</link>.
-{% endcall %}
+        Please add any links to information on relevant data models, ontologies, taxonomies etc specific to your
+        dataset. You can upload data models tothe
+        <link>data.gov.au data model repository</link>.
+    {% endcall %}
     {{ super() }}
 
 {% endblock %}
 
 {# https://github.com/okfn/ckan/blob/master/ckan/templates/macros/form.html documents the macros for fields #}
 
-{# hide author/maintainer fields
-TODO Autofill with author name #}
+{# hide author/maintainer fields #}
 {% block package_metadata_author %}
-
-    {{ form.hidden('author', 'value') }}
 {% endblock %}
 
 {% block package_metadata_fields_maintainer %}
@@ -95,6 +98,6 @@ TODO Autofill with author name #}
     {% endif %}
     {% set group_name = 'groups__%s__id' % data.groups|length %}
     {% set group_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/group/autocomplete?q=?', 'data-module-key': 'id', 'data-module-label': 'title'} %}
-    {{ form.input(group_name, label=_('Add Group/Theme'), id="field-group", value=data[group_name], classes=['control-medium'], attrs=group_attrs) }}
-    {# form.select(group_name, label=_('Add Group/Theme'), id="field-group", selected=data[group_name], classes=['control-medium'], options=h.get_group_select_list) #}
+    {{ form.input(group_name, label=_('Add Group/Theme'), id="field-group", value=data[group_name], classes=['control-full'], attrs=group_attrs) }}
+    {# form.select(group_name, label=_('Add Group/Theme'), id="field-group", selected=data[group_name], classes=['control-full'], options=h.get_group_select_list) #}
 {% endblock %}
