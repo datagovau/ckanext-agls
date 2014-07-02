@@ -24,7 +24,7 @@ won't work. #}
                 {% endfor %}
             </select>
             <br/>
-            The Australian and New Zealand Standard Research Classification (ANZSRC), 2008 defined <a
+            The Australian and New Zealand Standard Research Classification (ANZSRC), 2008 defined <a target="_blank"
                 href="http://www.abs.gov.au/AUSSTATS/abs@.nsf/0/6BB427AB9696C225CA2574180004463E?opendocument">field or
             fields of research</a> relevant to the dataset.
         </div>
@@ -46,10 +46,11 @@ won't work. #}
                             {% if geospatial_topic in data.get('geospatial_topic', []) %}selected="selected"{% endif %}>{{ geospatial_topic }}</option>
                 {% endfor %}
             </select>
-        </div>
-        The high level <a
+
+        The high level <a target="_blank"
             href="https://www2.landgate.wa.gov.au/interragatorplus/help/index.html?iso_19115_topic_categories.htm">ISO19115</a>
         topics. Optional but recommended.
+        </div>
     </div>
 
 
@@ -60,7 +61,7 @@ value=data.update_freq, error=errors.update_freq, classes=['control-full']) %}
 
         Please add any links to information on relevant data models, ontologies, taxonomies etc specific to your
         dataset. You can upload data models tothe
-        <link>data.gov.au data model repository</link>.
+        <a target="_blank" href="">data.gov.au data model repository</a>.
     {% endcall %}
     {{ super() }}
 
@@ -83,7 +84,7 @@ value=data.update_freq, error=errors.update_freq, classes=['control-full']) %}
 {% block dataset_fields %}
     {% if data.groups %}
         <div class="control-group">
-            <label class="control-label">Groups/Themes</label>
+            <label class="control-label">Themes</label>
 
             <div class="controls">
                 {% for group in data.groups %}
@@ -93,11 +94,16 @@ value=data.update_freq, error=errors.update_freq, classes=['control-full']) %}
                         {{ group.title }}
                     </label>
                 {% endfor %}
+
             </div>
         </div>
     {% endif %}
     {% set group_name = 'groups__%s__id' % data.groups|length %}
     {% set group_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/group/autocomplete?q=?', 'data-module-key': 'id', 'data-module-label': 'title'} %}
-    {{ form.input(group_name, label=_('Add Group/Theme'), id="field-group", value=data[group_name], classes=['control-full'], attrs=group_attrs) }}
-    {# form.select(group_name, label=_('Add Group/Theme'), id="field-group", selected=data[group_name], classes=['control-full'], options=h.get_group_select_list) #}
+    {% call form.input(group_name, label=_('Add Theme'), id="field-group", value=data[group_name], classes=['control-full'], attrs=group_attrs) %}
+        <br/>
+        The <a target="_blank" href="http://agift.naa.gov.au">AGIFT</a> top level government function to which the resource relates.
+        </span>
+    {% endcall %}
+    {# form.select(group_name, label=_('Add Theme'), id="field-group", selected=data[group_name], classes=['control-full'], options=h.get_group_select_list) #}
 {% endblock %}

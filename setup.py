@@ -22,5 +22,8 @@ setup(
 	"""
         [ckan.plugins]
 	agls=ckanext.agls.plugin:AGLSDatasetPlugin
+
+	[paste.paster_command]
+        initdb = ckanext.agls.command:InitDB
 	""",
 )

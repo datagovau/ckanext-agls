@@ -90,6 +90,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     def before_map(self, map):
         map.connect('/dataset/{id}/gmd',
                     controller='ckanext.agls.controller:AGLSController', action='gmd')
+        map.connect('/api/2/util/gazetteer/autocomplete',
+                    controller='ckanext.agls.controller:AGLSController', action='geo_autocomplete')
         return map
 
     def get_helpers(self):
