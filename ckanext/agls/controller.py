@@ -13,7 +13,9 @@ import ckan.lib.render
 from genshi.template import MarkupTemplate
 from genshi.template.text import NewTextTemplate
 import ckan.lib.base as base
-
+import ckan.lib.jsonp as jsonp
+import agls_model
+from sqlalchemy import func
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
@@ -26,49 +28,25 @@ class AGLSController(PackageController):
         limit = request.params.get('limit', 20)
         user_list = []
         if q:
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user or c.author, 'auth_user_obj': c.userobj}
+            import ckan.model as model
+            context = {'model': model}
 
             data_dict = {'q': q, 'limit': limit}
 
-            user_list = self.geo_autocomplete_query(context, data_dict)
+            model = context['model']
+
+            q = data_dict['q']
+            limit = data_dict.get('limit', 20)
+
+            query = model.Session.query(agls_model.AGLS_Gazetteer).filter(agls_model.AGLS_Gazetteer.name.ilike('%'+func.lower(q)+'%'))
+            query = query.limit(limit)
+
+            for user in query.all():
+                result_dict = {'name': getattr(user, 'record_id')+": "+getattr(user, 'name')}
+                user_list.append(result_dict)
         return user_list
 
-    @logic.validate(logic.schema.default_autocomplete_schema)
-    def geo_autocomplete_query(context, data_dict):
-        '''Return a list of user names that contain a string.
 
-        :param q: the string to search for
-        :type q: string
-        :param limit: the maximum number of user names to return (optional,
-            default: 20)
-        :type limit: int
-
-        :rtype: a list of user dictionaries each with keys ``'name'``,
-            ``'fullname'``, and ``'id'``
-
-        '''
-        model = context['model']
-        user = context['user']
-
-        _check_access('user_autocomplete', context, data_dict)
-
-        q = data_dict['q']
-        limit = data_dict.get('limit', 20)
-
-        query = model.User.search(q)
-        query = query.filter(model.User.state != model.State.DELETED)
-        query = query.limit(limit)
-
-        user_list = []
-        for user in query.all():
-            result_dict = {}
-            for k in ['id', 'name', 'fullname']:
-                result_dict[k] = getattr(user, k)
-
-            user_list.append(result_dict)
-
-        return user_list
 
     def gmd(self, id):
         format = 'html'

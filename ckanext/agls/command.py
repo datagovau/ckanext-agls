@@ -1,3 +1,4 @@
+from __future__ import print_function
 import logging
 import datetime
 import os
@@ -33,12 +34,12 @@ class InitDB(CkanCommand):
         agls_model.init_tables()
         log.info("DB tables are setup")
 
-        # TODO if table empty, fill with data.
-
-        with open('gazetteer.2012.csv', 'rb') as csvfile:
+        # if table empty, fill with data.
+        with open(os.path.dirname(__file__) + '/gazetteer.2012.csv', 'rb') as csvfile:
             reader = csv.reader(csvfile)
+            log.info("table empty, fill with data.")
             header = None
-            x = 0
+            y = 0
             for row in reader:
                 if not header:
                     header = row
@@ -46,6 +47,18 @@ class InitDB(CkanCommand):
                     values = {}
                     x = 0
                     for data in row:
+
                         values[header[x].lower()] = data
-                        x = x + 1
-                    agls_model.add_data(values)
+                        x += 1
+                    #log.info(values)
+                    #log.info(y)
+                    if values['feat_code'] == 'URBN' or values['feat_code'] == 'LOCB' or values['feat_code'] == 'LOCU':
+                        agls_model.add_data(values)
+                    y += 1
+                    if y % 1000 == 0:
+                        print(y)
+                    elif y % 100 == 0:
+                        print('*', end='')
+                    elif y % 10 == 0:
+                        print('.', end='')
+            print("done")

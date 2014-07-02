@@ -9,7 +9,6 @@ from sqlalchemy import func
 
 import ckan.model as model
 from ckan.lib.base import *
-
 log = __import__('logging').getLogger(__name__)
 
 metadata = MetaData()
@@ -22,26 +21,26 @@ class AGLS_Gazetteer(object):
 
 
 gaz_table = Table('refdata_gazetteer', metadata,
-                  Column('objectid', types.BigInteger),
-                  Column('recordid', types.UnicodeText, primary_key=True),
+                  Column('objectid', types.BigInteger, primary_key=True),
+                  Column('record_id', types.UnicodeText),
                   Column('name', types.UnicodeText),
                   Column('feat_code', types.UnicodeText),
-                  Column('cqdn', types.UnicodeText),
-                  Column("authority_id", types.UnicodeText),
+                  #Column('cgdn', types.UnicodeText),
+                  #Column("authority_id", types.UnicodeText),
                   Column("concise_gaz", types.UnicodeText),
                   Column("latitude", types.Numeric),
-                  Column("lat_degrees", types.Integer),
-                  Column("lat_minutes", types.Integer),
-                  Column("lat_seconds", types.Integer),
+                  #Column("lat_degrees", types.Integer),
+                  #Column("lat_minutes", types.Integer),
+                  #Column("lat_seconds", types.Integer),
                   Column("longitude", types.Numeric),
-                  Column("long_degrees", types.Integer),
-                  Column("long_minutes", types.Integer),
-                  Column("long_seconds", types.Integer),
-                  Column("postcode", types.UnicodeText),
+                  #Column("long_degrees", types.Integer),
+                  #Column("long_minutes", types.Integer),
+                  #Column("long_seconds", types.Integer),
+                  #Column("postcode", types.UnicodeText),
                   Column("state_id", types.UnicodeText),
                   Column("status", types.UnicodeText),
                   Column("variant_name", types.UnicodeText),
-                  Column("map_100k", types.Integer),
+                  #Column("map_100k", types.UnicodeText),
                   Column("place_id", types.Integer)
 )
 mapper(AGLS_Gazetteer, gaz_table)
@@ -64,8 +63,14 @@ def get_table(name):
 
 
 def add_data(values):
-    item = model.Session.query(AGLS_Gazetteer). \
-        filter(AGLS_Gazetteer.objectid == values['objectid'])
-    if not item:
+
+    q = model.Session.query(AGLS_Gazetteer).filter(AGLS_Gazetteer.objectid == values['objectid'])
+    if q.count() == 0:
+        log.info(values['objectid'] + ' is new')
+        #print "new"
+        #print values
         model.Session.add(AGLS_Gazetteer(**values))
         model.Session.commit()
+    else:
+        #print "old"
+        log.info(values['objectid'] + ' already done')
