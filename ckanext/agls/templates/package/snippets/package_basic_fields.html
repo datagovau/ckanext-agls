@@ -18,9 +18,17 @@ value=data.spatial or data.spatial_coverage, error=errors.spatial_coverage, clas
         <br/>
         Please input one of the following: 1) a point/polygon/bounding box; 2) an administrative boundary API; or 3) a
         reference ID from the <a href="http://www.ga.gov.au/place-names/">Gazetteer</a>.
-        </span>
-    {% endcall %}
 
+    {% endcall %}
+<script>
+window.onload= function() {
+    $("#field-spatial_coverage").on("change", function (e) {
+        $.getJSON( "/api/2/util/gazetteer/latlon?q=" + e.val.split(':')[0], function( data ) {
+            $('[name=spatial]').val(data.geojson);
+        })
+    });
+}
+</script>
 {{ form.hidden('spatial',data.spatial) }}
 
     {%  call form.input('temporal_coverage_from', label=_('Temporal Coverage From'), id='field-temporal_coverage-from',
@@ -40,12 +48,12 @@ value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['co
 selected='Active', error=errors.data_state) %}
     <br/>
     The status of the data with regard to whether it is kept updated (active, yes) or historic (inactive, no)
-        </span>
+
     {% endcall %}
 
-    {{ form.select('update_freq', label=_('Update Frequency'), id='field-update_freq',
-placeholder=_('How often the dataset is updated. Eg: Daily, Weekly, Never'),
-selected = '', options=
+    {% call form.select('update_freq', label=_('Update Frequency'), id='field-update_freq',
+
+selected = data.update_freq, options=
 [{'value': 'daily', 'text': 'Daily'},
 {'value': 'weekly', 'text': 'Weekly'},
 {'value': 'monthly', 'text': 'Monthly'},
@@ -56,12 +64,14 @@ selected = '', options=
 {'value': 'never', 'text': 'Never/Static'},
 {'value': 'other', 'text': 'Other (specify)'}]
 ,
-value=data.update_freq, error=errors.update_freq, classes=['control-full']) }}
+error=errors.update_freq, classes=['control-full']) %}
+            How often the dataset is updated. Eg: Daily, Weekly, Never
+    {%  endcall %}
 
     {% call form.checkbox('contact_info', checked=false, label='Expose User Contact Information', value=contact_info) %}
         <br/>
         Whether the user contact details should be public as well as the organisation contact details.
-        </span>
+
     {% endcall %}
 
 {% endblock %}

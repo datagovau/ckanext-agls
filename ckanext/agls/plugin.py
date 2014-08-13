@@ -92,6 +92,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                     controller='ckanext.agls.controller:AGLSController', action='gmd')
         map.connect('/api/2/util/gazetteer/autocomplete',
                     controller='ckanext.agls.controller:AGLSController', action='geo_autocomplete')
+        map.connect('/api/2/util/gazetteer/latlon',
+                    controller='ckanext.agls.controller:AGLSController', action='geo_latlon')
         return map
 
     def get_helpers(self):

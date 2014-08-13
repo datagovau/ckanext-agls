@@ -60,7 +60,7 @@ value=data.update_freq, error=errors.update_freq, classes=['control-full']) %}
 
 
         Please add any links to information on relevant data models, ontologies, taxonomies etc specific to your
-        dataset. You can upload data models tothe
+        dataset. You can upload data models to the
         <a target="_blank" href="">data.gov.au data model repository</a>.
     {% endcall %}
     {{ super() }}
@@ -103,7 +103,7 @@ value=data.update_freq, error=errors.update_freq, classes=['control-full']) %}
     {% call form.input(group_name, label=_('Add Theme'), id="field-group", value=data[group_name], classes=['control-full'], attrs=group_attrs) %}
         <br/>
         The <a target="_blank" href="http://agift.naa.gov.au">AGIFT</a> top level government function to which the resource relates.
-        </span>
+
     {% endcall %}
     {# form.select(group_name, label=_('Add Theme'), id="field-group", selected=data[group_name], classes=['control-full'], options=h.get_group_select_list) #}
 {% endblock %}
