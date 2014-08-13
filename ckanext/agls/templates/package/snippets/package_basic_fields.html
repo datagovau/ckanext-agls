@@ -43,8 +43,19 @@ selected='Active', error=errors.data_state) %}
         </span>
     {% endcall %}
 
-    {{ form.input('update_freq', label=_('Update Frequency'), id='field-update_freq',
+    {{ form.select('update_freq', label=_('Update Frequency'), id='field-update_freq',
 placeholder=_('How often the dataset is updated. Eg: Daily, Weekly, Never'),
+selected = '', options=
+[{'value': 'daily', 'text': 'Daily'},
+{'value': 'weekly', 'text': 'Weekly'},
+{'value': 'monthly', 'text': 'Monthly'},
+{'value': 'quarterly', 'text': 'Quarterly'},
+{'value': 'biennially', 'text': 'Biennially'},
+{'value': 'biannually', 'text': 'Biannually'},
+{'value': 'infrequently', 'text': 'Infrequently'},
+{'value': 'never', 'text': 'Never/Static'},
+{'value': 'other', 'text': 'Other (specify)'}]
+,
 value=data.update_freq, error=errors.update_freq, classes=['control-full']) }}
 
     {% call form.checkbox('contact_info', checked=false, label='Expose User Contact Information', value=contact_info) %}
