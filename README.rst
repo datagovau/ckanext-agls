@@ -14,6 +14,9 @@ To install this package, from your CKAN virtualenv, run the following from your 
 
 Then activate it by setting ``ckan.plugins = agls`` in your main ``ini``-file.
 
+
+paster initdb --config=../ckan/development.ini
+
 Notes
 ===========
 

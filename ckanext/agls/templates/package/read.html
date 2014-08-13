@@ -56,7 +56,7 @@
             <tr>
                 <th scope="row" class="dataset-label">Licence</th>
                 <td class="dataset-details">  {% if 'license_url' in pkg %}
-                    <a href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg.license_title }}</a>
+                    <a href="{{ pkg.license_url }}" rel="dc:rights">{{ pkg.license_title }}</a>
                 {% else %}
                     <span property="dc:rights">{{ pkg.license_title }}</span>
                 {% endif %}</td>
@@ -144,8 +144,6 @@
                     <td class="dataset-details" property="dct:temporal"> {{ pkg.temporal_coverage }}</td>
                 </tr>
             {% endif %}
-
-
 
             <tr>
                 <th scope="row" class="dataset-label">Publisher/Agency</th>
