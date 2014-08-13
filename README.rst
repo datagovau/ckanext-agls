@@ -14,8 +14,9 @@ To install this package, from your CKAN virtualenv, run the following from your 
 
 Then activate it by setting ``ckan.plugins = agls`` in your main ``ini``-file.
 
+To install the Gazetteer data (takes about 10 minutes)::
 
-paster initdb --config=../ckan/development.ini
+  paster initdb --config=../ckan/development.ini
 
 Notes
 ===========

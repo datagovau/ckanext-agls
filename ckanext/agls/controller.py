@@ -26,7 +26,7 @@ class AGLSController(PackageController):
     def geo_autocomplete(self):
         q = request.params.get('q', '')
         limit = request.params.get('limit', 20)
-        user_list = []
+        record_list = []
         if q:
             import ckan.model as model
             context = {'model': model}
@@ -41,11 +41,38 @@ class AGLSController(PackageController):
             query = model.Session.query(agls_model.AGLS_Gazetteer).filter(agls_model.AGLS_Gazetteer.name.ilike('%'+func.lower(q)+'%'))
             query = query.limit(limit)
 
-            for user in query.all():
-                result_dict = {'name': getattr(user, 'record_id')+": "+getattr(user, 'name')}
-                user_list.append(result_dict)
-        return user_list
+            for record in query.all():
+                result_dict = {'name': getattr(record, 'record_id')+": "+getattr(record, 'name')}
+                record_list.append(result_dict)
+        return record_list
 
+    @jsonp.jsonpify
+    def geo_latlon(self):
+        q = request.params.get('q', '')
+        limit = request.params.get('limit', 1)
+        record_list = []
+        if q:
+            import ckan.model as model
+            context = {'model': model}
+
+            data_dict = {'q': q, 'limit': limit}
+
+            model = context['model']
+
+            q = data_dict['q']
+            limit = data_dict.get('limit', 1)
+
+            query = model.Session.query(agls_model.AGLS_Gazetteer).filter(agls_model.AGLS_Gazetteer.record_id == q)
+            query = query.limit(limit)
+
+            for record in query.all():
+                result_dict = {'id': getattr(record, 'record_id'),
+                               'name': getattr(record, 'record_id')+": "+getattr(record, 'name'),
+                               'latitude': getattr(record, 'latitude'),
+                               'longitude': getattr(record, 'longitude'),
+                               'geojson': '{"type": "Point","coordinates": ['+ str(getattr(record, 'longitude'))+ ','+str(getattr(record, 'latitude'))+']}'}
+                return result_dict
+        return {}
 
 
     def gmd(self, id):
@@ -63,7 +90,8 @@ class AGLSController(PackageController):
             ctype, format, loader = self._content_type_from_accept()
 
         # response.headers['Content-Type'] = ctype
-        response.headers['Content-Type'] = 'application/vnd.iso.19139+xml'
+        response.headers['Content-Type'] = 'application/vnd.iso.19139+xml; charset=utf-8'
+        response.headers["Content-Disposition"] = "attachment; filename=" + id + ".xml"
         package_type = self._get_package_type(id.split('@')[0])
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,

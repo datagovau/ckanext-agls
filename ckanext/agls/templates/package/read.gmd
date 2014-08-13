@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv"
+<gmd:MD_Metadata xmlns:py="http://genshi.edgewall.org/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv"
                  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml"
                  xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns:geonet="http://www.fao.org/geonetwork"
-                 xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd    http://www.opengis.net/gml http://www.opengis.net/gml/gml.xsd">
+                 xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd    http://www.opengis.net/gml http://www.opengis.net/gml/gml.xsd"
+                 xmlns:dcat="http://www.w3.org/ns/dcat#"
+                 xmlns:dcam="http://purl.org/dc/dcam/"
+                 xmlns:aglsterms="http://www.agls.gov.au/agls/terms/"
+                 xmlns:agentterms="http://www.agls.gov.au/agls/agentterms/"
+                 xmlns:availterms="http://www.agls.gov.au/agls/availterms/"
+                 xmlns:adminterms="http://www.agls.gov.au/agls/adminterms/"
+                 xmlns:dct="http://purl.org/dc/terms/">
     <gmd:fileIdentifier>
         <gco:CharacterString>${c.pkg_dict['id']}</gco:CharacterString>
     </gmd:fileIdentifier>
@@ -20,8 +27,8 @@
     </gmd:hierarchyLevel>
     <gmd:contact>
         <gmd:CI_ResponsibleParty>
-            <gmd:organisationName gco:nilReason="missing">
-                <gco:CharacterString/>
+            <gmd:organisationName>
+                <gco:CharacterString>${ c.pkg_dict['organization']['title'] }</gco:CharacterString>
             </gmd:organisationName>
             <gmd:role>
                 <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode"
@@ -62,7 +69,7 @@
                 </gmd:CI_Citation>
             </gmd:citation>
             <gmd:abstract>
-                <gco:CharacterString>-- brief description --</gco:CharacterString>
+                <gco:CharacterString>${c.pkg_dict['notes']}</gco:CharacterString>
             </gmd:abstract>
             <gmd:language>
                 <gco:CharacterString>eng</gco:CharacterString>
@@ -104,15 +111,16 @@
         </gmd:MD_DataIdentification>
     </gmd:identificationInfo>
 
+    <py:for each="rsc_dict in c.pkg_dict['resources']">
     <gmd:distributionInfo>
         <gmd:MD_Distribution>
             <gmd:distributionFormat>
                 <gmd:MD_Format>
-                    <gmd:name gco:nilReason="missing">
-                        <gco:CharacterString/>
+                    <gmd:name>
+                        <gco:CharacterString>${rsc_dict.get('format')}</gco:CharacterString>
                     </gmd:name>
                     <gmd:version gco:nilReason="missing">
-                        <gco:CharacterString/>
+                    <gco:CharacterString/>
                     </gmd:version>
                 </gmd:MD_Format>
             </gmd:distributionFormat>
@@ -121,10 +129,10 @@
                     <gmd:onLine>
                         <gmd:CI_OnlineResource>
                             <gmd:linkage>
-                                <gmd:URL/>
+                                <gmd:URL>${ rsc_dict.get('url') }</gmd:URL>
                             </gmd:linkage>
-                            <gmd:description gco:nilReason="missing">
-                                <gco:CharacterString/>
+                            <gmd:description>
+                                <gco:CharacterString>${rsc_dict.get('name')}</gco:CharacterString>
                             </gmd:description>
                         </gmd:CI_OnlineResource>
                     </gmd:onLine>
@@ -132,6 +140,8 @@
             </gmd:transferOptions>
         </gmd:MD_Distribution>
     </gmd:distributionInfo>
+    </py:for>
+
     <gmd:dataQualityInfo>
         <gmd:DQ_DataQuality>
             <gmd:scope>
@@ -167,129 +177,121 @@
         </gmd:DQ_DataQuality>
     </gmd:dataQualityInfo>
 
-</gmd:MD_Metadata>
+        <!--
+    <rdf:RDF
+    xmlns:py="http://genshi.edgewall.org/"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 
-<rdf:RDF
-xmlns:py="http://genshi.edgewall.org/"
-xmlns:foaf="http://xmlns.com/foaf/0.1/"
-xmlns:owl="http://www.w3.org/2002/07/owl#"
-xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-xmlns:dcat="http://www.w3.org/ns/dcat#"
-xmlns:dcam="http://purl.org/dc/dcam/"
-xmlns:aglsterms="http://www.agls.gov.au/agls/terms/"
-xmlns:agentterms="http://www.agls.gov.au/agls/agentterms/"
-xmlns:availterms="http://www.agls.gov.au/agls/availterms/"
-xmlns:adminterms="http://www.agls.gov.au/agls/adminterms/"
-xmlns:dct="http://purl.org/dc/terms/"
-        >
-<dcat:Dataset rdf:about="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True)}">
-    <dct:identifier>${c.pkg_dict['name']}</dct:identifier>
-    <dct:title>${c.pkg_dict['title']}</dct:title>
-    <dct:landingPage
-            rdf:resource="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True) }"/>
-    <owl:sameAs rdf:resource="urn:uuid:${c.pkg_dict['id']}"/>
-    <dct:type>Dataset</dct:type>
-    <dct:description>${c.pkg_dict['notes']}</dct:description>
-    <dct:issued>${c.pkg_dict['metadata_created']}</dct:issued>
-    <dct:modified>${c.pkg_dict['metadata_modified']}</dct:modified>
+            >
+    <dcat:Dataset rdf:about="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True)}">
+        <dct:identifier>${c.pkg_dict['name']}</dct:identifier>
+        <dct:title>${c.pkg_dict['title']}</dct:title>
+        <dct:landingPage
+                rdf:resource="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True) }"/>
+        <owl:sameAs rdf:resource="urn:uuid:${c.pkg_dict['id']}"/>
+        <dct:type>Dataset</dct:type>
+        <dct:description>${c.pkg_dict['notes']}</dct:description>
+        <dct:issued>${c.pkg_dict['metadata_created']}</dct:issued>
+        <dct:modified>${c.pkg_dict['metadata_modified']}</dct:modified>
 
-    <py:choose>
-        <py:when test="c.pkg_dict.get('license_url',None)">
-            <dct:license rdf:resource="${c.pkg_dict['license_url']}"/>
-            <dct:rights rdf:resource="${c.pkg_dict['license_url']}"/>
-        </py:when>
-        <py:otherwise>
-            <dct:license>${c.pkg_dict['license_id']}</dct:license>
-            <dct:rights>"${c.pkg_dict['license_id']}"</dct:rights>
-        </py:otherwise>
-    </py:choose>
-    <py:for each="tag_dict in c.pkg_dict.get('tags',[])">
-        <dcat:keyword>${ tag_dict["name"] }</dcat:keyword>
-    </py:for>
+        <py:choose>
+            <py:when test="c.pkg_dict.get('license_url',None)">
+                <dct:license rdf:resource="${c.pkg_dict['license_url']}"/>
+                <dct:rights rdf:resource="${c.pkg_dict['license_url']}"/>
+            </py:when>
+            <py:otherwise>
+                <dct:license>${c.pkg_dict['license_id']}</dct:license>
+                <dct:rights>"${c.pkg_dict['license_id']}"</dct:rights>
+            </py:otherwise>
+        </py:choose>
+        <py:for each="tag_dict in c.pkg_dict.get('tags',[])">
+            <dcat:keyword>${ tag_dict["name"] }</dcat:keyword>
+        </py:for>
 
 
-    <py:for each="rsc_dict in c.pkg_dict['resources']">
-        <dcat:distribution>
-            <dcat:Distribution>
-                <dct:title>${rsc_dict.get('name')}</dct:title>
-                <owl:sameAs rdf:resource="urn:uuid:${rsc_dict.get('id')}"/>
-                <dct:description>${rsc_dict.get('description')}</dct:description>
-                <dcat:accessURL rdf:resource="${ rsc_dict.get('url') }"/>
-                <dct:created>${rsc_dict.get('created')}</dct:created>
-                <dct:modified>${rsc_dict.get('revision_timestamp')}</dct:modified>
-                <dcat:byteSize py:if="rsc_dict.get('size')">${rsc_dict.get('size')}</dcat:byteSize>
-                <dcat:mediaType py:if="rsc_dict.get('mimetype')">${rsc_dict.get('mimetype')}</dcat:mediaType>
-                <dct:extent py:if="rsc_dict.get('size')">${rsc_dict.get('size')} bytes</dct:extent>
-                <dct:format py:if="rsc_dict.get('format')">
-                    <dct:IMT>
-                        <rdf:value>${rsc_dict.get('format')}</rdf:value>
-                        <rdfs:label>${rsc_dict.get('format')}</rdfs:label>
-                    </dct:IMT>
-                </dct:format>
-                <dct:title py:if="rsc_dict.get('name')">${rsc_dict.get('name')}</dct:title>
-            </dcat:Distribution>
-        </dcat:distribution>
-    </py:for>
-
-
-    <!-- data.gov.au specific stuff below this line -->
-    <dct:publisher py:if="c.pkg_dict.get('organization', None)">
-        <rdf:Description>
-            <foaf:name>${ c.pkg_dict['organization']['title'] }</foaf:name>
-        </rdf:Description>
-    </dct:publisher>
-    <dct:creator py:if="c.pkg_dict.get('organization', None)">
-        <rdf:Description>
-            <foaf:name>${ c.pkg_dict['organization']['title'] }</foaf:name>
-        </rdf:Description>
-    </dct:creator>
-
-    <py:for each="extra_dict in c.pkg_dict.get('extras',[])">
-        <dct:relation>
+        <py:for each="rsc_dict in c.pkg_dict['resources']">
+            <dcat:distribution>
+                <dcat:Distribution>
+                    <dct:title>${rsc_dict.get('name')}</dct:title>
+                    <owl:sameAs rdf:resource="urn:uuid:${rsc_dict.get('id')}"/>
+                    <dct:description>${rsc_dict.get('description')}</dct:description>
+                    <dcat:accessURL rdf:resource="${ rsc_dict.get('url') }"/>
+                    <dct:created>${rsc_dict.get('created')}</dct:created>
+                    <dct:modified>${rsc_dict.get('revision_timestamp')}</dct:modified>
+                    <dcat:byteSize py:if="rsc_dict.get('size')">${rsc_dict.get('size')}</dcat:byteSize>
+                    <dcat:mediaType py:if="rsc_dict.get('mimetype')">${rsc_dict.get('mimetype')}</dcat:mediaType>
+                    <dct:extent py:if="rsc_dict.get('size')">${rsc_dict.get('size')} bytes</dct:extent>
+                    <dct:format py:if="rsc_dict.get('format')">
+                        <dct:IMT>
+                            <rdf:value>${rsc_dict.get('format')}</rdf:value>
+                            <rdfs:label>${rsc_dict.get('format')}</rdfs:label>
+                        </dct:IMT>
+                    </dct:format>
+                    <dct:title py:if="rsc_dict.get('name')">${rsc_dict.get('name')}</dct:title>
+                </dcat:Distribution>
+            </dcat:distribution>
+        </py:for>
+        <dct:publisher py:if="c.pkg_dict.get('organization', None)">
             <rdf:Description>
-                <rdfs:label>${extra_dict.get('key','')}</rdfs:label>
-                <rdf:value>${extra_dict.get('value','')}</rdf:value>
+                <foaf:name>${ c.pkg_dict['organization']['title'] }</foaf:name>
+            </rdf:Description>
+        </dct:publisher>
+        <dct:creator py:if="c.pkg_dict.get('organization', None)">
+            <rdf:Description>
+                <foaf:name>${ c.pkg_dict['organization']['title'] }</foaf:name>
+            </rdf:Description>
+        </dct:creator>
+
+        <py:for each="extra_dict in c.pkg_dict.get('extras',[])">
+            <dct:relation>
+                <rdf:Description>
+                    <rdfs:label>${extra_dict.get('key','')}</rdfs:label>
+                    <rdf:value>${extra_dict.get('value','')}</rdf:value>
+                </rdf:Description>
+            </dct:relation>
+        </py:for>
+        <dct:language>en</dct:language>
+        <foaf:homepage
+                rdf:resource="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True)}"/>
+        <dcat:contactPoint py:if="c.pkg_dict.get('contact_point')">${c.pkg_dict.contact_point }</dcat:contactPoint>
+        <py:choose>
+            <py:when test="c.pkg_dict.get('spatial',None)">
+                <dct:spatial py:if="c.pkg_dict.get('spatial')">${ c.pkg_dict.spatial }</dct:spatial>
+            </py:when>
+            <py:otherwise>
+                <dct:spatial py:if="c.pkg_dict.get('spatial_coverage')">${ c.pkg_dict.spatial_coverage }</dct:spatial>
+            </py:otherwise>
+        </py:choose>
+        <aglsterms:AglsJuri py:if="c.pkg_dict.get('jurisdiction')">${ c.pkg_dict.jurisdiction }</aglsterms:AglsJuri>
+        <dct:temporal py:if="c.pkg_dict.get('temporal_coverage')">${ c.pkg_dict.get('temporal_coverage') }</dct:temporal>
+        <dct:relation py:if="c.pkg_dict.get('data_state')">
+            <rdf:Description>
+                <rdfs:label>Data State</rdfs:label>
+                <rdf:value>${ c.pkg_dict.get('data_state') }</rdf:value>
             </rdf:Description>
         </dct:relation>
-    </py:for>
-    <dct:language>en</dct:language>
-    <foaf:homepage
-            rdf:resource="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True)}"/>
-    <dcat:contactPoint py:if="c.pkg_dict.get('contact_point')">${c.pkg_dict.contact_point }</dcat:contactPoint>
-    <py:choose>
-        <py:when test="c.pkg_dict.get('spatial',None)">
-            <dct:spatial py:if="c.pkg_dict.get('spatial')">${ c.pkg_dict.spatial }</dct:spatial>
-        </py:when>
-        <py:otherwise>
-            <dct:spatial py:if="c.pkg_dict.get('spatial_coverage')">${ c.pkg_dict.spatial_coverage }</dct:spatial>
-        </py:otherwise>
-    </py:choose>
-    <aglsterms:AglsJuri py:if="c.pkg_dict.get('jurisdiction')">${ c.pkg_dict.jurisdiction }</aglsterms:AglsJuri>
-    <dct:temporal py:if="c.pkg_dict.get('temporal_coverage')">${ c.pkg_dict.get('temporal_coverage') }</dct:temporal>
-    <dct:relation py:if="c.pkg_dict.get('data_state')">
-        <rdf:Description>
-            <rdfs:label>Data State</rdfs:label>
-            <rdf:value>${ c.pkg_dict.get('data_state') }</rdf:value>
-        </rdf:Description>
-    </dct:relation>
-    <dct:relation py:if="c.pkg_dict.get('update_freq')">
-        <rdf:Description>
-            <rdfs:label>Update Frequency</rdfs:label>
-            <rdf:value>${ c.pkg_dict.get('update_freq') }</rdf:value>
-        </rdf:Description>
-    </dct:relation>
-    <dct:relation py:if="c.pkg_dict.get('agency_program')">
-        <rdf:Description>
-            <rdfs:label>Agency Program</rdfs:label>
-            <rdf:value>${ c.pkg_dict.get('agency_program') }</rdf:value>
-        </rdf:Description>
-    </dct:relation>
-    <dct:relation py:if="c.pkg_dict.get('granularity')">
-        <rdf:Description>
-            <rdfs:label>Data Granularity</rdfs:label>
-            <rdf:value>${ c.pkg_dict.get('granularity') }</rdf:value>
-        </rdf:Description>
-    </dct:relation>
-</dcat:Dataset>
-</rdf:RDF>
+        <dct:relation py:if="c.pkg_dict.get('update_freq')">
+            <rdf:Description>
+                <rdfs:label>Update Frequency</rdfs:label>
+                <rdf:value>${ c.pkg_dict.get('update_freq') }</rdf:value>
+            </rdf:Description>
+        </dct:relation>
+        <dct:relation py:if="c.pkg_dict.get('agency_program')">
+            <rdf:Description>
+                <rdfs:label>Agency Program</rdfs:label>
+                <rdf:value>${ c.pkg_dict.get('agency_program') }</rdf:value>
+            </rdf:Description>
+        </dct:relation>
+        <dct:relation py:if="c.pkg_dict.get('granularity')">
+            <rdf:Description>
+                <rdfs:label>Data Granularity</rdfs:label>
+                <rdf:value>${ c.pkg_dict.get('granularity') }</rdf:value>
+            </rdf:Description>
+        </dct:relation>
+    </dcat:Dataset>
+    </rdf:RDF>
+    -->
+</gmd:MD_Metadata>

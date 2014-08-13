@@ -1,17 +1,33 @@
 {% ckan_extends %}
 {% block basic_fields %}
+    <style>
+    .form-horizontal .controls {
+        font-size: 0.8em;
+        line-height: 15px;
+    }
+    .form-horizontal .controls *{
+        font-size: 14px;
+
+    }
+    .form-horizontal .controls a{
+        font-size: 0.8em;
+    }
+    </style>
     {{ super() }}
     {% set organizations_available = h.organizations_available('create_dataset') %}
-    {{ form.input('maintainer', label=_('Publisher'), id='field-publisher',
+    {% call form.input('author', label=_('Publisher'), id='field-publisher',
 placeholder=_('Email address for questions about content of dataset'),
-value=data.maintainer  or data.organization.title or organizations_available[0].title, error=errors.maintainer, classes=['control-full']) }}
+value=data.author or data.organization.title or organizations_available[0].title, error=errors.maintainer, classes=['control-full']) %}
+    Name of Agency/publishing organisation.
+    {% endcall %}
 
     {{ form.input('contact_point', label=_('Contact'), id='field-contact_point',
 placeholder=_('Email address for questions about content of dataset'),
 value=data.contact_point or data.organization.email or organizations_available[0].email, error=errors.contact_point, classes=['control-full']) }}
 
-    {% call form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction', value=data.jurisdiction or data.organization.jurisdiction or organizations_available[0].jurisdiction, error=errors.jurisdiction, classes=['control-full']) %}
-    Name of Agency/publishing organisation.
+    {% call form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction',
+    value=data.jurisdiction or data.organization.jurisdiction or organizations_available[0].jurisdiction, error=errors.jurisdiction, classes=['control-full']) %}
+
     {% endcall %}
 {% endblock %}
 
