@@ -18,7 +18,7 @@ won't work. #}
 
         <div class="controls">
             <select id="field-field_of_research" name="field_of_research" multiple data-module="autocomplete">
-                {% for field_of_research in h.fields_of_research %}
+                {% for field_of_research in h.fields_of_research() %}
                     <option value="{{ field_of_research }}"
                             {% if field_of_research in data.get('fields_of_research', []) %}selected="selected"{% endif %}>{{ field_of_research }}</option>
                 {% endfor %}
@@ -41,7 +41,7 @@ won't work. #}
             <!--[if gte IE 8]> -->
             <select id="field-geospatial_topic" name="geospatial_topic" multiple data-module="autocomplete">
                 <!-- <![endif]-->
-                {% for geospatial_topic in h.geospatial_topics %}
+                {% for geospatial_topic in h.geospatial_topics() %}
                     <option value="{{ geospatial_topic }}"
                             {% if geospatial_topic in data.get('geospatial_topic', []) %}selected="selected"{% endif %}>{{ geospatial_topic }}</option>
                 {% endfor %}
