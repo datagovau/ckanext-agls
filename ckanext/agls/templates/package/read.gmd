@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gmd:MD_Metadata xmlns:py="http://genshi.edgewall.org/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv"
+<gmd:MD_Metadata xmlns:py="http://genshi.edgewall.org/" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                 xmlns:srv="http://www.isotc211.org/2005/srv"
                  xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml"
                  xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns:geonet="http://www.fao.org/geonetwork"
@@ -19,25 +20,47 @@
     </gmd:language>
     <gmd:characterSet>
         <gmd:MD_CharacterSetCode codeListValue="utf8"
-                                 codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode"/>
+                                 codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode">
+            utf8
+        </gmd:MD_CharacterSetCode>
     </gmd:characterSet>
     <gmd:hierarchyLevel>
         <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode"
-                          codeListValue="dataset"/>
+                          codeListValue="dataset">dataset
+        </gmd:MD_ScopeCode>
     </gmd:hierarchyLevel>
     <gmd:contact>
         <gmd:CI_ResponsibleParty>
             <gmd:organisationName>
                 <gco:CharacterString>${ c.pkg_dict['organization']['title'] }</gco:CharacterString>
             </gmd:organisationName>
+            <contactInfo>
+                <CI_Contact>
+                    <phone>
+                        <CI_Telephone>
+                            <voice py:if="'organisation_phone' in c.pkg_dict['organization']">
+                                <gco:CharacterString>+61 ${ c.pkg_dict['organization']['organisation_phone'] }</gco:CharacterString>
+                            </voice>
+                        </CI_Telephone>
+                    </phone>
+                    <address>
+                        <CI_Address>
+                            <electronicMailAddress py:if="'contact_point' in c.pkg_dict">
+                                <gco:CharacterString>${ c.pkg_dict['contact_point'] }</gco:CharacterString>
+                            </electronicMailAddress>
+                        </CI_Address>
+                    </address>
+                </CI_Contact>
+            </contactInfo>
             <gmd:role>
                 <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode"
-                                 codeListValue=""/>
+                                 codeListValue="pointOfContact">pointOfContact
+                </gmd:CI_RoleCode>
             </gmd:role>
         </gmd:CI_ResponsibleParty>
     </gmd:contact>
     <gmd:dateStamp>
-        <gco:DateTime/>
+        <gco:Date>${c.pkg_dict['metadata_modified']}</gco:Date>
     </gmd:dateStamp>
     <gmd:metadataStandardName>
         <gco:CharacterString>ANZLIC Metadata Profile: An Australian/New Zealand Profile of AS/NZS ISO 19115:2005,
@@ -57,15 +80,35 @@
                     <gmd:date>
                         <gmd:CI_Date>
                             <gmd:date>
-                                <gco:DateTime/>
+                                <gco:Date>${c.pkg_dict['metadata_created']}</gco:Date>
                             </gmd:date>
                             <gmd:dateType>
                                 <gmd:CI_DateTypeCode
                                         codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
-                                        codeListValue=""/>
+                                        codeListValue="publication">publication</gmd:CI_DateTypeCode>
                             </gmd:dateType>
                         </gmd:CI_Date>
                     </gmd:date>
+                    <edition>
+                        <gco:CharacterString>${c.pkg_dict['revision_id']}</gco:CharacterString>
+                    </edition>
+                    <identifier>
+                        <MD_Identifier>
+                            <code>
+                                <gco:CharacterString>${c.pkg_dict['id']}</gco:CharacterString>
+                            </code>
+                        </MD_Identifier>
+                    </identifier>
+                    <citedResponsibleParty>
+                        <CI_ResponsibleParty>
+                            <individualName>
+                                <gco:CharacterString>${ c.pkg_dict['organization']['title'] }</gco:CharacterString>
+                            </individualName>
+                            <role>
+                                <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="author">author</CI_RoleCode>
+                            </role>
+                        </CI_ResponsibleParty>
+                    </citedResponsibleParty>
                 </gmd:CI_Citation>
             </gmd:citation>
             <gmd:abstract>
@@ -74,33 +117,34 @@
             <gmd:language>
                 <gco:CharacterString>eng</gco:CharacterString>
             </gmd:language>
-            <gmd:topicCategory>
-                <gmd:MD_TopicCategoryCode/>
+            <gmd:topicCategory py:if="len(c.pkg_dict.get('geospatial_topic',[])) > 0">
+
+                <py:for each="geospatial_topic in c.pkg_dict.get('geospatial_topic',[])">
+                    <gmd:MD_TopicCategoryCode
+                            codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#MD_TopicCategoryCode"
+                            codeListValue="${ geospatial_topic }">${ geospatial_topic }</gmd:MD_TopicCategoryCode>
+                </py:for>
+
             </gmd:topicCategory>
+            <gmd:status py:if="'data_state' in c.pkg_dict">
+                <gco:CharacterString>${c.pkg_dict['data_state']}</gco:CharacterString>
+            </gmd:status>
             <gmd:extent>
-                <gmd:EX_Extent>
-                    <gmd:geographicElement>
-                        <gmd:EX_GeographicBoundingBox>
-                            <gmd:westBoundLongitude>
-                                <gco:Decimal/>
-                            </gmd:westBoundLongitude>
-                            <gmd:eastBoundLongitude>
-                                <gco:Decimal/>
-                            </gmd:eastBoundLongitude>
-                            <gmd:southBoundLatitude>
-                                <gco:Decimal/>
-                            </gmd:southBoundLatitude>
-                            <gmd:northBoundLatitude>
-                                <gco:Decimal/>
-                            </gmd:northBoundLatitude>
+                <gmd:EX_Extent py:with="spatial_box = h.spatial_bound(c.pkg_dict.get('spatial'))">
+                    <gmd:geographicElement py:if="spatial_box != None">
+                        <gmd:EX_GeographicBoundingBox py:with="(minx,maxx,miny,maxy) = spatial_box" >
+                        <gmd:westBoundLongitude><gco:Decimal>${minx}</gco:Decimal></gmd:westBoundLongitude>
+                        <gmd:eastBoundLongitude><gco:Decimal>${maxx}</gco:Decimal></gmd:eastBoundLongitude>
+                        <gmd:southBoundLatitude><gco:Decimal>${miny}</gco:Decimal></gmd:southBoundLatitude>
+                        <gmd:northBoundLatitude><gco:Decimal>${maxy}</gco:Decimal></gmd:northBoundLatitude>
                         </gmd:EX_GeographicBoundingBox>
                     </gmd:geographicElement>
                     <gmd:temporalElement>
                         <gmd:EX_TemporalExtent>
                             <gmd:extent>
                                 <gml:TimePeriod gml:id="TP01">
-                                    <gml:beginPosition/>
-                                    <gml:endPosition/>
+                                    <gml:beginPosition>${ c.pkg_dict.get('temporal_coverage_from') }</gml:beginPosition>
+                                    <gml:endPosition>${ c.pkg_dict.get('temporal_coverage_to') }</gml:endPosition>
                                 </gml:TimePeriod>
                             </gmd:extent>
                         </gmd:EX_TemporalExtent>
@@ -110,36 +154,164 @@
             </gmd:extent>
         </gmd:MD_DataIdentification>
     </gmd:identificationInfo>
+    <resourceMaintenance>
+        <MD_MaintenanceInformation>
+            <maintenanceAndUpdateFrequency>
+                <MD_MaintenanceFrequencyCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="${ c.pkg_dict.get('update_freq') }">${ c.pkg_dict.get('update_freq') }</MD_MaintenanceFrequencyCode>
+            </maintenanceAndUpdateFrequency>
+        </MD_MaintenanceInformation>
+    </resourceMaintenance>
+    <descriptiveKeywords>
+        <MD_Keywords>
+            <py:for each="tag_dict in c.pkg_dict.get('tags',[])">
+            <keyword>
+                <gco:CharacterString>${ tag_dict["name"] }</gco:CharacterString>
+            </keyword>
+            </py:for>
+        </MD_Keywords>
+    </descriptiveKeywords>
 
+    <descriptiveKeywords py:if="len(c.pkg_dict.get('field_of_research',[])) > 0">
+        <MD_Keywords>
+            <py:for each="field_of_research in c.pkg_dict.get('field_of_research',[])">
+                <keyword>
+                    <gco:CharacterString>${ field_of_research }</gco:CharacterString>
+                </keyword>
+            </py:for>
+            <thesaurusName>
+                <CI_Citation>
+                    <title>
+                        <gco:CharacterString>Australian and New Zealand Standard Research Classification (ANZSRC)</gco:CharacterString>
+                    </title>
+                    <date>
+                        <CI_Date>
+                            <date>
+                                <gco:Date>2008-03-31+11:00</gco:Date>
+                            </date>
+                            <dateType>
+                                <CI_DateTypeCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</CI_DateTypeCode>
+                            </dateType>
+                        </CI_Date>
+                    </date>
+                    <citedResponsibleParty>
+                        <CI_ResponsibleParty>
+                            <organisationName>
+                                <gco:CharacterString>Australian Bureau of Statistics (ABS)</gco:CharacterString>
+                            </organisationName>
+                            <contactInfo>
+                                <CI_Contact>
+                                    <onlineResource>
+                                        <CI_OnlineResource>
+                                            <linkage>
+                                                <URL>http://www.abs.gov.au/ausstats/abs@.nsf/Latestproducts/1297.0Main%20Features32008?opendocument&amp;tabname=Summary&amp;prodno=1297.0&amp;issue=2008&amp;num=&amp;view=</URL>
+                                            </linkage>
+                                        </CI_OnlineResource>
+                                    </onlineResource>
+                                </CI_Contact>
+                            </contactInfo>
+                            <role>
+                                <CI_RoleCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#CI_RoleCode" codeListValue="owner">owner</CI_RoleCode>
+                            </role>
+                        </CI_ResponsibleParty>
+                    </citedResponsibleParty>
+                    <ISBN>
+                        <gco:CharacterString>9780642483584</gco:CharacterString>
+                    </ISBN>
+                </CI_Citation>
+            </thesaurusName>
+        </MD_Keywords>
+    </descriptiveKeywords>
+
+    <resourceConstraints>
+        <MD_LegalConstraints>
+            <accessConstraints>
+                <MD_RestrictionCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</MD_RestrictionCode>
+            </accessConstraints>
+            <otherConstraints>
+                <gco:CharacterString>license</gco:CharacterString>
+            </otherConstraints>
+        </MD_LegalConstraints>
+    </resourceConstraints>
+    <resourceConstraints>
+        <MD_LegalConstraints>
+            <useConstraints>
+                <MD_RestrictionCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#MD_RestrictionCode" codeListValue="license">license</MD_RestrictionCode>
+            </useConstraints>
+            <useConstraints>
+                <MD_RestrictionCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</MD_RestrictionCode>
+            </useConstraints>
+            <otherConstraints>
+                <gco:CharacterString>Creative Commons Attribution 3.0 Australia Licence</gco:CharacterString>
+            </otherConstraints>
+        </MD_LegalConstraints>
+    </resourceConstraints>
+    <resourceConstraints>
+        <MD_SecurityConstraints>
+            <classification>
+                <MD_ClassificationCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#MD_ClassificationCode" codeListValue="unclassified">unclassified</MD_ClassificationCode>
+            </classification>
+        </MD_SecurityConstraints>
+    </resourceConstraints>
+    <topicCategory>
+        <MD_TopicCategoryCode>geoscientificInformation</MD_TopicCategoryCode>
+    </topicCategory>
     <py:for each="rsc_dict in c.pkg_dict['resources']">
-    <gmd:distributionInfo>
-        <gmd:MD_Distribution>
-            <gmd:distributionFormat>
-                <gmd:MD_Format>
-                    <gmd:name>
-                        <gco:CharacterString>${rsc_dict.get('format')}</gco:CharacterString>
-                    </gmd:name>
-                    <gmd:version gco:nilReason="missing">
-                    <gco:CharacterString/>
-                    </gmd:version>
-                </gmd:MD_Format>
-            </gmd:distributionFormat>
-            <gmd:transferOptions>
-                <gmd:MD_DigitalTransferOptions>
-                    <gmd:onLine>
-                        <gmd:CI_OnlineResource>
-                            <gmd:linkage>
-                                <gmd:URL>${ rsc_dict.get('url') }</gmd:URL>
-                            </gmd:linkage>
-                            <gmd:description>
-                                <gco:CharacterString>${rsc_dict.get('name')}</gco:CharacterString>
-                            </gmd:description>
-                        </gmd:CI_OnlineResource>
-                    </gmd:onLine>
-                </gmd:MD_DigitalTransferOptions>
-            </gmd:transferOptions>
-        </gmd:MD_Distribution>
-    </gmd:distributionInfo>
+        <gmd:distributionInfo>
+            <gmd:MD_Distribution>
+                <gmd:distributionFormat>
+                    <gmd:MD_Format>
+                        <gmd:name>
+                            <gco:CharacterString>${rsc_dict.get('format')}</gco:CharacterString>
+                        </gmd:name>
+                        <gmd:version gco:nilReason="missing">
+                            <gco:CharacterString/>
+                        </gmd:version>
+                    </gmd:MD_Format>
+                </gmd:distributionFormat>
+                <gmd:transferOptions>
+                    <gmd:MD_DigitalTransferOptions>
+                        <gmd:onLine>
+                            <gmd:CI_OnlineResource>
+                                <gmd:linkage>
+                                    <gmd:URL>${ rsc_dict.get('url') }</gmd:URL>
+                                </gmd:linkage>
+                                <py:if test="rsc_dict.get('format') == 'wms' or rsc_dict.get('format') == 'wfs' or rsc_dict.get('format') == 'kml'">
+                                    <protocol>
+                                        <gco:CharacterString>OGC:${rsc_dict.get('format')}</gco:CharacterString>
+                                    </protocol>
+                                </py:if>
+                                <py:if test="rsc_dict.get('format') != 'wms' and rsc_dict.get('format') != 'wfs' and rsc_dict.get('format') != 'kml'">
+                                <protocol>
+                                    <gco:CharacterString>WWW:DOWNLOAD-1.0-http--download</gco:CharacterString>
+                                </protocol>
+                                </py:if>
+                                <gmd:transferSize>
+                                    <gco:Real>${rsc_dict.get('size')}</gco:Real>
+                                </gmd:transferSize>
+                                <gmd:name>
+                                    <gco:CharacterString>${rsc_dict.get('name')}</gco:CharacterString>
+                                </gmd:name>
+                                <gmd:description>
+                                    <gco:CharacterString>${rsc_dict.get('description')}</gco:CharacterString>
+                                </gmd:description>
+
+                                <py:if test="rsc_dict.get('format') == 'wms' or rsc_dict.get('format') == 'wfs' or rsc_dict.get('format') == 'kml'">
+                                <function>
+                                    <CI_OnLineFunctionCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information">information</CI_OnLineFunctionCode>
+                                </function>
+                                </py:if>
+                                <py:if test="rsc_dict.get('format') != 'wms' and rsc_dict.get('format') != 'wfs' and rsc_dict.get('format') != 'kml'">
+                                <function>
+                                    <CI_OnLineFunctionCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</CI_OnLineFunctionCode>
+                                </function>
+                                </py:if>
+
+                            </gmd:CI_OnlineResource>
+                        </gmd:onLine>
+                    </gmd:MD_DigitalTransferOptions>
+                </gmd:transferOptions>
+            </gmd:MD_Distribution>
+        </gmd:distributionInfo>
     </py:for>
 
     <gmd:dataQualityInfo>
@@ -149,7 +321,7 @@
                     <gmd:level>
                         <gmd:MD_ScopeCode
                                 codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode"
-                                codeListValue="" codeSpace="domainCode"/>
+                                codeListValue="dataset" codeSpace="domainCode">dataset</gmd:MD_ScopeCode>
                     </gmd:level>
                     <gmd:levelDescription>
                         <gmd:MD_ScopeDescription>
@@ -176,122 +348,11 @@
             </gmd:lineage>
         </gmd:DQ_DataQuality>
     </gmd:dataQualityInfo>
-
-        <!--
-    <rdf:RDF
-    xmlns:py="http://genshi.edgewall.org/"
-    xmlns:foaf="http://xmlns.com/foaf/0.1/"
-    xmlns:owl="http://www.w3.org/2002/07/owl#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-
-            >
-    <dcat:Dataset rdf:about="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True)}">
-        <dct:identifier>${c.pkg_dict['name']}</dct:identifier>
-        <dct:title>${c.pkg_dict['title']}</dct:title>
-        <dct:landingPage
-                rdf:resource="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True) }"/>
-        <owl:sameAs rdf:resource="urn:uuid:${c.pkg_dict['id']}"/>
-        <dct:type>Dataset</dct:type>
-        <dct:description>${c.pkg_dict['notes']}</dct:description>
-        <dct:issued>${c.pkg_dict['metadata_created']}</dct:issued>
-        <dct:modified>${c.pkg_dict['metadata_modified']}</dct:modified>
-
-        <py:choose>
-            <py:when test="c.pkg_dict.get('license_url',None)">
-                <dct:license rdf:resource="${c.pkg_dict['license_url']}"/>
-                <dct:rights rdf:resource="${c.pkg_dict['license_url']}"/>
-            </py:when>
-            <py:otherwise>
-                <dct:license>${c.pkg_dict['license_id']}</dct:license>
-                <dct:rights>"${c.pkg_dict['license_id']}"</dct:rights>
-            </py:otherwise>
-        </py:choose>
-        <py:for each="tag_dict in c.pkg_dict.get('tags',[])">
-            <dcat:keyword>${ tag_dict["name"] }</dcat:keyword>
-        </py:for>
-
-
-        <py:for each="rsc_dict in c.pkg_dict['resources']">
-            <dcat:distribution>
-                <dcat:Distribution>
-                    <dct:title>${rsc_dict.get('name')}</dct:title>
-                    <owl:sameAs rdf:resource="urn:uuid:${rsc_dict.get('id')}"/>
-                    <dct:description>${rsc_dict.get('description')}</dct:description>
-                    <dcat:accessURL rdf:resource="${ rsc_dict.get('url') }"/>
-                    <dct:created>${rsc_dict.get('created')}</dct:created>
-                    <dct:modified>${rsc_dict.get('revision_timestamp')}</dct:modified>
-                    <dcat:byteSize py:if="rsc_dict.get('size')">${rsc_dict.get('size')}</dcat:byteSize>
-                    <dcat:mediaType py:if="rsc_dict.get('mimetype')">${rsc_dict.get('mimetype')}</dcat:mediaType>
-                    <dct:extent py:if="rsc_dict.get('size')">${rsc_dict.get('size')} bytes</dct:extent>
-                    <dct:format py:if="rsc_dict.get('format')">
-                        <dct:IMT>
-                            <rdf:value>${rsc_dict.get('format')}</rdf:value>
-                            <rdfs:label>${rsc_dict.get('format')}</rdfs:label>
-                        </dct:IMT>
-                    </dct:format>
-                    <dct:title py:if="rsc_dict.get('name')">${rsc_dict.get('name')}</dct:title>
-                </dcat:Distribution>
-            </dcat:distribution>
-        </py:for>
-        <dct:publisher py:if="c.pkg_dict.get('organization', None)">
-            <rdf:Description>
-                <foaf:name>${ c.pkg_dict['organization']['title'] }</foaf:name>
-            </rdf:Description>
-        </dct:publisher>
-        <dct:creator py:if="c.pkg_dict.get('organization', None)">
-            <rdf:Description>
-                <foaf:name>${ c.pkg_dict['organization']['title'] }</foaf:name>
-            </rdf:Description>
-        </dct:creator>
-
-        <py:for each="extra_dict in c.pkg_dict.get('extras',[])">
-            <dct:relation>
-                <rdf:Description>
-                    <rdfs:label>${extra_dict.get('key','')}</rdfs:label>
-                    <rdf:value>${extra_dict.get('value','')}</rdf:value>
-                </rdf:Description>
-            </dct:relation>
-        </py:for>
-        <dct:language>en</dct:language>
-        <foaf:homepage
-                rdf:resource="${ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True)}"/>
-        <dcat:contactPoint py:if="c.pkg_dict.get('contact_point')">${c.pkg_dict.contact_point }</dcat:contactPoint>
-        <py:choose>
-            <py:when test="c.pkg_dict.get('spatial',None)">
-                <dct:spatial py:if="c.pkg_dict.get('spatial')">${ c.pkg_dict.spatial }</dct:spatial>
-            </py:when>
-            <py:otherwise>
-                <dct:spatial py:if="c.pkg_dict.get('spatial_coverage')">${ c.pkg_dict.spatial_coverage }</dct:spatial>
-            </py:otherwise>
-        </py:choose>
-        <aglsterms:AglsJuri py:if="c.pkg_dict.get('jurisdiction')">${ c.pkg_dict.jurisdiction }</aglsterms:AglsJuri>
-        <dct:temporal py:if="c.pkg_dict.get('temporal_coverage')">${ c.pkg_dict.get('temporal_coverage') }</dct:temporal>
-        <dct:relation py:if="c.pkg_dict.get('data_state')">
-            <rdf:Description>
-                <rdfs:label>Data State</rdfs:label>
-                <rdf:value>${ c.pkg_dict.get('data_state') }</rdf:value>
-            </rdf:Description>
-        </dct:relation>
-        <dct:relation py:if="c.pkg_dict.get('update_freq')">
-            <rdf:Description>
-                <rdfs:label>Update Frequency</rdfs:label>
-                <rdf:value>${ c.pkg_dict.get('update_freq') }</rdf:value>
-            </rdf:Description>
-        </dct:relation>
-        <dct:relation py:if="c.pkg_dict.get('agency_program')">
-            <rdf:Description>
-                <rdfs:label>Agency Program</rdfs:label>
-                <rdf:value>${ c.pkg_dict.get('agency_program') }</rdf:value>
-            </rdf:Description>
-        </dct:relation>
-        <dct:relation py:if="c.pkg_dict.get('granularity')">
-            <rdf:Description>
-                <rdfs:label>Data Granularity</rdfs:label>
-                <rdf:value>${ c.pkg_dict.get('granularity') }</rdf:value>
-            </rdf:Description>
-        </dct:relation>
-    </dcat:Dataset>
-    </rdf:RDF>
-    -->
+    <metadataConstraints>
+        <MD_SecurityConstraints>
+            <classification>
+                <MD_ClassificationCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#MD_ClassificationCode" codeListValue="unclassified">unclassified</MD_ClassificationCode>
+            </classification>
+        </MD_SecurityConstraints>
+    </metadataConstraints>
 </gmd:MD_Metadata>
