@@ -92,6 +92,16 @@ def spatial_bound(spatial_str):
         return (minx,maxx,miny,maxy)
     return None
 
+def get_user_full(username):
+    try:
+        return plugins.toolkit.get_action('user_show')({'return_minimal': True, 'keep_sensitive_data': True, 'keep_email': True},{'id': username})
+    except plugins.toolkit.ObjectNotFound:
+        return None
+def get_org_full(id):
+        try:
+            return plugins.toolkit.get_action('organization_show')({'include_datasets': False},{'id': id})
+        except plugins.toolkit.ObjectNotFound:
+            return None
 
 class AGLSDatasetPlugin(plugins.SingletonPlugin,
                         tk.DefaultDatasetForm):
@@ -116,7 +126,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
 
     def get_helpers(self):
         return {'fields_of_research': fields_of_research, 'geospatial_topics': geospatial_topics,
-                'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound}
+                'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound,
+                'get_user_full': get_user_full, 'get_org_full': get_org_full}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -166,6 +177,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
 
             'contact_point': [tk.get_converter('convert_from_extras'),
                               tk.get_validator('ignore_empty')],
+            'contact_info': [tk.get_converter('convert_from_extras'),
+                           tk.get_validator('ignore_missing')],
             'spatial_coverage': [tk.get_converter('convert_from_extras'),
                                  tk.get_validator('ignore_empty')],
             'spatial': [tk.get_converter('convert_from_extras'),
@@ -209,6 +222,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         schema.update({
             'contact_point': [tk.get_converter('convert_to_extras'),
                               tk.get_validator('not_empty')],
+            'contact_info': [tk.get_validator('ignore_missing'),
+                        tk.get_converter('convert_to_extras')],
             'spatial_coverage': [tk.get_converter('convert_to_extras'),
                                  tk.get_validator('not_empty')],
             'spatial': [tk.get_validator('ignore_missing'),

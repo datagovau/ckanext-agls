@@ -68,7 +68,7 @@ error=errors.update_freq, classes=['control-full']) %}
             How often the dataset is updated. Eg: Daily, Weekly, Never
     {%  endcall %}
 
-    {% call form.checkbox('contact_info', checked=false, label='Expose User Contact Information', value=contact_info) %}
+    {% call form.checkbox('contact_info', checked=data.contact_info, label='Expose User Contact Information', value='True') %}
         <br/>
         Whether the user contact details should be public as well as the organisation contact details.
 
