@@ -110,21 +110,34 @@
                     <th scope="row" class="dataset-label">Contact Point</th>
                     <td class="dataset-details" property="dcat:contactPoint">
                         <div about="http://" typeof="v:VCard">
-                            <span property="v:fn">{{ pkg.organization.title }}</span>
-
-                            <div rel="v:tel">
-                                <div typeof="v:Tel v:Home">
-                                    <span property="rdf:value"></span>
-                                </div>
-                            </div>
-                    <span property="v:email"> {{ h.mail_to(email_address=pkg.contact_point,
-                name=pkg.contact_point) }}</span>
+                            <span property="v:fn">{{ pkg.organization.title }}</span><br/>
+                            {% set org_full = h.get_org_full(pkg.organization.id) %}
+                            {% if h.get_pkg_dict_extra(org_full,'telephone') %}
+                            <span rel="v:tel">
+                                <span typeof="v:Tel v:Home">
+                                    <span property="rdf:value">{{ h.get_pkg_dict_extra(org_full,'telephone') }}</span>
+                                </span>
+                            </span><br/>
+                            {% endif %}
+                    <span property="v:email"> {{ h.mail_to(email_address=pkg.contact_point, name=pkg.contact_point) }}</span>
                         </div>
                     </td>
                 </tr>
             {% endif %}
 
-
+            {% if pkg.get('contact_info') and pkg.get('contact_info') == 'True' %}
+            {% set contact = h.get_user_full(pkg.maintainer) %}
+            {%  if contact %}
+            <tr>
+                <th scope="row" class="dataset-label">Contact Point</th>
+                <td class="dataset-details" property="dcat:contactPoint">
+                    <div about="http://" typeof="v:VCard">
+                        <span property="v:fn">{{ contact.display_name }}</span><br/>
+                    <span property="v:email"> {{ h.mail_to(email_address=contact.email, name=contact.email) }}</span>
+                    </div>
+                </td>
+            </tr>
+            {% endif %}{% endif %}
             {% if pkg.get('spatial_coverage') %}
 
                 <tr>
@@ -147,7 +160,7 @@
 
             <tr>
                 <th scope="row" class="dataset-label">Publisher/Agency</th>
-                <td class="dataset-details" property="dc:publisher">{{ pkg.maintainer or pkg.organization.title }}
+                <td class="dataset-details" property="dc:publisher">{{ pkg.organization.title }}
                 </td>
             </tr>
 

@@ -38,8 +38,8 @@
                 <CI_Contact>
                     <phone>
                         <CI_Telephone>
-                            <voice py:if="h.get_pkg_dict_extra(c.pkg_dict['organization'],'telephone')">
-                                <gco:CharacterString>${ h.get_pkg_dict_extra(c.pkg_dict['organization'],'telephone') }</gco:CharacterString>
+                            <voice py:if="h.get_pkg_dict_extra( h.get_org_full(c.pkg_dict['organization']['id']),'telephone')">
+                                <gco:CharacterString>${ h.get_pkg_dict_extra( h.get_org_full(c.pkg_dict['organization']['id']),'telephone') }</gco:CharacterString>
                             </voice>
                         </CI_Telephone>
                     </phone>
