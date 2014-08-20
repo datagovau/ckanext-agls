@@ -47,6 +47,19 @@ def geospatial_topics():
     except tk.ObjectNotFound:
         return None
 
+def groups():
+    import ckan.model as model
+    query = model.Group.all(group_type='group')
+
+    def convert_to_dict(user):
+        out = {}
+        for k in ['id', 'name', 'title']:
+            out[k] = getattr(user, k)
+        return out
+
+    out = map(convert_to_dict, query.all())
+    return out
+
 
 def create_fields_of_research():
     user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
@@ -127,7 +140,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     def get_helpers(self):
         return {'fields_of_research': fields_of_research, 'geospatial_topics': geospatial_topics,
                 'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound,
-                'get_user_full': get_user_full, 'get_org_full': get_org_full}
+                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
