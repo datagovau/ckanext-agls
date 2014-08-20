@@ -150,7 +150,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
 
         tk.add_template_directory(config, 'templates')
         tk.add_public_directory(config, 'theme/public')
-        tk.add_resource('theme/public', 'ckanext-agls')
+        tk.add_public_directory(config, 'fanstatic/ckanext-agls')
+        tk.add_resource('fanstatic', 'ckanext-agls')
         # config['licenses_group_url'] = 'http://%(ckan.site_url)/licenses.json'
 
 

@@ -20,15 +20,7 @@ value=data.spatial or data.spatial_coverage, error=errors.spatial_coverage, clas
         reference ID from the <a href="http://www.ga.gov.au/place-names/">Gazetteer</a>.
 
     {% endcall %}
-<script>
-window.onload= function() {
-    $("#field-spatial_coverage").change(function (e) {
-        $.getJSON( "/api/2/util/gazetteer/latlon?q=" + e.val.split(':')[0], function( data ) {
-            $('[name=spatial]').val(data.geojson);
-        })
-    });
-}
-</script>
+
 {{ form.hidden('spatial',data.spatial) }}
 
     {%  call form.input('temporal_coverage_from', label=_('Temporal Coverage From'), id='field-temporal_coverage-from',
