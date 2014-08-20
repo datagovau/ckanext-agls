@@ -1,0 +1,23 @@
+{% ckan_extends %}
+{% block scripts %}
+    <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+{% resource 'ckanext-agls/styles/jquery-ui.js' %}
+    {{ super() }}
+    <script>
+        window.onload= function() {
+            $("#field-spatial_coverage").change(function (e) {
+                $.getJSON( "/api/2/util/gazetteer/latlon?q=" + e.val.split(':')[0], function( data ) {
+                    $('[name=spatial]').val(data.geojson);
+                })
+            });
+            $(function() {
+                $( "#field-temporal_coverage-from" ).datepicker();
+                $( "#field-temporal_coverage-to" ).datepicker();
+            });
+
+        };
+
+    </script>
+
+{% endblock %}
