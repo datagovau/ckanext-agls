@@ -26,7 +26,7 @@
                 if (m != null) {
                     gazID = m[1];
                     $.getJSON("/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
-                        $('[name=spatial]').val(data.geojson);
+                        $('#spatial').val(data.geojson);
                     })
                 } else {
                     var re2 = new RegExp("[a-zA-Z].*\\d");
@@ -34,7 +34,7 @@
                     if (m2 != null) {
                         gazID = m2[0];
                         $.getJSON("/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
-                            $('[name=spatial]').val(data.geojson);
+                            $('#spatial').val(data.geojson);
                         })
                     }
                 }
