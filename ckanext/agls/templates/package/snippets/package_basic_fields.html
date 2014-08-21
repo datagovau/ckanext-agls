@@ -7,11 +7,14 @@
 {% block package_basic_fields_license %}
     <div class="control-group">
         {% set error = errors.license_id %}
-        <span title="This field is required" class="control-required">*</span><label class="control-label" for="field-license">{{ _("License") }}</label>
+        <span title="This field is required" class="control-required">*</span><label class="control-label"
+                                                                                     for="field-license">{{ _("License") }}</label>
+
         <div class="controls">
             <select id="field-license" name="license_id" data-module="autocomplete">
-                {% for license_desc, license_id in licenses|sort if license_desc  %}
-                    <option value="{{ license_id }}" {% if data.get('license_id', 'notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
+                {% for license_desc, license_id in licenses|sort if license_desc %}
+                    <option value="{{ license_id }}"
+                            {% if data.get('license_id', 'notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
                 {% endfor %}
             </select>
             {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
@@ -37,32 +40,47 @@
 
     {% call form.input('spatial_coverage', label=_('Geospatial Coverage'), id='field-spatial_coverage',
 placeholder=_('The geographical area covered by the data. Eg: Whole of Australia, New South Wales, Canberra'),
-value=data.spatial_coverage or data.spatial, error=errors.spatial_coverage, classes=['control-full'], is_required='true')  %}
+value=data.spatial_coverage or data.spatial, error=errors.spatial_coverage, classes=['control-full'], is_required='true') %}
         <br/>
         Please input one of the following: 1) a point/polygon/bounding box; 2) an administrative boundary API; or 3) a
-        URL reference from the <a href="https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au#Extent">Gazetteer</a>.
+        URL reference from the
+        <a href="https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au#Extent">Gazetteer</a>.
 
     {% endcall %}
+    <input type="hidden" id='spatial' name="spatial" value="data.spatial" />
+    {#  for extra in data.extras %}
+        {% set prefix = 'extras__%d__' % (loop.index0) %}
 
-{{ form.hidden('spatial',data.spatial) }}
+        {% if extra.key == 'spatial' %}
+            <input type="hidden" id='spatial' name="{{ prefix ~ 'value' }}" value="{{ extra.value }}" />
+        {% else %}
+            {{ form.hidden(prefix ~ 'value',extra.value) }}
+        {% endif %}
 
-    {%  call form.input('temporal_coverage_from', label=_('Temporal Coverage From'), id='field-temporal_coverage-from',
+    {% endfor %}
+    {% set total_extras = extras|count %}
+    {% if not h.get_pkg_dict_extra(data,'spatial') %}
+        {% set prefix = 'extras__%d__' % total_extras %}
+        {{ form.hidden(prefix ~ 'key','spatial') }}
+        <input type="hidden" id='spatial' name="{{ prefix ~ 'value' }}" value="" />
+    {% endif #}
+    {% call form.input('temporal_coverage_from', label=_('Temporal Coverage From'), id='field-temporal_coverage-from',
 placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
-value=data.temporal_coverage_from, error=errors.temporal_coverage_from, classes=['control-full'], is_required='true')  %}
+value=data.temporal_coverage_from, error=errors.temporal_coverage_from, classes=['control-full'], is_required='true') %}
         <br/>
         What is the temporal coverage of your dataset? Please choose a single date or a from and to date.
-        
+
     {% endcall %}
 
     {{ form.input('temporal_coverage_to', label=_('Temporal Coverage To'), id='field-temporal_coverage-to',
 placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
-value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['control-full'])}}
+value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['control-full']) }}
 
 
     {% call form.select('data_state', label=_('Data Status'), options= [{'value': 'active', 'text': 'Active'}, {'value': 'inactive', 'text': 'Inactive'}],
-selected='Active', error=errors.data_state, is_required='true')  %}
-    <br/>
-    The status of the data with regard to whether it is kept updated (active, yes) or historic (inactive, no)
+selected='Active', error=errors.data_state, is_required='true') %}
+        <br/>
+        The status of the data with regard to whether it is kept updated (active, yes) or historic (inactive, no)
 
     {% endcall %}
 
@@ -79,13 +97,14 @@ selected = data.update_freq, options=
 {'value': 'never', 'text': 'Never/Static'},
 {'value': 'other', 'text': 'Other (specify)'}]
 ,
-error=errors.update_freq, classes=['control-full'], is_required='true')  %}
-            How often the dataset is updated. Eg: Daily, Weekly, Never
-    {%  endcall %}
+error=errors.update_freq, classes=['control-full'], is_required='true') %}
+        How often the dataset is updated. Eg: Daily, Weekly, Never
+    {% endcall %}
 
-    {% call form.checkbox('contact_info', checked=data.contact_info, label='Expose User Contact Information', value='True')  %}
+    {% call form.checkbox('contact_info', checked=data.contact_info, label='Expose User Contact Information', value='True') %}
         <br/>
-        <span title="This field is required" class="control-required">*</span>Whether the user contact details should be public as well as the organisation contact details.
+        <span title="This field is required" class="control-required">*</span>Whether the user contact details should be
+        public as well as the organisation contact details.
 
     {% endcall %}
     {% if data.groups %}
@@ -105,19 +124,22 @@ error=errors.update_freq, classes=['control-full'], is_required='true')  %}
         </div>
     {% endif %}
     {% set group_name = 'groups__%s__id' % data.groups|length %}
-        <div class="control-group control-full">
+    <div class="control-group control-full">
 
-        <label class="control-label" for="field-group"><span title="This field is required" class="control-required">*</span>AGIFT Function/Theme</label>
+        <label class="control-label" for="field-group"><span title="This field is required"
+                                                             class="control-required">*</span>AGIFT
+            Function/Theme</label>
 
         <div class="controls">
-        <select id="field-group" name="{{ group_name }}" data-module="autocomplete">
-            {% for group in h.groups() %}
-                <option value="{{ group.id }}">{{ group.title }}</option>
-            {% endfor %}
-        </select>
-        <br/>
-        The <a target="_blank" href="http://agift.naa.gov.au">AGIFT</a> top level government function to which the resource relates.
+            <select id="field-group" name="{{ group_name }}" data-module="autocomplete">
+                {% for group in h.groups() %}
+                    <option value="{{ group.id }}">{{ group.title }}</option>
+                {% endfor %}
+            </select>
+            <br/>
+            The <a target="_blank" href="http://agift.naa.gov.au">AGIFT</a> top level government function to which the
+            resource relates.
 
         </div>
-        </div>
+    </div>
 {% endblock %}
