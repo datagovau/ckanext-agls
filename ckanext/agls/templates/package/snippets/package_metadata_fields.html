@@ -27,9 +27,9 @@ won't work. #}
     </div>
 
 
-    {% call form.markdown('data_models', label=_('Data Models'), id='field-data-models',
+    {% call form.markdown('data_model', label=_('Data Models'), id='field-data-model',
 placeholder=_('Information on any relevant data models, ontologies, taxonomies etc specific to this dataset.'),
-value=data.update_freq, error=errors.update_freq, classes=['control-full']) %}
+value=data.data_model, error=errors.data_model, classes=['control-full']) %}
 
 
         Please add any links to information on relevant data models, ontologies, taxonomies etc specific to your
@@ -49,7 +49,7 @@ value=data.update_freq, error=errors.update_freq, classes=['control-full']) %}
                 <!-- <![endif]-->
                 {% for field_of_research in h.fields_of_research() %}
                     <option value="{{ field_of_research }}"
-                            {% if field_of_research in data.get('fields_of_research', []) %}selected="selected"{% endif %}>{{ field_of_research }}</option>
+                            {% if field_of_research in data.get('field_of_research', []) %}selected="selected"{% endif %}>{{ field_of_research }}</option>
                 {% endfor %}
             </select>
             <br/>

@@ -45,9 +45,6 @@
                 <th scope="row" class="dataset-label">Type</th>
                 <td class="dataset-details" property="dc:type">Dataset</td>
             </tr>
-            Keyword
-            Theme
-
             <tr>
                 <th scope="row" class="dataset-label">Language</th>
                 <td class="dataset-details" property="dc:language">English</td>
@@ -77,7 +74,7 @@
             <tr>
                 <th scope="row" class="dataset-label">{{ _('Landing Page') }}</th>
                 <td class="dataset-details"
-                    property="dct:source">{{ h.url_for(controller='package', action='read', id=pkg.id, qualified=True) }}
+                    property="dct:source"><a href="{{ h.url_for(controller='package', action='read', id=pkg.id, qualified=True) }}">{{ h.url_for(controller='package', action='read', id=pkg.id, qualified=True) }}</a>
                 </td>
             </tr>
 
