@@ -4,12 +4,41 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
 {% resource 'ckanext-agls/styles/jquery-ui.js' %}
     {{ super() }}
+    <style>
+        .form-horizontal .controls {
+            font-size: 0.8em;
+            line-height: 15px;
+        }
+        .form-horizontal .controls *{
+            font-size: 14px;
+
+        }
+        .form-horizontal .controls a{
+            font-size: 0.8em;
+        }
+    </style>
     <script>
         window.onload= function() {
             $("#field-spatial_coverage").change(function (e) {
-                $.getJSON( "/api/2/util/gazetteer/latlon?q=" + e.val.split(':')[0], function( data ) {
-                    $('[name=spatial]').val(data.geojson);
-                })
+                gazURL = e.target.value;
+                var re = new RegExp("submit1=(.*\\d)&");
+                var m = re.exec(gazURL);
+                if (m != null) {
+                    gazID = m[1];
+                    $.getJSON("/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
+                        $('[name=spatial]').val(data.geojson);
+                    })
+                } else {
+                    var re2 = new RegExp("[a-zA-Z].*\\d");
+                    var m2 = re2.exec(gazURL);
+                    if (m2 != null) {
+                        gazID = m2[0];
+                        $.getJSON("/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
+                            $('[name=spatial]').val(data.geojson);
+                        })
+                    }
+                }
+
             });
             $(function() {
                 $( "#field-temporal_coverage-from" ).datepicker();
