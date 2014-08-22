@@ -90,19 +90,21 @@ def fields_of_research():
 
 
 def spatial_bound(spatial_str):
-    spatial_dict = json.loads(spatial_str)
-    if spatial_dict['type'] == 'Point':
-        minx = spatial_dict['coordinates'][0]
-        maxx = spatial_dict['coordinates'][0]
-        miny = spatial_dict['coordinates'][1]
-        maxy = spatial_dict['coordinates'][1]
-    if spatial_dict['type'] == 'Polygon':
-        minx = spatial_dict['coordinates'][0][0][0]
-        maxx = spatial_dict['coordinates'][0][1][0]
-        miny = spatial_dict['coordinates'][0][0][1]
-        maxy = spatial_dict['coordinates'][0][2][1]
-    if minx:
-        return (minx,maxx,miny,maxy)
+    if spatial_str and spatial_str != '':
+        spatial_dict = json.loads(spatial_str)
+        if spatial_dict['type'] == 'Point':
+            minx = spatial_dict['coordinates'][0]
+            minx = spatial_dict['coordinates'][0]
+            maxx = spatial_dict['coordinates'][0]
+            miny = spatial_dict['coordinates'][1]
+            maxy = spatial_dict['coordinates'][1]
+        if spatial_dict['type'] == 'Polygon':
+            minx = spatial_dict['coordinates'][0][0][0]
+            maxx = spatial_dict['coordinates'][0][1][0]
+            miny = spatial_dict['coordinates'][0][0][1]
+            maxy = spatial_dict['coordinates'][0][2][1]
+        if minx:
+            return (minx,maxx,miny,maxy)
     return None
 
 def get_user_full(username):
