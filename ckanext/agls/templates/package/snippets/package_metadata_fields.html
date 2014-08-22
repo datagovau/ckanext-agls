@@ -47,6 +47,7 @@ value=data.data_model, error=errors.data_model, classes=['control-full']) %}
             <!--[if gte IE 9]> -->
             <select id="field-field_of_research" name="field_of_research" multiple data-module="autocomplete">
                 <!-- <![endif]-->
+                <option value=""></option>
                 {% for field_of_research in h.fields_of_research() %}
                     <option value="{{ field_of_research }}"
                             {% if field_of_research in data.get('field_of_research', []) %}selected="selected"{% endif %}>{{ field_of_research }}</option>

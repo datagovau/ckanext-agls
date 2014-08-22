@@ -211,21 +211,23 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                             tk.get_validator('ignore_empty')],
             'data_model': [tk.get_converter('convert_from_extras'),
                            tk.get_validator('ignore_missing')],
-            # harvesting fields
-            # 'spatial_harvester': [tk.get_converter('convert_from_extras'),
-            # tk.get_validator('ignore_missing')],
-            # 'harvest_object_id': [tk.get_converter('convert_from_extras'),
-            #                   tk.get_validator('ignore_missing')],
-            #'harvest_source_id': [tk.get_converter('convert_from_extras'),
-            #                   tk.get_validator('ignore_missing')],
-            #'harvest_source_title': [tk.get_converter('convert_from_extras'),
-            #                   tk.get_validator('ignore_missing')],
+            'language': [tk.get_converter('convert_from_extras'),
+                           tk.get_validator('ignore_missing')],
             'geospatial_topic': [
                 tk.get_converter('convert_from_tags')('geospatial_topics'),
                 tk.get_validator('ignore_missing')],
             'field_of_research': [
                 tk.get_converter('convert_from_tags')('fields_of_research'),
-                tk.get_validator('ignore_missing')]
+                tk.get_validator('ignore_missing')],
+            # harvesting fields
+             'spatial_harvester': [tk.get_converter('convert_from_extras'),
+             tk.get_validator('ignore_missing')],
+             'harvest_object_id': [tk.get_converter('convert_from_extras'),
+                               tk.get_validator('ignore_missing')],
+            'harvest_source_id': [tk.get_converter('convert_from_extras'),
+                               tk.get_validator('ignore_missing')],
+            'harvest_source_title': [tk.get_converter('convert_from_extras'),
+                               tk.get_validator('ignore_missing')]
         })
         return schema
 
@@ -256,16 +258,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                             tk.get_validator('not_empty')],
             'data_models': [tk.get_validator('ignore_missing'),
                             tk.get_converter('convert_to_extras')],
-            # harvesting fields
-            # 'spatial_harvester': [tk.get_validator('ignore_missing'),
-            # tk.get_converter('convert_to_extras')],
-            # 'harvest_object_id': [tk.get_validator('ignore_missing'),
-            #                   tk.get_converter('convert_to_extras')],
-            #'harvest_source_id': [tk.get_validator('ignore_missing'),
-            #                   tk.get_converter('convert_to_extras')],
-            #'harvest_source_title': [tk.get_validator('ignore_missing'),
-            #                   tk.get_converter('convert_to_extras')],
-
+            'language': [tk.get_validator('ignore_missing'),
+                            tk.get_converter('convert_to_extras')],
             'geospatial_topic': [
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_tags')('geospatial_topics')
@@ -274,5 +268,15 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_tags')('fields_of_research')
             ],
+            # harvesting fields
+             'spatial_harvester': [tk.get_validator('ignore_missing'),
+             tk.get_converter('convert_to_extras')],
+             'harvest_object_id': [tk.get_validator('ignore_missing'),
+                               tk.get_converter('convert_to_extras')],
+            'harvest_source_id': [tk.get_validator('ignore_missing'),
+                               tk.get_converter('convert_to_extras')],
+            'harvest_source_title': [tk.get_validator('ignore_missing'),
+                               tk.get_converter('convert_to_extras')],
+
         })
         return schema

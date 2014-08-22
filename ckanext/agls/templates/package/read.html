@@ -47,7 +47,7 @@
             </tr>
             <tr>
                 <th scope="row" class="dataset-label">Language</th>
-                <td class="dataset-details" property="dc:language">English</td>
+                <td class="dataset-details" property="dc:language">{{ pkg.language or 'English'}}</td>
             </tr>
 
             <tr>
@@ -94,14 +94,6 @@
             {% endif %}
 
 
-            {% if  h.get_pkg_dict_extra(c.pkg_dict, 'spatial_harvester','') != '' %}
-                <tr>
-                    <th scope="row" class="dataset-label">XML Metadata Document</th>
-                    <td class="dataset-details">{{ h.link_to("View",h.url_for(controller='HarvestMetadataApi', action='display_xml_original', id=h.get_pkg_dict_extra(c.pkg_dict, 'harvest_object_id'))) }}
-                    </td>
-                </tr>
-            {% endif %}
-
             {% if pkg.get('contact_point') %}
                 <tr>
                     <th scope="row" class="dataset-label">Contact Point</th>
@@ -146,6 +138,18 @@
                 <tr>
                     <th scope="row" class="dataset-label">Jurisdiction</th>
                     <td class="dataset-details" property="aglsterms:AglsJuri"> {{ pkg.jurisdiction }}</td>
+                </tr>
+            {% endif %}
+            {% if pkg.harvest_source_title %}
+                <tr>
+                    <th scope="row" class="dataset-label">Data Portal</th>
+                    <td class="dataset-details"> {{  pkg.harvest_source_title }}</td>
+
+             </tr>
+                {% else %}
+                <tr>
+                    <th scope="row" class="dataset-label">Data Portal</th>
+                    <td class="dataset-details"> {{ g.site_title }}</td>
                 </tr>
             {% endif %}
             {% if pkg.get('temporal_coverage') %}
