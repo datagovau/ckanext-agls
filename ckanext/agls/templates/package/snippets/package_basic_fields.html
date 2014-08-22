@@ -81,7 +81,6 @@ value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['co
 selected='Active', error=errors.data_state, is_required='true') %}
         <br/>
         The status of the data with regard to whether it is kept updated (active, yes) or historic (inactive, no)
-
     {% endcall %}
 
     {% call form.select('update_freq', label=_('Update Frequency'), id='field-update_freq',
