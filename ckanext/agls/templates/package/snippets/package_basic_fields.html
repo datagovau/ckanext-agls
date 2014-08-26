@@ -56,7 +56,7 @@ value=data.spatial_coverage or data.spatial or h.get_pkg_dict_extra(org_full,'sp
         <a href="https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au#Extent">Gazetteer</a>.
 
     {% endcall %}
-    <input type="hidden" id='spatial' name="spatial" value="data.spatial" />
+    <input type="hidden" id='spatial' name="spatial" value="{{data.spatial}}" />
     {#  for extra in data.extras %}
         {% set prefix = 'extras__%d__' % (loop.index0) %}
 
