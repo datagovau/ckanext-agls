@@ -4,7 +4,7 @@ import ckan.plugins.toolkit as tk
 import csv
 import os
 import json
-
+from ckan.common import OrderedDict, _, json, request, c, g, response
 
 def get_group_select_list():
     result = []
@@ -16,6 +16,9 @@ def get_group_select_list():
         result.append({'value': group})
     return result
 
+def group_id():
+    id =  request.params.get('group') or request.params.get('groups__0__id')
+    return id
 
 # vocab setup
 # "Geospatial Topic" and "Field(s) of Research" are tag vocabularies.
@@ -142,7 +145,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     def get_helpers(self):
         return {'fields_of_research': fields_of_research, 'geospatial_topics': geospatial_topics,
                 'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound,
-                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups}
+                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so

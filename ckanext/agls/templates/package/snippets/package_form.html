@@ -7,10 +7,15 @@
     {% if data.organization %}
     {% set org = data.organization %}
     {% endif %}
-    {% set org_full = h.get_org_full(org.id) %}
+    {% if h.group_id() %}
+        {% set org_full = h.get_org_full(h.group_id()) %}
+        {% else %}
+        {% set org_full = h.get_org_full(org.id) %}
+    {% endif %}
+
     {% call form.input('author', label=_('Publisher'), id='field-publisher',
 placeholder=_('Email address for questions about content of dataset'),
-value=data.author or org.title, error=errors.maintainer, classes=['control-full'], is_required=true) %}
+value=data.author or org_full.title, error=errors.maintainer, classes=['control-full'], is_required=true) %}
     Name of Agency/publishing organisation.
     {% endcall %}
 
