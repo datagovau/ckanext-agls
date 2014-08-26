@@ -52,8 +52,8 @@ class InitDB(CkanCommand):
                         x += 1
                     #log.info(values)
                     #log.info(y)
-                    if values['feat_code'] == 'URBN' or values['feat_code'] == 'LOCB' or values['feat_code'] == 'LOCU':
-                        agls_model.add_data(values)
+                    #if values['feat_code'] == 'URBN' or values['feat_code'] == 'LOCB' or values['feat_code'] == 'LOCU':
+                    agls_model.add_data(values)
                     y += 1
                     if y % 1000 == 0:
                         print(y)
