@@ -5,6 +5,7 @@ import csv
 import os
 import json
 from ckan.common import OrderedDict, _, json, request, c, g, response
+import ckan.model as model
 
 def get_group_select_list():
     result = []
@@ -25,10 +26,8 @@ def group_id():
 def create_geospatial_topics():
     user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
     context = {'user': user['name']}
-    try:
-        data = {'id': 'geospatial_topics'}
-        tk.get_action('vocabulary_show')(context, data)
-    except (TypeError, tk.ObjectNotFound):
+    vocab = model.Vocabulary.get('geospatial_topics')
+    if not vocab:
         data = {'name': 'geospatial_topics'}
         vocab = tk.get_action('vocabulary_create')(context, data)
         for tag in ('Farming', 'Biota', 'Boundaries', 'Climatology Meteorology and Atmosphere', 'Economy', 'Elevation',
@@ -51,7 +50,6 @@ def geospatial_topics():
         return None
 
 def groups():
-    import ckan.model as model
     query = model.Group.all(group_type='group')
 
     def convert_to_dict(user):
@@ -65,12 +63,11 @@ def groups():
 
 
 def create_fields_of_research():
+
     user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
     context = {'user': user['name']}
-    try:
-        data = {'id': 'fields_of_research'}
-        tk.get_action('vocabulary_show')(context, data)
-    except (TypeError, tk.ObjectNotFound):
+    vocab = model.Vocabulary.get('fields_of_research')
+    if not vocab:
         print "Loading ABS Fields of Research for the first time, please wait..."
         data = {'name': 'fields_of_research'}
         vocab = tk.get_action('vocabulary_create')(context, data)
@@ -86,7 +83,7 @@ def fields_of_research():
     create_fields_of_research()
     try:
         tag_list = tk.get_action('tag_list')
-        fields_of_research = tag_list(data_dict={'vocabulary_id': 'fields_of_research'})
+        fields_of_research = tag_list(data_dict={'vocabulary_id': 'fields_of_research', 'all_fields': False})
         return fields_of_research
     except tk.ObjectNotFound:
         return None
