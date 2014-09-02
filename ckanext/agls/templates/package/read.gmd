@@ -31,7 +31,7 @@
     </gmd:hierarchyLevel>
     <gmd:contact>
         <gmd:CI_ResponsibleParty>
-            <gmd:organisationName>
+            <gmd:organisationName py:if="'organization' in c.pkg_dict">
                 <gco:CharacterString>${ c.pkg_dict['organization']['title'] }</gco:CharacterString>
             </gmd:organisationName>
             <contactInfo>
