@@ -41,7 +41,11 @@
             }
         }
     }
-        window.onload= function() {
+    var prev_handler = window.onload;
+    window.onload = function () {
+        if (prev_handler) {
+            prev_handler();
+        }
             $("#field-spatial_coverage").change(function (e) {
                 gazURL = e.target.value;
                 gazSearch(gazURL);
