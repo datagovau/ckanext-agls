@@ -9,8 +9,11 @@
     {% endif %}
     {% if h.group_id() %}
         {% set org_full = h.get_org_full(h.group_id()) %}
-        {% else %}
-        {% set org_full = h.get_org_full(org.id) %}
+    {% else %}
+        {% set org_full = h.get_org_full(data.owner_org) %}
+    {% endif %}
+    {% if not org_full %}
+     {% set org_full = {'extras':{}} %}
     {% endif %}
 
     {% call form.input('author', label=_('Publisher'), id='field-publisher',
