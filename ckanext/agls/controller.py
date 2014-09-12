@@ -90,8 +90,8 @@ class AGLSController(PackageController):
             ctype, format, loader = self._content_type_from_accept()
 
         # response.headers['Content-Type'] = ctype
-        response.headers['Content-Type'] = 'application/vnd.iso.19139+xml; charset=utf-8'
-        response.headers["Content-Disposition"] = "attachment; filename=" + id + ".xml"
+        response.headers['Content-Type'] = 'application/vnd.iso.19139+xml; charset=utf-8'.encode("ISO-8859-1")
+        response.headers["Content-Disposition"] = ("attachment; filename=" + id + ".xml").encode("ISO-8859-1")
         package_type = self._get_package_type(id.split('@')[0])
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
