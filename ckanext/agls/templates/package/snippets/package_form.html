@@ -11,6 +11,8 @@
         {% set org_full = h.get_org_full(h.group_id()) %}
     {% elif data.owner_org %}
         {% set org_full = h.get_org_full(data.owner_org) %}
+    {% elif org %}
+        {% set org_full = h.get_org_full(org.id) %}
     {% endif %}
     {% if not org_full %}
      {% set org_full = {'extras':{}} %}
