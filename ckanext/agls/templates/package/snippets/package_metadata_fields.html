@@ -9,59 +9,8 @@ won't work. #}
 
 {% block package_metadata_fields %}
 
-    <div class="control-group control-full">
-        <label class="control-label" for="field-geospatial_topic">{{ _("Geospatial Topic") }}</label>
-
-        <div class="controls">
-            <select id="field-geospatial_topic" name="geospatial_topic" multiple data-module="autocomplete">
-                {% for geospatial_topic in h.geospatial_topics() %}
-                    <option value="{{ geospatial_topic }}"
-                            {% if geospatial_topic in data.get('geospatial_topic', []) %}selected="selected"{% endif %}>{{ geospatial_topic }}</option>
-                {% endfor %}
-            </select>
-
-        The high level <a target="_blank"
-            href="https://www2.landgate.wa.gov.au/interragatorplus/help/index.html?iso_19115_topic_categories.htm">ISO19115</a>
-        topics. Optional but recommended.
-        </div>
-    </div>
-
-
-    {% call form.markdown('data_model', label=_('Data Models'), id='field-data-model',
-placeholder=_('Information on any relevant data models, ontologies, taxonomies etc specific to this dataset.'),
-value=data.data_model, error=errors.data_model, classes=['control-full']) %}
-
-
-        Please add any links to information on relevant data models, ontologies, taxonomies etc specific to your
-        dataset. You can upload data models to the
-        <a target="_blank" href="">data.gov.au data model repository</a>.
-    {% endcall %}
-
-    <div class="control-group control-full">
-        <label class="control-label" for="field-field_of_research">{{ _("Field of Research") }} (optional)</label>
-
-        <div class="controls">
-            <!--[if lte IE 8]>
-            <select id="field-field_of_research" name="field_of_research" multiple="multiple">
-            <![endif]-->
-            <!--[if gte IE 9]> -->
-            <select id="field-field_of_research" name="field_of_research" multiple data-module="autocomplete">
-                <!-- <![endif]-->
-                <option value=""></option>
-                {% for field_of_research in h.fields_of_research() %}
-                    <option value="{{ field_of_research }}"
-                            {% if field_of_research in data.get('field_of_research', []) %}selected="selected"{% endif %}>{{ field_of_research }}</option>
-                {% endfor %}
-            </select>
-            <br/>
-            The Australian and New Zealand Standard Research Classification (ANZSRC), 2008 defined <a target="_blank"
-                                                                                                      href="http://www.abs.gov.au/AUSSTATS/abs@.nsf/0/6BB427AB9696C225CA2574180004463E?opendocument">field or
-            fields of research</a> relevant to the dataset.
-        </div>
-
-    </div>
-
-    {{ super() }}
+{{ super () }}
+  {# snippet 'snippets/custom_form_fields.html', extras=data.extras, errors=errors, limit=3 #}
 
 {% endblock %}
 

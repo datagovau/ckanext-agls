@@ -117,6 +117,28 @@ def get_org_full(id):
             return plugins.toolkit.get_action('organization_show')({'include_datasets': False},{'id': id})
         except plugins.toolkit.ObjectNotFound:
             return None
+def is_hosted(pkg):
+    hosted = 'Hosted'
+    for res in pkg['resources']:
+	if 'data.sa.gov.au' not in res['url']:
+		hosted = 'Linked'
+    return hosted
+def get_pkg_obj_extra(pkg_dict, key, default=None):
+    '''Returns the value for the dataset extra with the provided key.
+    If the key is not found, it returns a default value, which is None by
+    default.
+    :param pkg_dict: dictized dataset
+    :key: extra key to lookup
+    :default: default value returned if not found
+    '''
+    #print pkg_dict['extras']
+    extras = pkg_dict.extras if hasattr(pkg_dict,'extras') else []
+
+    for extra in extras:
+        if extra['key'] == key:
+            return extra['value']
+
+    return default
 
 class AGLSDatasetPlugin(plugins.SingletonPlugin,
                         tk.DefaultDatasetForm):
@@ -142,7 +164,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     def get_helpers(self):
         return {'fields_of_research': fields_of_research, 'geospatial_topics': geospatial_topics,
                 'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound,
-                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id}
+                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id,
+		'is_hosted': is_hosted, 'get_pkg_obj_extra': get_pkg_obj_extra}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -198,17 +221,19 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
             'spatial_coverage': [tk.get_converter('convert_from_extras'),
                                  tk.get_validator('ignore_empty')],
             'spatial': [tk.get_converter('convert_from_extras'),
-                        tk.get_validator('ignore_empty')],
+                        tk.get_validator('ignore_missing')],
             'jurisdiction': [tk.get_converter('convert_from_extras'),
                              tk.get_validator('ignore_empty')],
             'temporal_coverage_from': [tk.get_converter('convert_from_extras'),
-                                       tk.get_validator('ignore_empty')],
+                                       tk.get_validator('ignore_missing')],
             'temporal_coverage_to': [tk.get_converter('convert_from_extras'),
+                                     tk.get_validator('ignore_missing')],
+            'data_granularity': [tk.get_converter('convert_from_extras'),
                                      tk.get_validator('ignore_missing')],
             'data_state': [tk.get_converter('convert_from_extras'),
                            tk.get_validator('ignore_empty')],
             'update_freq': [tk.get_converter('convert_from_extras'),
-                            tk.get_validator('ignore_empty')],
+                            tk.get_validator('ignore_missing')],
             'data_model': [tk.get_converter('convert_from_extras'),
                            tk.get_validator('ignore_missing')],
             'language': [tk.get_converter('convert_from_extras'),
@@ -219,15 +244,6 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
             'field_of_research': [
                 tk.get_converter('convert_from_tags')('fields_of_research'),
                 tk.get_validator('ignore_missing')],
-            # harvesting fields
-             'spatial_harvester': [tk.get_converter('convert_from_extras'),
-             tk.get_validator('ignore_missing')],
-             'harvest_object_id': [tk.get_converter('convert_from_extras'),
-                               tk.get_validator('ignore_missing')],
-            'harvest_source_id': [tk.get_converter('convert_from_extras'),
-                               tk.get_validator('ignore_missing')],
-            'harvest_source_title': [tk.get_converter('convert_from_extras'),
-                               tk.get_validator('ignore_missing')]
         })
         return schema
 
@@ -242,20 +258,22 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                               tk.get_validator('not_empty')],
             'contact_info': [tk.get_validator('ignore_missing'),
                         tk.get_converter('convert_to_extras')],
-            'spatial_coverage': [tk.get_converter('convert_to_extras'),
-                                 tk.get_validator('not_empty')],
+            'spatial_coverage':[tk.get_converter('convert_to_extras'),
+                              tk.get_validator('not_empty')],
             'spatial': [tk.get_validator('ignore_missing'),
                         tk.get_converter('convert_to_extras')],
             'jurisdiction': [tk.get_converter('convert_to_extras'),
                              tk.get_validator('not_empty')],
-            'temporal_coverage_from': [tk.get_converter('convert_to_extras'),
-                                       tk.get_validator('not_empty')],
+            'temporal_coverage_from': [tk.get_validator('ignore_missing'),
+                        tk.get_converter('convert_to_extras')],
             'temporal_coverage_to': [tk.get_validator('ignore_missing'),
+                                     tk.get_converter('convert_to_extras')],
+         'data_granularity': [tk.get_validator('ignore_missing'),
                                      tk.get_converter('convert_to_extras')],
             'data_state': [tk.get_converter('convert_to_extras'),
                            tk.get_validator('not_empty')],
-            'update_freq': [tk.get_converter('convert_to_extras'),
-                            tk.get_validator('not_empty')],
+            'update_freq': [tk.get_validator('ignore_missing'),
+                        tk.get_converter('convert_to_extras')],
             'data_models': [tk.get_validator('ignore_missing'),
                             tk.get_converter('convert_to_extras')],
             'language': [tk.get_validator('ignore_missing'),
@@ -268,15 +286,6 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_tags')('fields_of_research')
             ],
-            # harvesting fields
-             'spatial_harvester': [tk.get_validator('ignore_missing'),
-             tk.get_converter('convert_to_extras')],
-             'harvest_object_id': [tk.get_validator('ignore_missing'),
-                               tk.get_converter('convert_to_extras')],
-            'harvest_source_id': [tk.get_validator('ignore_missing'),
-                               tk.get_converter('convert_to_extras')],
-            'harvest_source_title': [tk.get_validator('ignore_missing'),
-                               tk.get_converter('convert_to_extras')],
 
         })
         return schema
