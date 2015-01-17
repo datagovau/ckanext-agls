@@ -1,47 +1,22 @@
-diff --git a/ckan/templates/package/read.html b/ckan/templates/package/read.html
-index a805b4a..1be697f 100644
---- a/ckan/templates/package/read.html
-+++ b/ckan/templates/package/read.html
-@@ -13,6 +13,12 @@
-         {{ _('Private') }}
-       </span>
-     {% endif %}
-+  {% if h.get_pkg_dict_extra(pkg,'harvest_source_title') %}
-+          <span class="dataset-private label label-inverse">
-+            <i class="icon-link"></i>
-+            From {{h.get_pkg_dict_extra(pkg,'harvest_source_title') }}
-+          </span>
-+        {% endif %}
-     <h1>
-       {% block page_heading %}
-       {{ pkg.title or pkg.name }}
-diff --git a/ckan/templates/package/search.html b/ckan/templates/package/search.html
-index 7bf773b..bce5a1c 100644
---- a/ckan/templates/package/search.html
-+++ b/ckan/templates/package/search.html
-@@ -27,6 +27,7 @@
-         %}
-         {% set sorting = [
-           (_('Relevance'), 'score desc, metadata_modified desc'),
-+          (_('Source Data Portal'), 'extras_harvest_source_title asc'),
-           (_('Name Ascending'), 'title_string asc'),
-           (_('Name Descending'), 'title_string desc'),
-           (_('Last Modified'), 'metadata_modified desc'),
-diff --git a/ckan/templates/snippets/package_item.html b/ckan/templates/snippets/package_item.html
-index b6ae1b9..0d4a6d6 100644
---- a/ckan/templates/snippets/package_item.html
-+++ b/ckan/templates/snippets/package_item.html
-@@ -28,6 +28,13 @@ Example:
-             {{ _('Private') }}
-           </span>
-         {% endif %}
-+   {% if h.get_pkg_dict_extra(package,'harvest_source_title') %}
-+          <span class="dataset-private label label-inverse">
-+            <i class="icon-link"></i>
-+            From {{h.get_pkg_dict_extra(package,'harvest_source_title') }}
-+          </span>
-+        {% endif %}
-+
-         {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
-         {% if package.get('state', '').startswith('draft') %}
-           <span class="label label-info">{{ _('Draft') }}</span>
+diff --git a/ckan/controllers/package.py b/ckan/controllers/package.py
+index d22d9f1..4e2cf3a 100644
+--- a/ckan/controllers/package.py
++++ b/ckan/controllers/package.py
+@@ -174,7 +174,7 @@ class PackageController(base.BaseController):
+ 
+         c.sort_by = _sort_by
+         if sort_by is None:
+-            c.sort_by_fields = []
++            c.sort_by_fields = [('extra_harvest_portal', 'asc')]
+         else:
+             c.sort_by_fields = [field.split()[0]
+                                 for field in sort_by.split(',')]
+@@ -193,6 +193,8 @@ class PackageController(base.BaseController):
+             c.fields_grouped = {}
+             search_extras = {}
+             fq = ''
++            if q == '':
++                fq ='-harvest_portal:*'
+             for (param, value) in request.params.items():
+                 if param not in ['q', 'page', 'sort'] \
+                         and len(value) and not param.startswith('_'):
