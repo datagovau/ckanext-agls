@@ -3,7 +3,6 @@
 {% block custom_fields %}
 
     {{ form.hidden('extras__0__key','jurisdiction') }}
-
    {{ form.select('extras__0__value', label=_('Jurisdiction'), id='field-jurisdiction',
 options= [
         {'value': 'Government of South Australia'},
