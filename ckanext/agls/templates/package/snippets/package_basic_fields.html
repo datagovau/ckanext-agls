@@ -52,7 +52,7 @@ placeholder=_('The geographical area covered by the data. Eg: South Australia'),
 value=data.spatial_coverage or data.spatial or h.get_pkg_dict_extra(org_full,'spatial_coverage') or 'South Australia', error=errors.spatial_coverage, classes=['control-full'], is_required='true') %}
         <br/>
 The geographical area covered by the data. Eg: South Australia<br/>
-        Please input one of the following: 1) a point/polygon/bounding box; 2) an administrative boundary API; or 3) a
+        Please input one of the following: 1) a point/polygon/bounding box 2) an administrative boundary API or 3) a
         URL reference from the
         <a href="https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au#Extent">Gazetteer</a>.
 
@@ -80,7 +80,7 @@ value=data.language or 'English', error=errors.language, classes=['control-full'
     {% call form.select('data_state', label=_('Data Status'), options= [{'value': 'active', 'text': 'Active'}, {'value': 'inactive', 'text': 'Inactive'}],
 selected='Active', error=errors.data_state, is_required='true') %}
         <br/>
-        The status of the data with regard to whether it is kept updated (active, yes) or historic (inactive, no)
+The status of the data and whether it is kept updated (Active) or whether it is historic and no longer updated (Inactive)
     {% endcall %}
 
     {% call form.select('update_freq', label=_('Update Frequency'), id='field-update_freq',

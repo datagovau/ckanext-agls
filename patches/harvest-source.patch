@@ -20,3 +20,17 @@ index d22d9f1..4e2cf3a 100644
              for (param, value) in request.params.items():
                  if param not in ['q', 'page', 'sort'] \
                          and len(value) and not param.startswith('_'):
+diff --git a/ckan/logic/action/get.py b/ckan/logic/action/get.py
+index 365fe71..7ad0492 100644
+--- a/ckan/logic/action/get.py
++++ b/ckan/logic/action/get.py
+@@ -1463,7 +1463,7 @@ def package_search(context, data_dict):
+         # If this query hasn't come from a controller that has set this flag
+         # then we should remove any mention of capacity from the fq and
+         # instead set it to only retrieve public datasets
+-        fq = data_dict.get('fq', '')
++        fq = data_dict.get('fq', '-harvest_portal:*')
+         if not context.get('ignore_capacity_check', False):
+             fq = ' '.join(p for p in fq.split(' ')
+                             if not 'capacity:' in p)
+
