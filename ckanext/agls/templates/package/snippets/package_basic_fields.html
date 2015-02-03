@@ -28,10 +28,13 @@
         </div>
     </div>
 {% endblock %}
+{% block package_basic_fields_description %}
+  {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes, is_required=true) }}
+{% endblock %}
 
 {% block package_basic_fields_tags %}
     {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
-    {{ form.input('tag_string', id='field-tags', label=_('Keywords'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
+    {{ form.input('tag_string', id='field-tags', label=_('Keywords'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs, is_required='true') }}
 {% endblock %}
 
 {% block package_basic_fields_org %}
@@ -100,7 +103,7 @@ selected = data.update_freq, options=
 {'value': 'never', 'text': 'Never/Static'},
 {'value': 'other', 'text': 'Other (specify in description)'}]
 ,
-error=errors.update_freq, classes=['control-full']) %}
+error=errors.update_freq, classes=['control-full'], is_required='true') %}
         How often the dataset is updated. Eg: Daily, Weekly, Never
     {% endcall %}
 

@@ -254,6 +254,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         # not_empty == mandatory, enforced here while modifying
 
         schema.update({
+ 'tag_string': [tk.get_validator('tag_string_convert'),tk.get_validator('not_empty')],
+     'notes': [tk.get_validator('not_empty')],
             'contact_point': [tk.get_converter('convert_to_extras'),
                               tk.get_validator('not_empty')],
             'contact_info': [tk.get_validator('ignore_missing'),
@@ -272,8 +274,9 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                                      tk.get_converter('convert_to_extras')],
             'data_state': [tk.get_converter('convert_to_extras'),
                            tk.get_validator('not_empty')],
-            'update_freq': [tk.get_validator('ignore_missing'),
-                        tk.get_converter('convert_to_extras')],
+            'update_freq': [tk.get_converter('convert_to_extras'),
+                           tk.get_validator('not_empty')],
+
             'data_models': [tk.get_validator('ignore_missing'),
                             tk.get_converter('convert_to_extras')],
             'language': [tk.get_validator('ignore_missing'),
