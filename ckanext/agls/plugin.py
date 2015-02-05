@@ -254,7 +254,6 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         # not_empty == mandatory, enforced here while modifying
 
         schema.update({
- 'tag_string': [tk.get_validator('tag_string_convert'),tk.get_validator('not_empty')],
      'notes': [tk.get_validator('not_empty')],
             'contact_point': [tk.get_converter('convert_to_extras'),
                               tk.get_validator('not_empty')],
