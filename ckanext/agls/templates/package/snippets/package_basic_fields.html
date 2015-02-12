@@ -137,6 +137,7 @@ error=errors.update_freq, classes=['control-full'], is_required='true') %}
 
         <div class="controls">
             <select id="field-group" name="{{ group_name }}" data-module="autocomplete">
+                    <option value="">Please Select</option>
                 {% for group in h.groups() %}
                     <option value="{{ group.id }}">{{ group.title }}</option>
                 {% endfor %}
