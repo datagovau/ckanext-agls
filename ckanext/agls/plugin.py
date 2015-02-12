@@ -5,6 +5,7 @@ import csv
 import os
 import json
 from ckan.common import OrderedDict, _, json, request, c, g, response
+from sqlalchemy.exc import ProgrammingError
 import ckan.model as model
 
 def get_group_select_list():
@@ -113,11 +114,14 @@ def get_user_full(username):
     except plugins.toolkit.ObjectNotFound:
         return None
 def get_org_full(id):
+	if id == 'Undefined':
+	    return None
         try:
             return plugins.toolkit.get_action('organization_show')({'include_datasets': False},{'id': id})
         except plugins.toolkit.ObjectNotFound:
-            return None
-
+            return {}
+        except ProgrammingError:
+            return {}
 class AGLSDatasetPlugin(plugins.SingletonPlugin,
                         tk.DefaultDatasetForm):
     '''An example IDatasetForm CKAN plugin.
