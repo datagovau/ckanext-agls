@@ -14,11 +14,6 @@ To install this package, from your CKAN virtualenv, run the following from your 
 
 Then activate it by setting ``ckan.plugins = agls`` in your main ``ini``-file.
 
-To install the Gazetteer data (takes about 10 minutes)::
-  cd ../src/ckanext-agls/ckanext/agls/
-  xz gazetteer.2012.csv.xz
-  paster initdb --config=../ckan/development.ini
-
 Notes
 ===========
 https://github.com/geonetwork/schema-plugins/blob/master/iso19139.anzlic/templates/ANZLICMinimum.xml

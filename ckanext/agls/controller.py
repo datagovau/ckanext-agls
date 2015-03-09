@@ -14,7 +14,6 @@ from genshi.template import MarkupTemplate
 from genshi.template.text import NewTextTemplate
 import ckan.lib.base as base
 import ckan.lib.jsonp as jsonp
-import agls_model
 from sqlalchemy import func
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
@@ -38,10 +37,12 @@ class AGLSController(PackageController):
             q = data_dict['q']
             limit = data_dict.get('limit', 20)
 
-            query = model.Session.query(agls_model.AGLS_Gazetteer).filter(agls_model.AGLS_Gazetteer.name.ilike('%'+func.lower(q)+'%'))
-            query = query.limit(limit)
 
-            for record in query.all():
+            # http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:*Can*
+            #query = model.Session.query(agls_model.AGLS_Gazetteer).filter(agls_model.AGLS_Gazetteer.name.ilike('%'+func.lower(q)+'%'))
+            #query = query.limit(limit)
+
+            for record in []:
                 result_dict = {'name': getattr(record, 'record_id')+": "+getattr(record, 'name')}
                 record_list.append(result_dict)
         return record_list
@@ -62,10 +63,11 @@ class AGLSController(PackageController):
             q = data_dict['q']
             limit = data_dict.get('limit', 1)
 
-            query = model.Session.query(agls_model.AGLS_Gazetteer).filter(agls_model.AGLS_Gazetteer.record_id == q)
-            query = query.limit(limit)
+            # http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:*Can*
+            #query = model.Session.query(agls_model.AGLS_Gazetteer).filter(agls_model.AGLS_Gazetteer.record_id == q)
+            #query = query.limit(limit)
 
-            for record in query.all():
+            for record in []:
                 result_dict = {'id': getattr(record, 'record_id'),
                                'name': getattr(record, 'record_id')+": "+getattr(record, 'name'),
                                'latitude': getattr(record, 'latitude'),

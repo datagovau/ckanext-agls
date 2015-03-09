@@ -6,6 +6,7 @@ import os
 import json
 from ckan.common import OrderedDict, _, json, request, c, g, response
 import ckan.model as model
+from pylons import config
 
 def get_group_select_list():
     result = []
@@ -117,6 +118,8 @@ def get_org_full(id):
             return plugins.toolkit.get_action('organization_show')({'include_datasets': False},{'id': id})
         except plugins.toolkit.ObjectNotFound:
             return None
+def is_site(site_name):
+    return site_name in config.get('ckan.site_url', '')
 
 class AGLSDatasetPlugin(plugins.SingletonPlugin,
                         tk.DefaultDatasetForm):

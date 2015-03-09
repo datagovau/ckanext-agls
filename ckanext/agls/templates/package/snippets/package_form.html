@@ -27,9 +27,13 @@ value=data.author or org_full.title, error=errors.maintainer, classes=['control-
 placeholder=_('Email address for questions about content of dataset'),
 value=data.contact_point or h.get_pkg_dict_extra(org_full,'email'), error=errors.contact_point, classes=['control-full'], is_required=true) }}
 
-    {% call form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction',
-    value=data.jurisdiction or h.get_pkg_dict_extra(org_full,'jurisdiction'), error=errors.jurisdiction, classes=['control-full'], is_required=true) %}
-
+{% if h.is_site('nsw') %}
+{% call form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction',
+value=data.jurisdiction or h.get_pkg_dict_extra(org_full,'jurisdiction') or 'New South Wales', error=errors.jurisdiction, classes=['control-full'], is_required=true) %}
+{% else %}
+{% call form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction',
+value=data.jurisdiction or h.get_pkg_dict_extra(org_full,'jurisdiction') or 'Commonwealth of Australia', error=errors.jurisdiction, classes=['control-full'], is_required=true) %}
+{% endif %}
     {% endcall %}
 {% endblock %}
 
