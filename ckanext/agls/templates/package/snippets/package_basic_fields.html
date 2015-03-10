@@ -72,9 +72,9 @@ value=data.temporal_coverage_from or data.temporal_coverage or h.get_pkg_dict_ex
     {{ form.input('temporal_coverage_to', label=_('Temporal Coverage To'), id='field-temporal_coverage-to',
 placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
 value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['control-full']) }}
-    {{ form.input('granularity', label=_('Data Granularity'), id='field-granularity',
+    {{ form.input('data_granularity', label=_('Data Granularity'), id='field-data_granularity',
 placeholder=_('The level of detail of each data item ie. Unit level or aggregate'),
-value=data.granularity, error=errors.granularity, classes=['control-full']) }}
+value=data.data_granularity, error=errors.data_granularity, classes=['control-full']) }}
 
     {{ form.input('language', label=_('Language'), id='field-language',
 placeholder=_('If not English, language should be assigned a value'),
