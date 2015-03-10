@@ -4,7 +4,7 @@
           <div class="field">
             <label for="field-sitewide-search">{% block header_site_search_label %}{{ _('Search Datasets') }}{% endblock %}</label>
             <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search') }}" />
-<input name="sort" type="hidden" value="extras_harvest_portal asc"/>
+<input name="sort" type="hidden" value="extras_harvest_portal asc, score desc"/>
             <button class="btn-search" type="submit"><i class="icon-search"></i></button>
           </div>
         </form>
