@@ -57,7 +57,7 @@ Example:
         {% for resource in h.dict_list_reduce(package.resources, 'format') %}
           <li>
    {% if h.get_pkg_dict_extra(package,'harvest_portal') %}
- <a href="{{h.get_pkg_dict_extra(package,'harvest_url')}}" class="label searchpartnership-url-analytics" data-portal="{{h.get_pkg_dict_extra(package,'harvest_portal')}}" data-format="{{ resource.lower() }}" target="_blank">{{ resource }}</a>
+ <a href="{{h.get_pkg_dict_extra(package,'harvest_url')}}" class="label searchpartnership-url-analytics" data-portal="{{h.get_pkg_dict_extra(package,'harvest_portal')}}" data-format="{{ resource.lower() }}">{{ resource }}</a>
 {% else %}
             <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label" data-format="{{ resource.lower() }}">{{ resource }}</a>
 {% endif %}
