@@ -54,11 +54,12 @@
 placeholder=_('The geographical area covered by the data. Eg: South Australia'),
 value=data.spatial_coverage or data.spatial or h.get_pkg_dict_extra(org_full,'spatial_coverage') or 'South Australia', error=errors.spatial_coverage, classes=['control-full'], is_required='true') %}
         <br/>
-The geographical area covered by the data. Eg: South Australia<br/>
-        Please input one of the following: 1) a point/polygon/bounding box 2) an administrative boundary API or 3) a
-        URL reference from the
-        <a href="https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au#Extent">Gazetteer</a>.
-
+Free text field with South Australia as the default. If you have a more specific location use one of the following:
+<ol>
+ <li> a point/polygon (WKT) <a href="http://en.wikipedia.org/wiki/Well-known_text" class="external-link" rel="nofollow">http://en.wikipedia.org/wiki/Well-known_text</a></li>
+<li> an administrative boundary API </li>
+ <li> a reference URL (website address) from the National Gazetteer <a href="http://www.ga.gov.au/place-names/index.xhtml" class="external-link" rel="nofollow">http://www.ga.gov.au/place-names/index.xhtml</a>. Gazetteer reference URLs can be found by searching for a place at <a href="http://www.ga.gov.au/place-names/" class="external-link" rel="nofollow">http://www.ga.gov.au/place-names/</a> then clicking through to the most appropriate location "Reference ID", and then copying and pasting the URL from the page into the Geospatial field in data.gov.au. </li>
+</ol>
     {% endcall %}
     <input type="hidden" id='spatial' name="spatial" value="{{ data.spatial }}" />
     {% call form.input('temporal_coverage_from', label=_('Temporal Coverage From'), id='field-temporal_coverage-from',
