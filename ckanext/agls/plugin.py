@@ -119,7 +119,8 @@ def get_org_full(id):
         except plugins.toolkit.ObjectNotFound:
             return None
 def is_site(site_name):
-    return site_name in config.get('ckan.site_url', '')
+    result = site_name in config.get('ckan.site_url', '')
+    return result
 
 class AGLSDatasetPlugin(plugins.SingletonPlugin,
                         tk.DefaultDatasetForm):
@@ -145,7 +146,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     def get_helpers(self):
         return {'fields_of_research': fields_of_research, 'geospatial_topics': geospatial_topics,
                 'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound,
-                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id}
+                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id, 'is_site': is_site}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
