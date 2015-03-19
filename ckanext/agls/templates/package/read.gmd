@@ -132,7 +132,7 @@
             <gmd:extent>
                 <gmd:EX_Extent py:with="spatial_box = h.spatial_bound(c.pkg_dict.get('spatial'))">
                     <gmd:geographicElement py:if="spatial_box != None">
-                        <gmd:EX_GeographicBoundingBox py:with="(minx,maxx,miny,maxy) = spatial_box" >
+                        <gmd:EX_GeographicBoundingBox py:with="(minx,miny,maxx,maxy) = spatial_box" >
                         <gmd:westBoundLongitude><gco:Decimal>${minx}</gco:Decimal></gmd:westBoundLongitude>
                         <gmd:eastBoundLongitude><gco:Decimal>${maxx}</gco:Decimal></gmd:eastBoundLongitude>
                         <gmd:southBoundLatitude><gco:Decimal>${miny}</gco:Decimal></gmd:southBoundLatitude>
