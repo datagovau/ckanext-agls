@@ -134,11 +134,12 @@ error=errors.update_freq, classes=['control-full'], is_required='true') %}
     <div class="control-group control-full">
 
         <label class="control-label" for="field-group"><span title="This field is required"
-                                                             class="control-required">*</span>AGIFT
+                                                             class="control-required">*</span>Add AGIFT
             Function/Theme</label>
 
         <div class="controls">
             <select id="field-group" name="{{ group_name }}" data-module="autocomplete">
+                <option value="">Please Select</option>
                 {% for group in h.groups() %}
                     <option value="{{ group.id }}">{{ group.title }}</option>
                 {% endfor %}
