@@ -38,10 +38,11 @@
                 <gmd:CI_Contact>
                     <gmd:phone>
                         <gmd:CI_Telephone>
-                            <gmd:voice py:if="h.get_pkg_dict_extra( h.get_org_full(c.pkg_dict['organization']['id']),'telephone')">
+                            <gmd:voice py:if="c.pkg_dict.get('organization', None) and h.get_pkg_dict_extra( h.get_org_full(c.pkg_dict['organization']['id']),'telephone')">
                                 <gco:CharacterString>${ h.get_pkg_dict_extra( h.get_org_full(c.pkg_dict['organization']['id']),'telephone') }</gco:CharacterString>
                             </gmd:voice>
                         </gmd:CI_Telephone>
+
                     </gmd:phone>
                     <gmd:address>
                         <gmd:CI_Address>
@@ -101,8 +102,8 @@
                     </identifier>
                     <citedResponsibleParty>
                         <CI_ResponsibleParty>
-                            <individualName>
-                                <gco:CharacterString>${ c.pkg_dict['organization']['title'] }</gco:CharacterString>
+                            <individualName py:if="c.pkg_dict.get('organization', None)">
+                                <gco:CharacterString>${ c.pkg_dict.get('organization', {'title':''})['title'] }</gco:CharacterString>
                             </individualName>
                             <role>
                                 <CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="author">author</CI_RoleCode>
