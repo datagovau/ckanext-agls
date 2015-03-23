@@ -7,6 +7,8 @@ import json
 from ckan.common import OrderedDict, _, json, request, c, g, response
 from sqlalchemy.exc import ProgrammingError
 import ckan.model as model
+from shapely.geometry import asShape
+from pylons import config
 
 def get_group_select_list():
     result = []
@@ -93,19 +95,7 @@ def fields_of_research():
 def spatial_bound(spatial_str):
     if spatial_str and spatial_str != '':
         spatial_dict = json.loads(spatial_str)
-        if spatial_dict['type'] == 'Point':
-            minx = spatial_dict['coordinates'][0]
-            minx = spatial_dict['coordinates'][0]
-            maxx = spatial_dict['coordinates'][0]
-            miny = spatial_dict['coordinates'][1]
-            maxy = spatial_dict['coordinates'][1]
-        if spatial_dict['type'] == 'Polygon':
-            minx = spatial_dict['coordinates'][0][0][0]
-            maxx = spatial_dict['coordinates'][0][1][0]
-            miny = spatial_dict['coordinates'][0][0][1]
-            maxy = spatial_dict['coordinates'][0][2][1]
-        if minx:
-            return (minx,maxx,miny,maxy)
+        return asShape(spatial_dict).bounds
     return None
 
 def get_user_full(username):
@@ -115,13 +105,19 @@ def get_user_full(username):
         return None
 def get_org_full(id):
 	if id == 'Undefined':
-	    return None
+	    return {}
         try:
             return plugins.toolkit.get_action('organization_show')({'include_datasets': False},{'id': id})
         except plugins.toolkit.ObjectNotFound:
             return {}
         except ProgrammingError:
             return {}
+	return {}
+
+def is_site(site_name):
+    result = site_name in config.get('ckan.site_url', '')
+    return result
+
 class AGLSDatasetPlugin(plugins.SingletonPlugin,
                         tk.DefaultDatasetForm):
     '''An example IDatasetForm CKAN plugin.
@@ -146,7 +142,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     def get_helpers(self):
         return {'fields_of_research': fields_of_research, 'geospatial_topics': geospatial_topics,
                 'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound,
-                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id}
+                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id, 'is_site': is_site}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so

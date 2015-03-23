@@ -46,19 +46,30 @@
     {% if h.group_id() %}
         {% set org_full = h.get_org_full(h.group_id()) %}
     {% endif %}
-
+{% set spatial_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/gazetteer/autocomplete?q=?'} %}
+{% if h.is_site('nsw') %}
     {% call form.input('spatial_coverage', label=_('Geospatial Coverage'), id='field-spatial_coverage',
-placeholder=_('The geographical area covered by the data. Eg: Whole of Australia, New South Wales, Canberra'),
-value=data.spatial_coverage or data.spatial or h.get_pkg_dict_extra(org_full,'spatial_coverage'), error=errors.spatial_coverage, classes=['control-full'], is_required='true') %}
-        <br/>
-        Please input one of the following: 1) a point/polygon/bounding box; 2) an administrative boundary API; or 3) a
-        URL reference from the
-        <a href="https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au#Extent">Gazetteer</a>.
+placeholder=_('The geographical area covered by the data. Eg: Canberra (GA1487)'),
+value=data.spatial_coverage or data.spatial or h.get_pkg_dict_extra(org_full,'spatial_coverage') or 'New South Wales (NSW81093)', error=errors.spatial_coverage, classes=['control-full'], is_required='true', attrs=spatial_attrs) %}
+<br/>
+Please input one of the following: 1) a point/polygon/bounding box; 2) an administrative boundary API; or 3) a location name and ID from the <a href="https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au#Extent">National
+    Gazetteer</a>.
 
-    {% endcall %}
+{% endcall %}
+{% else %}
+{% call form.input('spatial_coverage', label=_('Geospatial Coverage'), id='field-spatial_coverage',
+placeholder=_('The geographical area covered by the data. Eg: Canberra (GA1487)'),
+value=data.spatial_coverage or data.spatial or h.get_pkg_dict_extra(org_full,'spatial_coverage'), error=errors.spatial_coverage, classes=['control-full'], is_required='true', attrs=spatial_attrs) %}
+<br/>
+Please input one of the following: 1) a point/polygon/bounding box; 2) an administrative boundary API; or 3) a location name and ID from the <a href="https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au#Extent">National
+    Gazetteer</a>.
+
+{% endcall %}
+{% endif %}
+
     <input type="hidden" id='spatial' name="spatial" value="{{ data.spatial }}" />
     {% call form.input('temporal_coverage_from', label=_('Temporal Coverage From'), id='field-temporal_coverage-from',
-placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
+placeholder=_('The date at which timespan the dataset relates to starts eg. 2014-01-01'),
 value=data.temporal_coverage_from or data.temporal_coverage or h.get_pkg_dict_extra(data,'temporal_coverage'), error=errors.temporal_coverage_from, classes=['control-full'], is_required='true') %}
         <br/>
         What is the temporal coverage of your dataset? Please choose a single date or a from and to date.
@@ -66,7 +77,7 @@ value=data.temporal_coverage_from or data.temporal_coverage or h.get_pkg_dict_ex
     {% endcall %}
 
     {{ form.input('temporal_coverage_to', label=_('Temporal Coverage To'), id='field-temporal_coverage-to',
-placeholder=_('The timespan the dataset relates to: Current, 2008, 2008-2012, Jan 2012'),
+placeholder=_('The date at which timespan the dataset relates to ends (if known) eg. 2014-12-31'),
 value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['control-full']) }}
 
     {{ form.input('language', label=_('Language'), id='field-language',
@@ -91,7 +102,7 @@ selected = data.update_freq, options=
 {'value': 'annually', 'text': 'Annually'},
 {'value': 'infrequently', 'text': 'Infrequently'},
 {'value': 'never', 'text': 'Never/Static'},
-{'value': 'other', 'text': 'Other (specify)'}]
+{'value': 'other', 'text': 'Other (specify in dataset description/notes)'}]
 ,
 error=errors.update_freq, classes=['control-full'], is_required='true') %}
         How often the dataset is updated. Eg: Daily, Weekly, Never
@@ -123,11 +134,12 @@ error=errors.update_freq, classes=['control-full'], is_required='true') %}
     <div class="control-group control-full">
 
         <label class="control-label" for="field-group"><span title="This field is required"
-                                                             class="control-required">*</span>AGIFT
+                                                             class="control-required">*</span>Add AGIFT
             Function/Theme</label>
 
         <div class="controls">
             <select id="field-group" name="{{ group_name }}" data-module="autocomplete">
+                <option value="">Please Select</option>
                 {% for group in h.groups() %}
                     <option value="{{ group.id }}">{{ group.title }}</option>
                 {% endfor %}

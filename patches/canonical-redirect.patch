@@ -1,0 +1,15 @@
+diff --git a/ckan/controllers/package.py b/ckan/controllers/package.py
+index 32ce8f6..911fee6 100644
+--- a/ckan/controllers/package.py
++++ b/ckan/controllers/package.py
+@@ -382,6 +382,9 @@ class PackageController(base.BaseController):
+ 
+         # used by disqus plugin
+         c.current_package_id = c.pkg.id
++        if h.get_pkg_dict_extra(c.pkg_dict,'harvest_portal'):
++            log.info(h.get_pkg_dict_extra(c.pkg_dict,'harvest_portal'))
++            redirect(h.get_pkg_dict_extra(c.pkg_dict,'harvest_url').encode('ascii','ignore'), 301)
+         c.related_count = c.pkg.related_count
+ 
+         # can the resources be previewed?
+

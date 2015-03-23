@@ -7,7 +7,7 @@ index d22d9f1..4e2cf3a 100644
          c.sort_by = _sort_by
          if sort_by is None:
 -            c.sort_by_fields = []
-+            c.sort_by_fields = [('extra_harvest_portal', 'asc')]
++            c.sort_by_fields = [('extra_harvest_portal', 'asc'), ('score','desc')]
          else:
              c.sort_by_fields = [field.split()[0]
                                  for field in sort_by.split(',')]
