@@ -24,14 +24,13 @@ class AGLSController(PackageController):
     @jsonp.jsonpify
     def geo_autocomplete(self):
         q = request.params.get('q', '')
-        limit = request.params.get('limit', 20)
         record_list = []
         if q:
-
-            r = requests.get("http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:"+q).json()
+            r = requests.get("http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:*"+q+"*"\
+                             "&fq=feature_code:POPL or feature_code:LOCB or feature_code:SUB or feature_code:URBN or feature_code:STAT ").json()
 
             for record in r['response']['docs']:
-                result_dict = {'name': getattr(record, 'record_id')+": "+getattr(record, 'name')}
+                result_dict = {'name': record.get('id')+": "+record.get('name')}
                 record_list.append(result_dict)
         return record_list
 
@@ -41,26 +40,17 @@ class AGLSController(PackageController):
         limit = request.params.get('limit', 1)
         record_list = []
         if q:
-            import ckan.model as model
-            context = {'model': model}
+            r = requests.get("http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=id:"+q).json()
 
-            data_dict = {'q': q, 'limit': limit}
-
-            model = context['model']
-
-            q = data_dict['q']
-            limit = data_dict.get('limit', 1)
-
-            # http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:*Can*
-            #query = model.Session.query(agls_model.AGLS_Gazetteer).filter(agls_model.AGLS_Gazetteer.record_id == q)
-            #query = query.limit(limit)
-
-            for record in []:
-                result_dict = {'id': getattr(record, 'record_id'),
-                               'name': getattr(record, 'record_id')+": "+getattr(record, 'name'),
-                               'latitude': getattr(record, 'latitude'),
-                               'longitude': getattr(record, 'longitude'),
-                               'geojson': '{"type": "Point","coordinates": ['+ str(getattr(record, 'longitude'))+ ','+str(getattr(record, 'latitude'))+']}'}
+            for record in r['response']['docs']:
+                locationParts = record['location'].split(',')
+                latitude = locationParts[0]
+                longitude = locationParts[1]
+                result_dict = {'id': record.get('id'),
+                               'name': record.get('id')+": "+record.get('name'),
+                               'latitude': latitude,
+                               'longitude': longitude,
+                               'geojson': '{"type": "Point","coordinates": ['+ longitude+ ','+latitude+']}'}
                 return result_dict
         return {}
 
