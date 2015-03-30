@@ -139,6 +139,10 @@ def get_pkg_obj_extra(pkg_dict, key, default=None):
             return extra['value']
 
     return default
+def get_popular_tags():  
+    connection = model.Session.connection()
+    res = connection.execute("select tag.name from package_tag INNER JOIN tag on tag.id = package_tag.tag_id where package_tag.package_id not in (select distinct package_id from package_extra where key = 'harvest_portal') group by tag.name order by count(*) desc limit 3;").fetchall()
+    return res
 
 class AGLSDatasetPlugin(plugins.SingletonPlugin,
                         tk.DefaultDatasetForm):
@@ -165,7 +169,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         return {'fields_of_research': fields_of_research, 'geospatial_topics': geospatial_topics,
                 'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound,
                 'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id,
-		'is_hosted': is_hosted, 'get_pkg_obj_extra': get_pkg_obj_extra}
+		'is_hosted': is_hosted, 'get_pkg_obj_extra': get_pkg_obj_extra, 'get_popular_tags': get_popular_tags}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
