@@ -1,7 +1,7 @@
 {% ckan_extends %}
 
-{% block custom_fields %}
-
+{% block basic_fields %}
+{{ super() }}
     {{ form.hidden('extras__0__key','jurisdiction') }}
     {{ form.select('extras__0__value', label=_('Jurisdiction'), id='field-jurisdiction',
 options= [
@@ -35,5 +35,7 @@ value=h.get_pkg_dict_extra(data,'email'), error=errors['extras__2__key'] or erro
     {{ form.input('extras__4__value', label=_('Telephone'), id='field-telephone',
 placeholder=_('Telephone contact for general open data enquiries'),
 value=h.get_pkg_dict_extra(data,'telephone'), error=errors['extras__3__key'] or errors['extras__3__value'], classes=['control-medium'], is_required=true) }}
+{% endblock %}
 
+{% block custom_fields %}
 {% endblock %}
