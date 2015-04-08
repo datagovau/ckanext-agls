@@ -7,6 +7,7 @@ import json
 from ckan.common import OrderedDict, _, json, request, c, g, response
 from sqlalchemy.exc import ProgrammingError
 import ckan.model as model
+import datetime
 from shapely.geometry import asShape
 from pylons import config
 
@@ -117,6 +118,8 @@ def get_org_full(id):
 def is_site(site_name):
     result = site_name in config.get('ckan.site_url', '')
     return result
+def get_now():
+    return datetime.datetime.now().strftime('%Y-%M-%d')
 
 class AGLSDatasetPlugin(plugins.SingletonPlugin,
                         tk.DefaultDatasetForm):
@@ -142,7 +145,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     def get_helpers(self):
         return {'fields_of_research': fields_of_research, 'geospatial_topics': geospatial_topics,
                 'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound,
-                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id, 'is_site': is_site}
+                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id, 'is_site': is_site, 'get_now': get_now}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
