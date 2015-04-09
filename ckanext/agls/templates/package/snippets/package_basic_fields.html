@@ -116,7 +116,13 @@ error=errors.update_freq, classes=['control-full'], is_required='true') %}
     {% endcall %}
     {% if data.groups %}
         <div class="control-group">
-            <label class="control-label">AGIFT Themes</label>
+            <label class="control-label">
+{% if h.is_site('nsw') %}
+Functions of Government
+{% else %}
+AGIFT Themes
+{% endif %}
+</label>
 
             <div class="controls">
                 {% for group in data.groups %}
@@ -134,8 +140,14 @@ error=errors.update_freq, classes=['control-full'], is_required='true') %}
     <div class="control-group control-full">
 
         <label class="control-label" for="field-group"><span title="This field is required"
-                                                             class="control-required">*</span>Add AGIFT
-            Function/Theme</label>
+                                                             class="control-required">*</span>
+{% if h.is_site('nsw') %}
+Add Function of Government
+{% else %}
+Add AGIFT Function/Theme
+{% endif %}
+
+</label>
 
         <div class="controls">
             <select id="field-group" name="{{ group_name }}" data-module="autocomplete">
@@ -145,9 +157,11 @@ error=errors.update_freq, classes=['control-full'], is_required='true') %}
                 {% endfor %}
             </select>
             <br/>
+{% if h.is_site('nsw') %}
+{% else %}
             The <a target="_blank" href="http://agift.naa.gov.au">AGIFT</a> top level government function to which the
             resource relates.
-
+{% endif %}
         </div>
     </div>
 {% endblock %}
