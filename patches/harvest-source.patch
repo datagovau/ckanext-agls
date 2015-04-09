@@ -1,7 +1,16 @@
 diff --git a/ckan/controllers/package.py b/ckan/controllers/package.py
-index d22d9f1..4e2cf3a 100644
+index d22d9f1..0c9e185 100644
 --- a/ckan/controllers/package.py
 +++ b/ckan/controllers/package.py
+@@ -152,7 +152,7 @@ class PackageController(base.BaseController):
+ 
+         c.remove_field = remove_field
+ 
+-        sort_by = request.params.get('sort', None)
++        sort_by = request.params.get('sort', 'extras_harvest_portal asc, score desc')
+         params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
+ 
+         def _sort_by(fields):
 @@ -174,7 +174,7 @@ class PackageController(base.BaseController):
  
          c.sort_by = _sort_by
@@ -20,3 +29,4 @@ index d22d9f1..4e2cf3a 100644
              for (param, value) in request.params.items():
                  if param not in ['q', 'page', 'sort'] \
                          and len(value) and not param.startswith('_'):
+
