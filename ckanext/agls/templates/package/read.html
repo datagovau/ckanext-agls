@@ -163,7 +163,7 @@
             {% if pkg.get('temporal_coverage_from') %}
                 <tr>
                     <th scope="row" class="dataset-label">Temporal Coverage</th>
-                    <td class="dataset-details" property="dct:temporal"> {{ h.render_datetime(pkg.temporal_coverage_from,date_format) }}
+                    <td class="dataset-details" property="dct:temporal"> {{ h.render_datetime(pkg.temporal_coverage_from,date_format) or pkg.temporal_coverage_from }}
   {% if pkg.get('temporal_coverage_to')  %}
 to {{h.render_datetime(pkg.temporal_coverage_to,date_format) }}
 {% endif %}
