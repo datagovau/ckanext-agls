@@ -28,6 +28,7 @@
 {% endblock %}
 
 {% block package_additional_info %}
+{% set date_format="%d-%m-%Y" %}
     <section class="additional-info" prefix="dc: http://purl.org/dc/elements/1.1/ dcat: http://www.w3.org/ns/dcat#
          dcam: http://purl.org/dc/dcam/
          aglsterms: http://www.agls.gov.au/agls/terms/
@@ -96,26 +97,26 @@
 {% if pkg.get('date_created') %}
                 <tr>
                     <th scope="row" class="dataset-label">Date Published</th>
-                    <td class="dataset-details" property="dct:issued">{{ pkg.date_created }}</td>
+                    <td class="dataset-details" property="dct:issued">{{ h.render_datetime(pkg.date_created,date_format) }}</td>
                 </tr>
 
             {%else %}{%  if pkg.get('metadata_created') %}
                 <tr>
                     <th scope="row" class="dataset-label">Date Published</th>
-                    <td class="dataset-details" property="dct:issued">{{ pkg.metadata_created.split("T")[0] }}</td>
+                    <td class="dataset-details" property="dct:issued">{{ h.render_datetime(pkg.metadata_created.split("T")[0],date_format) }}</td>
                 </tr>
             {% endif %}
  {% endif %}
 {%if pkg.get('date_updated') %}
    <tr>
                     <th scope="row" class="dataset-label">Date Updated</th>
-                    <td class="dataset-details" property="dct:updated">{{ pkg.date_updated }}</td>
+                    <td class="dataset-details" property="dct:updated">{{ h.render_datetime(pkg.date_updated,date_format) }}</td>
                 </tr>
 
             {% else %} {% if pkg.get('metadata_updated') %}
                 <tr>
                     <th scope="row" class="dataset-label">Date Updated</th>
-                    <td class="dataset-details" property="dct:updated">{{ pkg.metadata_updated.split("T")[0] }}</td>
+                    <td class="dataset-details" property="dct:updated">{{ h.render_datetime(pkg.metadata_updated.split("T")[0],date_format) }}</td>
                 </tr>
             {% endif %}
  {% endif %}
@@ -162,9 +163,9 @@
             {% if pkg.get('temporal_coverage_from') %}
                 <tr>
                     <th scope="row" class="dataset-label">Temporal Coverage</th>
-                    <td class="dataset-details" property="dct:temporal"> {{ pkg.temporal_coverage_from }}
+                    <td class="dataset-details" property="dct:temporal"> {{ h.render_datetime(pkg.temporal_coverage_from,date_format) }}
   {% if pkg.get('temporal_coverage_to')  %}
-- {{pkg.temporal_coverage_to }}
+to {{h.render_datetime(pkg.temporal_coverage_to,date_format) }}
 {% endif %}
 </td>
                 </tr>
