@@ -1,0 +1,28 @@
+diff --git a/ckan/controllers/package.py b/ckan/controllers/package.py
+index d22d9f1..d66bddc 100644
+--- a/ckan/controllers/package.py
++++ b/ckan/controllers/package.py
+@@ -660,7 +662,7 @@ class PackageController(base.BaseController):
+                         return self.new_resource(id, data, errors, error_summary)
+                 # we have a resource so let them add metadata
+                 redirect(h.url_for(controller='package',
+-                                   action='new_metadata', id=id))
++                                   action='read', id=id))
+
+             data['package_id'] = id
+             try:
+@@ -679,9 +681,12 @@ class PackageController(base.BaseController):
+                 abort(404,
+                     _('The dataset {id} could not be found.').format(id=id))
+             if save_action == 'go-metadata':
++               data_dict = get_action('package_show')(context, {'id': id})
++                data_dict['state'] = 'active'
++                pkg_dict = get_action('package_update')(context, data_dict)
+                 # go to final stage of add dataset
+                 redirect(h.url_for(controller='package',
+-                                   action='new_metadata', id=id))
++                                   action='read', id=id))
+             elif save_action == 'go-dataset':
+                 # go to first stage of add dataset
+                 redirect(h.url_for(controller='package',
+

@@ -216,6 +216,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                            tk.get_validator('ignore_missing')],
             'language': [tk.get_converter('convert_from_extras'),
                            tk.get_validator('ignore_missing')],
+            'type': [tk.get_converter('convert_from_extras'),
+                           tk.get_validator('ignore_missing')],
             'geospatial_topic': [
                 tk.get_converter('convert_from_tags')('geospatial_topics'),
                 tk.get_validator('ignore_missing')],
@@ -241,6 +243,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         # not_empty == mandatory, enforced here while modifying
 
         schema.update({
+     'notes': [tk.get_validator('not_empty')],
             'contact_point': [tk.get_converter('convert_to_extras'),
                               tk.get_validator('not_empty')],
             'contact_info': [tk.get_validator('ignore_missing'),
@@ -263,6 +266,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                             tk.get_converter('convert_to_extras')],
             'language': [tk.get_validator('ignore_missing'),
                             tk.get_converter('convert_to_extras')],
+            'type': [tk.get_converter('convert_from_extras'),
+                           tk.get_validator('ignore_missing')],
             'geospatial_topic': [
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_tags')('geospatial_topics')

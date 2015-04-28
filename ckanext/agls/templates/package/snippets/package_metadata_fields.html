@@ -8,6 +8,8 @@ won't work. #}
 {% endblock %}
 
 {% block package_metadata_fields %}
+{% if h.is_site('nsw') %}
+{% else %}
 
     <div class="control-group control-full">
         <label class="control-label" for="field-geospatial_topic">{{ _("Geospatial Topic") }}</label>
@@ -60,6 +62,7 @@ value=data.data_model, error=errors.data_model, classes=['control-full']) %}
         </div>
 
     </div>
+{% endif %}
 
     {{ super() }}
 

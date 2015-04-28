@@ -18,14 +18,16 @@
      {% set org_full = {'extras':{}} %}
     {% endif %}
     {% call form.input('author', label=_('Publisher'), id='field-publisher',
-placeholder=_('Email address for questions about content of dataset'),
 value=data.author or org_full.title, error=errors.maintainer, classes=['control-full'], is_required=true) %}
     Name of Agency/publishing organisation.
     {% endcall %}
 
-    {{ form.input('contact_point', label=_('Contact'), id='field-contact_point',
+    {% call form.input('contact_point', label=_('Contact Email'), id='field-contact_point',
 placeholder=_('Email address for questions about content of dataset'),
-value=data.contact_point or h.get_pkg_dict_extra(org_full,'email'), error=errors.contact_point, classes=['control-full'], is_required=true) }}
+value=data.contact_point or h.get_pkg_dict_extra(org_full,'email'), error=errors.contact_point, classes=['control-full'], is_required=true) %}
+A publically-displayed email address for questions about the dataset
+{% endcall %}
+
 
 {% if h.is_site('nsw') %}
 {% call form.input('jurisdiction', label=_('Jurisdiction'), id='field-jurisdiction',
@@ -43,3 +45,7 @@ value=data.jurisdiction or h.get_pkg_dict_extra(org_full,'jurisdiction') or 'Com
     {{ form.hidden('maintainer', c.user) }}
     {{ super() }}
 {% endblock %}
+
+      {% block save_button %}
+        <button class="btn btn-primary" type="submit" name="save">{% block save_button_text %}{{ _('Next: Add Resources') }}{% endblock %}</button>
+      {% endblock %}

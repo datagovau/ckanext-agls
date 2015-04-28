@@ -47,11 +47,11 @@
             <tbody>
             <tr>
                 <th scope="row" class="dataset-label">Title</th>
-                <td class="dataset-details" property="dc:type">{{ pkg.title }}</td>
+                <td class="dataset-details" property="dc:title">{{ pkg.title }}</td>
             </tr>
             <tr>
                 <th scope="row" class="dataset-label">Type</th>
-                <td class="dataset-details" property="dc:type">Dataset</td>
+                <td class="dataset-details" property="dc:type">{{pkg.type or 'Dataset'}}</td>
             </tr>
             <tr>
                 <th scope="row" class="dataset-label">Language</th>

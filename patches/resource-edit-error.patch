@@ -1,8 +1,18 @@
 diff --git a/ckan/logic/action/create.py b/ckan/logic/action/create.py
-index 29ae102..8364cbe 100644
+index 4bb0800..3bfaf96 100644
 --- a/ckan/logic/action/create.py
 +++ b/ckan/logic/action/create.py
-@@ -269,7 +269,11 @@ def resource_create(context, data_dict):
+@@ -249,6 +249,9 @@ def resource_create(context, data_dict):
+     model = context['model']
+     user = context['user']
+ 
++    if 'name' not in data_dict or data_dict['name'] == "":
++       raise ValidationError(["Please enter a name for the resource"])
++
+     package_id = _get_or_bust(data_dict, 'package_id')
+     data_dict.pop('package_id')
+ 
+@@ -269,7 +272,11 @@ def resource_create(context, data_dict):
          _get_action('package_update')(context, pkg_dict)
          context.pop('defer_commit')
      except ValidationError, e:
@@ -16,10 +26,20 @@ index 29ae102..8364cbe 100644
  
      ## Get out resource_id resource from model as it will not appear in
 diff --git a/ckan/logic/action/update.py b/ckan/logic/action/update.py
-index a0b80db..57b910c 100644
+index e0c06dd..c5fac3b 100644
 --- a/ckan/logic/action/update.py
 +++ b/ckan/logic/action/update.py
-@@ -230,7 +230,10 @@ def resource_update(context, data_dict):
+@@ -200,6 +200,9 @@ def resource_update(context, data_dict):
+     user = context['user']
+     id = _get_or_bust(data_dict, "id")
+ 
++    if 'name' not in data_dict or data_dict['name'] == "":
++       raise ValidationError(["Please enter a name for the resource"])
++
+     resource = model.Resource.get(id)
+     context["resource"] = resource
+ 
+@@ -230,7 +233,10 @@ def resource_update(context, data_dict):
          pkg_dict = _get_action('package_update')(context, pkg_dict)
          context.pop('defer_commit')
      except ValidationError, e:

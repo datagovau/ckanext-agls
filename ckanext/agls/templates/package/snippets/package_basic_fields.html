@@ -4,6 +4,23 @@
     {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large'], attrs={'data-module': 'slug-preview-target'}, is_required=true) }}
 {% endblock %}
 
+{% block package_basic_fields_description %}
+  {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes, is_required='true') }}
+{% endblock %}
+
+{% block package_metadata_fields_visibility %}
+      <div class="control-group">
+        <label for="field-private" class="control-label">{{ _('Visibility') }}</label>
+        <div class="controls">
+          <select id="field-private" name="private">
+            {% for option in [('False', _('Public')), ('True', _('Private'))] %}
+            <option value="{{ option[0] }}" {% if option[0] == data.private|trim %}selected="selected"{% endif %}>{{ option[1] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    {% endblock %}
+
 {% block package_basic_fields_license %}
     <div class="control-group">
         {% set error = errors.license_id %}
@@ -83,6 +100,24 @@ value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['co
     {{ form.input('language', label=_('Language'), id='field-language',
 placeholder=_('If not English, language should be assigned a value'),
 value=data.language or 'English', error=errors.language, classes=['control-full']) }}
+    {% call form.select('type', label=_('Type'), id='field-type',
+
+selected = data.type or 'Dataset', options=
+[{'value': 'Dataset', 'text': 'Dataset'},
+{'value': 'Collection', 'text': 'Collection'},
+{'value': 'Event', 'text': 'Event'},
+{'value': 'Image', 'text': 'Image'},
+{'value': 'InteractiveResource', 'text': 'InteractiveResource'},
+{'value': 'MovingImage', 'text': 'MovingImage'},
+{'value': 'PhysicalObject', 'text': 'PhysicalObject'},
+{'value': 'Service', 'text': 'Service'},
+{'value': 'Software ', 'text': 'Software'},
+{'value': 'Sound', 'text': 'Sound'},
+{'value': 'StillImage', 'text': 'StillImage'},
+{'value': 'Text', 'text': 'Text'},
+],
+error=errors.type, classes=['control-full'], is_required='true') %}
+    {% endcall %}
 
     {% call form.select('data_state', label=_('Data Status'), options= [{'value': 'active', 'text': 'Active'}, {'value': 'inactive', 'text': 'Inactive'}],
 selected='Active', error=errors.data_state, is_required='true') %}
@@ -108,10 +143,10 @@ error=errors.update_freq, classes=['control-full'], is_required='true') %}
         How often the dataset is updated. Eg: Daily, Weekly, Never
     {% endcall %}
 
-    {% call form.checkbox('contact_info', checked=data.contact_info, label='Expose User Contact Information', value='True') %}
+    {% call form.select('contact_info', selected=data.contact_info or 'False', label='Display User Contact Details', options=
+[{'value': 'False', 'text': 'No'},{'value': 'True', 'text': 'Yes'}], is_required='true') %}
         <br/>
-        <span title="This field is required" class="control-required">*</span>Whether the user contact details should be
-        public as well as the organisation contact details.
+        Displays the contact name and email address (drawn from the CKAN profile) of the last user to edit this dataset, in addition to the organisation contact details.
 
     {% endcall %}
     {% if data.groups %}
@@ -142,7 +177,7 @@ AGIFT Themes
         <label class="control-label" for="field-group"><span title="This field is required"
                                                              class="control-required">*</span>
 {% if h.is_site('nsw') %}
-Add Function of Government
+Function of Government
 {% else %}
 Add AGIFT Function/Theme
 {% endif %}
