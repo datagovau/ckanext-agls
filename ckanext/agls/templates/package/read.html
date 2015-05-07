@@ -113,10 +113,10 @@
                     <td class="dataset-details" property="dct:updated">{{ h.render_datetime(pkg.date_updated,date_format) }}</td>
                 </tr>
 
-            {% else %} {% if pkg.get('metadata_updated') %}
+            {% else %} {% if pkg.get('metadata_modified') %}
                 <tr>
                     <th scope="row" class="dataset-label">Date Updated</th>
-                    <td class="dataset-details" property="dct:updated">{{ h.render_datetime(pkg.metadata_updated.split("T")[0],date_format) }}</td>
+                    <td class="dataset-details" property="dct:updated">{{ h.render_datetime(pkg.metadata_modified.split("T")[0],date_format) }}</td>
                 </tr>
             {% endif %}
  {% endif %}
