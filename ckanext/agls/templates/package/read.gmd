@@ -34,7 +34,7 @@
             <gmd:organisationName py:if="c.pkg_dict.get('organization', None)">
                 <gco:CharacterString>${ c.pkg_dict.get('organization', {'title':''})['title'] }</gco:CharacterString>
             </gmd:organisationName>
-            <gmd:contactInfo>
+            <gmd:contactInfo py:if="c.pkg_dict.get('organization', None)">
                 <gmd:CI_Contact>
                     <gmd:phone>
                         <gmd:CI_Telephone>

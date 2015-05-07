@@ -108,15 +108,15 @@
                     <td class="dataset-details" property="dct:updated">{{ pkg.date_updated }}</td>
                 </tr>
 
-            {% else %} {% if pkg.get('metadata_updated') %}
+            {% else %} {% if pkg.get('metadata_modified') %}
                 <tr>
                     <th scope="row" class="dataset-label">Date Updated</th>
-                    <td class="dataset-details" property="dct:updated">{{ pkg.metadata_updated.split("T")[0] }}</td>
+                    <td class="dataset-details" property="dct:updated">{{ pkg.metadata_modified.split("T")[0] }}</td>
                 </tr>
             {% endif %}
  {% endif %}
 
-            {% if pkg.get('contact_point') %}
+            {% if pkg.get('contact_point') and pkg.get('organization') %}
                 <tr>
                     <th scope="row" class="dataset-label">Contact Point</th>
                     <td class="dataset-details" property="dcat:contactPoint">
@@ -190,12 +190,14 @@
                     <td class="dataset-details"> {{ g.site_title }}</td>
                 </tr>
             {% endif %}
+         {% if pkg.get('organization') %}
 
             <tr>
                 <th scope="row" class="dataset-label">Publisher/Agency</th>
                 <td class="dataset-details" property="dc:publisher">{{ pkg.organization.title }}
                 </td>
             </tr>
+ {% endif %}
 
             {% if pkg.get('field_of_research') %}
                 <tr>
