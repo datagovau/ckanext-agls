@@ -52,8 +52,14 @@
             });
             gazSearch($("#field-spatial_coverage").val());
             $(function() {
-                $( "#field-temporal_coverage-from" ).datepicker();
-                $( "#field-temporal_coverage-to" ).datepicker();
+                $( "#field-temporal_coverage-from" ).datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
+                $( "#field-temporal_coverage-to" ).datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
             });
 
         };
