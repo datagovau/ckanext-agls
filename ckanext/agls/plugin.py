@@ -243,6 +243,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         # not_empty == mandatory, enforced here while modifying
 
         schema.update({
+        'id': [tk.get_validator('ignore_missing')],
      'notes': [tk.get_validator('not_empty')],
             'contact_point': [tk.get_converter('convert_to_extras'),
                               tk.get_validator('not_empty')],
