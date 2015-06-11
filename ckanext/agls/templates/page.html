@@ -1,8 +1,9 @@
 {% ckan_extends %}
 {% block scripts %}
     <!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-{% resource 'ckanext-agls/styles/jquery-ui.js' %}
+
+{% resource 'ckanext-agls/styles/kalendae.standalone.js' %}
+{% resource 'ckanext-agls/styles/kalendae.css' %}
     {{ super() }}
     <style>
         .form-horizontal .controls, .form-horizontal .controls ol li {
@@ -52,8 +53,25 @@
             });
             gazSearch($("#field-spatial_coverage").val());
             $(function() {
-                $( "#field-temporal_coverage-from" ).datepicker();
-                $( "#field-temporal_coverage-to" ).datepicker();
+                $( "#field-temporal_coverage-from" ).kalendae({format:"YYYY-MM-DD"});
+                $( "#field-temporal_coverage-from").focusout(function() {
+                    var date = moment($( "#field-temporal_coverage-from").val());
+                    if (date.format("YYYY-MM-DD") == 'Invalid date') {
+                     window.alert('Invalid Date. Please enter in Year-Month-Day format eg. 2012-05-15.')
+                    }else {
+                        $("#field-temporal_coverage-from").val(date.format("YYYY-MM-DD"));
+                    }
+                });
+
+                $( "#field-temporal_coverage-to" ).kalendae({format:"YYYY-MM-DD"});
+                $( "#field-temporal_coverage-to").focusout(function() {
+                    var date = moment($( "#field-temporal_coverage-to").val());
+                    if (date.format("YYYY-MM-DD") == 'Invalid date') {
+                        window.alert('Invalid Date. Please enter in Year-Month-Day format eg. 2012-05-15.')
+                    }else {
+                        $("#field-temporal_coverage-to").val(date.format("YYYY-MM-DD"));
+                    }
+                });
             });
 
         };
