@@ -1,4 +1,19 @@
 {% ckan_extends %}
+{% block content_action %}
+ {% if pkg.private %}
+ <span class="dataset-private label label-inverse pull-right" style="
+    margin-left: 10px;
+    height: 24PX;
+    padding-top: 8px;
+    background-color: #9e1d1d;
+">
+        <i class="icon-lock"></i>
+        {{ _('Private') }}
+      </span>
+{% endif %}
+   {{ super() }}
+
+{% endblock %}
 
 {% block links -%}
     {{ super() }}
