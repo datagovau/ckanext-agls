@@ -58,17 +58,6 @@ class AGLSController(PackageController):
 
     def gmd(self, id):
         format = 'html'
-        if not format == 'html':
-            ctype, extension, loader = \
-                self._content_type_from_extension(format)
-            if not ctype:
-                # An unknown format, we'll carry on in case it is a
-                # revision specifier and re-constitute the original id
-                id = "%s.%s" % (id, format)
-                ctype, format, loader = "text/html; charset=utf-8", "html", \
-                                        MarkupTemplate
-        else:
-            ctype, format, loader = self._content_type_from_accept()
 
         # response.headers['Content-Type'] = ctype
         response.headers['Content-Type'] = 'application/vnd.iso.19139+xml; charset=utf-8'.encode("ISO-8859-1")
@@ -123,7 +112,7 @@ class AGLSController(PackageController):
         template = 'package/read.gmd'
 
         try:
-            return base.render(template, loader_class=loader)
+            return base.render(template, extra_vars={'dataset_type': package_type})
         except ckan.lib.render.TemplateNotFound:
             msg = _("Viewing {package_type} datasets in {format} format is "
                     "not supported (template file {file} not found).".format(
