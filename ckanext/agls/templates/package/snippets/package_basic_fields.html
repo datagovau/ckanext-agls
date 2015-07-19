@@ -59,7 +59,7 @@ Please input one of the following: 1) a point/polygon/bounding box; 2) an admini
 {% else %}
 {% call form.input('spatial_coverage', label=_('Geospatial Coverage'), id='field-spatial_coverage',
 placeholder=_('The geographical area covered by the data. Eg: Canberra (GA1487)'),
-value=data.spatial_coverage or data.spatial or h.get_pkg_dict_extra(org_full,'spatial_coverage'), error=errors.spatial_coverage, classes=['control-full'], is_required='true', attrs=spatial_attrs) %}
+value=data.spatial_coverage or data.spatial or h.get_pkg_dict_extra(org_full or {},'spatial_coverage'), error=errors.spatial_coverage, classes=['control-full'], is_required='true', attrs=spatial_attrs) %}
 <br/>
 Please input one of the following: 1) a point/polygon/bounding box; 2) an administrative boundary API; or 3) a location name and ID from the <a href="https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au#Extent">National
     Gazetteer</a>.
