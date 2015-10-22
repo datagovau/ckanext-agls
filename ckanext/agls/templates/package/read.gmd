@@ -100,7 +100,7 @@
                         </MD_Identifier>
                     </identifier>
                     <citedResponsibleParty>
-                        <CI_ResponsibleParty>
+                        <CI_ResponsibleParty py:if="c.pkg_dict.get('organization', None)">
                             <individualName>
                                 <gco:CharacterString>${ c.pkg_dict['organization']['title'] }</gco:CharacterString>
                             </individualName>
