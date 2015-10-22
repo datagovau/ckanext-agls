@@ -27,6 +27,12 @@
     </span>
         </div>
     </div>
+{% call form.checkbox('unpublished', checked=data.unpublished, label='Unpublished', value='True') %}
+<br/>
+<span title="This field is required" class="control-required">*</span>Whether this dataset is unpublished ie. there are no public data files or links available
+
+{% endcall %}
+
 {% endblock %}
 
 {% block package_basic_fields_tags %}
