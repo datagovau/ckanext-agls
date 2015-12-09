@@ -1,4 +1,9 @@
 {% ckan_extends %}
+  {% block scripts %}
+
+{% resource 'ckanext-agls/styles/kalendae.standalone.js' %}
+{% resource 'ckanext-agls/styles/kalendae.css' %}
+  {% endblock %}
 
   {% block organization_extras %}
     {% snippet 'organization/snippets/org_additional_info.html', extras = h.sorted_extras(c.group_dict.extras) %}
