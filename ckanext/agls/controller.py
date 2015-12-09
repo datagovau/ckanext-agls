@@ -74,20 +74,20 @@ class AGLSController(PackageController):
                 return result_dict
         return {}
 
-
     def gmd(self, id):
         format = 'html'
+        loader = MarkupTemplate
         if not format == 'html':
-            ctype, extension, loader = \
+            ctype, extension, = \
                 self._content_type_from_extension(format)
             if not ctype:
                 # An unknown format, we'll carry on in case it is a
                 # revision specifier and re-constitute the original id
                 id = "%s.%s" % (id, format)
-                ctype, format, loader = "text/html; charset=utf-8", "html", \
-                                        MarkupTemplate
+                ctype, format = "text/html; charset=utf-8", "html"
+
         else:
-            ctype, format, loader = self._content_type_from_accept()
+            ctype, format = self._content_type_from_accept()
 
         # response.headers['Content-Type'] = ctype
         response.headers['Content-Type'] = 'application/vnd.iso.19139+xml; charset=utf-8'.encode("ISO-8859-1")
