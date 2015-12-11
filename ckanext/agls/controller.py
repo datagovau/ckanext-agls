@@ -169,5 +169,5 @@ class AGLSController(PackageController):
             return action(*pargs, **kargs)
         except KeyError, e:
             if 'resources' in e.args:
-                h.flash_error('You must fill required fields before this action')
+                h.flash_error('Some mandatory fields are missing. Please complete before adding a new resource')
                 base.redirect(h.url_for('dataset_edit', id=id))
