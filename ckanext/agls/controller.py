@@ -152,3 +152,22 @@ class AGLSController(PackageController):
         assert False, "We should never get here"
 
         #return p.toolkit.render('package/read.gmd.xml', loader_class=MarkupTemplate)
+
+    def resource_redefine(self, id, resource_id=None, data=None, errors=None, error_summary=None, original_action=None):
+        action = getattr(super(AGLSController, self), original_action)
+
+        if original_action == 'new_resource':
+            pargs = id,
+            kargs = dict(data=data, errors=errors, error_summary=error_summary)
+        elif original_action == 'resource_edit':
+            pargs = id, resource_id
+            kargs = dict(data=data, errors=errors, error_summary=error_summary)
+        elif original_action == 'resource_delete':
+            pargs = id, resource_id
+            kargs = dict()
+        try:
+            return action(*pargs, **kargs)
+        except KeyError, e:
+            if 'resources' in e.args:
+                h.flash_error('Some mandatory dataset fields are missing. Please complete before adding a new resource')
+                base.redirect(h.url_for('dataset_edit', id=id))

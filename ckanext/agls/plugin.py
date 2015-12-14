@@ -6,6 +6,7 @@ import os
 import json
 from ckan.common import OrderedDict, _, json, request, c, g, response
 import ckan.model as model
+from routes.mapper import SubMapper
 
 def get_group_select_list():
     result = []
@@ -139,7 +140,7 @@ def get_pkg_obj_extra(pkg_dict, key, default=None):
             return extra['value']
 
     return default
-def get_popular_tags():  
+def get_popular_tags():
     connection = model.Session.connection()
     res = connection.execute("select tag.name from package_tag INNER JOIN tag on tag.id = package_tag.tag_id where package_tag.package_id not in (select distinct package_id from package_extra where key = 'harvest_portal') group by tag.name order by count(*) desc limit 3;").fetchall()
     return res
@@ -157,12 +158,13 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     plugins.implements(plugins.IRoutes, inherit=True)
 
     def before_map(self, map):
-        map.connect('/dataset/{id}/gmd',
-                    controller='ckanext.agls.controller:AGLSController', action='gmd')
-        map.connect('/api/2/util/gazetteer/autocomplete',
-                    controller='ckanext.agls.controller:AGLSController', action='geo_autocomplete')
-        map.connect('/api/2/util/gazetteer/latlon',
-                    controller='ckanext.agls.controller:AGLSController', action='geo_latlon')
+        with SubMapper(map, controller='ckanext.agls.controller:AGLSController') as m:
+            m.connect('/dataset/{id}/gmd', action='gmd')
+            m.connect('/api/2/util/gazetteer/autocomplete', action='geo_autocomplete')
+            m.connect('/api/2/util/gazetteer/latlon', action='geo_latlon')
+            m.connect('/dataset/new_resource/{id}', action='resource_redefine', original_action='new_resource')
+            m.connect('/dataset/{id}/resource_edit/{resource_id}', action='resource_redefine', original_action='resource_edit')
+            m.connect('/dataset/{id}/resource_delete/{resource_id}', action='resource_redefine', original_action='resource_delete')
         return map
 
     def get_helpers(self):
