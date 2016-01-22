@@ -241,7 +241,7 @@
                 <MD_RestrictionCode codeList="http://asdd.ga.gov.au/asdd/profileinfo/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</MD_RestrictionCode>
             </useConstraints>
             <otherConstraints>
-                <gco:CharacterString>Creative Commons Attribution 3.0 Australia Licence</gco:CharacterString>
+                <gco:CharacterString>${ c.pkg_dict.get('license_title').encode('ascii', 'ignore') if c.pkg_dict.get('license_title') else '' }</gco:CharacterString>
             </otherConstraints>
         </MD_LegalConstraints>
     </resourceConstraints>
