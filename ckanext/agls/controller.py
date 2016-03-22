@@ -1,17 +1,13 @@
-import ckan.plugins as p
-from ckan.lib.base import BaseController, config
-from ckan.common import OrderedDict, _, json, request, c, g, response
+
+from ckan.common import _, request, c, response
 from ckan.controllers.package import PackageController
 import ckan.logic as logic
 
 import ckan.model as model
 
-import ckan.lib.package_saver as package_saver
 import ckan.lib.helpers as h
 import ckan.lib.render
 
-from genshi.template import MarkupTemplate
-from genshi.template.text import NewTextTemplate
 import ckan.lib.base as base
 import ckan.lib.jsonp as jsonp
 import requests
@@ -106,9 +102,6 @@ class AGLSController(PackageController):
 
         self._setup_template_variables(context, {'id': id},
                                        package_type=package_type)
-
-        package_saver.PackageSaver().render_package(c.pkg_dict, context)
-
         template = 'package/read.gmd'
 
         try:
@@ -120,5 +113,3 @@ class AGLSController(PackageController):
             base.abort(403, msg)
 
         assert False, "We should never get here"
-
-        #return p.toolkit.render('package/read.gmd.xml', loader_class=MarkupTemplate)
