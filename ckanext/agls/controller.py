@@ -93,7 +93,10 @@ class AGLSController(PackageController):
 
         # used by disqus plugin
         c.current_package_id = c.pkg.id
-        c.related_count = c.pkg.related_count
+        try:
+            c.related_count = c.pkg.related_count
+        except:
+            c.related_count = 0
 
         # can the resources be previewed?
         for resource in c.pkg_dict['resources']:

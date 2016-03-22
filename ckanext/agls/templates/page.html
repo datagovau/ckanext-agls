@@ -23,7 +23,7 @@
         var m = re.exec(gazURL);
         if (m != null) {
             gazID = m[1];
-            $.getJSON("/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
+            $.getJSON("/data/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
                 if (data.geojson != undefined) {
                     $('#spatial').val(data.geojson);
                 }
@@ -33,7 +33,7 @@
             var m2 = re2.exec(gazURL);
             if (m2 != null) {
                 gazID = m2[0];
-                $.getJSON("/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
+                $.getJSON("/data/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
                     if (data.geojson != undefined) {
                         $('#spatial').val(data.geojson);
                     }
