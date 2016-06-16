@@ -1,0 +1,20 @@
+{% import 'macros/form.html' as form %}
+<div class="control-group control-full">
+
+    <label class="control-label" for="field-group"><span title="This field is required"
+                                                         class="control-required">*</span>Add AGIFT
+        Function/Theme</label>
+
+    <div class="controls">
+        <select id="field-group" name="{{ group_name }}" data-module="autocomplete">
+            <option value="">Please Select</option>
+            {% for group in h.groups() %}
+                <option value="{{ group.id }}">{{ group.title }}</option>
+            {% endfor %}
+        </select>
+        <br/>
+        The <a target="_blank" href="http://agift.naa.gov.au">AGIFT</a> top level government function to which the
+        resource relates.
+
+    </div>
+</div>

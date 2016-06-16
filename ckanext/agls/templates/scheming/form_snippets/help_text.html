@@ -1,0 +1,6 @@
+{% import 'macros/form.html' as form %}
+
+{%- if field.help_text -%}
+    <br>
+    {{- h.scheming_language_text(field.help_text)|safe -}}
+{%- endif -%}

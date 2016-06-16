@@ -42,7 +42,7 @@
         }
     }
     var prev_handler = window.onload;
-    window_onload = function () {
+    window.onload = function () {
         if (prev_handler) {
             prev_handler();
         }

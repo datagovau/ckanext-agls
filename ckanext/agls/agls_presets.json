@@ -1,0 +1,100 @@
+{
+    "scheming_presets_version": 1,
+    "about": "tfield presets",
+    "about_url": "http://github.com/ckan/ckanext-scheming#preset",
+    "presets": [
+
+        {
+          "preset_name": "keyword_string_autocomplete",
+          "values": {
+            "validators": "ignore_missing tag_string_convert",
+            "form_attrs": {
+              "data-module": "autocomplete",
+              "data-module-tags": "",
+              "data-module-source": "/api/2/util/tag/autocomplete?incomplete=?"
+            }
+          }
+        },
+         {
+          "preset_name": "geospatial_topic",
+          "values": {
+            "form_snippet": "geospatial_topic.html",
+            "validators": "scheming_required",
+            "form_attrs": {
+              "data-module": "autocomplete",
+              "multiple": "multiple"
+            }
+          }
+        },
+         {
+          "preset_name": "field_of_research",
+          "values": {
+            "form_snippet": "field_of_research.html",
+            "validators": "scheming_required",
+            "form_attrs": {
+              "data-module": "autocomplete",
+              "multiple": "multiple"
+            }
+          }
+        },
+        {
+          "preset_name": "language_string_autocomplete",
+          "values": {
+            "form_snippet": "iso_language.html",
+            "validators": "scheming_required",
+            "form_attrs": {
+              "data-module": "autocomplete"
+            }
+          }
+        },
+        {
+          "preset_name": "spatial_coverage",
+          "values": {
+            "validators": "scheming_required",
+            "form_attrs": {
+              "data-module": "autocomplete",
+              "data-module-source": "/api/2/util/gazetteer/autocomplete?q=?"
+            }
+          }
+        },
+
+        {
+          "preset_name": "temporal_field",
+          "values": {
+            "validators": "scheming_required"
+          }
+        },
+        {
+          "preset_name": "data_status",
+          "values": {
+            "form_snippet": "select.html",
+            "validators": "boolean_validator",
+            "choices": [
+              {"value": "true", "label": "Active"},
+              {"value": "false", "label": "Inactive"}
+            ]
+          }
+        },
+
+        {
+          "preset_name": "update_frequency",
+          "values": {
+            "form_snippet": "select.html",
+            "validators": "scheming_choices scheming_required",
+            "choices": [
+              {"value": "daily",      "label": "Daily"},
+              {"value": "weekly",     "label": "Weekly"},
+              {"value": "monthly",    "label": "Monthly"},
+              {"value": "biennially",  "label": "Biennially"},
+              {"value": "biannually",  "label": "Biannually"},
+              {"value": "annually",  "label": "Annually"},
+              {"value": "infrequently",  "label": "Infrequently"},
+              {"value": "never",  "label": "Never"},
+              {"value": "other",  "label": "Other (specify in dataset description/notes)"}
+
+            ]
+          }
+        }
+
+    ]
+}

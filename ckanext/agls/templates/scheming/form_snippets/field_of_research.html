@@ -1,0 +1,23 @@
+{% import 'macros/form.html' as form %}
+
+
+<div class="control-group control-full">
+    <label class="control-label" for="field-{{ field.field_name }}">{{ field.label }}</label>
+
+    <div class="controls">
+
+    <select id="field-{{ field.field_name }}" name="{{ field.field_name }}" multiple data-module="autocomplete">
+        <!-- <![endif]-->
+        <option value=""></option>
+        {% for field_of_research in h.fields_of_research() %}
+            <option value="{{ field_of_research }}"
+                    {% if field_of_research in data[field.field_name] %}selected="selected"{% endif %}>{{ field_of_research }}</option>
+        {% endfor %}
+    </select>
+
+ <br>
+            The Australian and New Zealand Standard Research Classification (ANZSRC), 2008 defined <a target="_blank" href="http://www.abs.gov.au/AUSSTATS/abs@.nsf/0/6BB427AB9696C225CA2574180004463E?opendocument">field or
+            fields of research</a> relevant to the dataset.
+
+</div>
+</div>

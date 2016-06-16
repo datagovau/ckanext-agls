@@ -114,6 +114,10 @@ def is_site(site_name):
 def get_now():
     return datetime.datetime.now().strftime('%Y-%M-%d')
 
+
+def iso_languages_list():
+    return config.get('iso638.2')
+
 class AGLSDatasetPlugin(plugins.SingletonPlugin,
                         tk.DefaultDatasetForm):
     '''An example IDatasetForm CKAN plugin.
@@ -122,7 +126,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
 
     '''
     plugins.implements(plugins.IConfigurer, inherit=False)
-    plugins.implements(plugins.IDatasetForm, inherit=False)
+    # plugins.implements(plugins.IDatasetForm, inherit=False)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IRoutes, inherit=True)
 
@@ -136,9 +140,15 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         return map
 
     def get_helpers(self):
-        return {'fields_of_research': fields_of_research, 'geospatial_topics': geospatial_topics,
-                'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound,
-                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id, 'is_site': is_site, 'get_now': get_now}
+        return {'fields_of_research': fields_of_research,
+                'geospatial_topics': geospatial_topics,
+                'get_group_select_list': get_group_select_list,
+                'spatial_bound': spatial_bound,
+                'get_user_full': get_user_full,
+                'get_org_full': get_org_full,
+                'groups': groups, 'group_id': group_id,
+                'is_site': is_site, 'get_now': get_now,
+                'iso_languages_list': iso_languages_list}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
@@ -150,133 +160,138 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         tk.add_public_directory(config, 'theme/public')
         tk.add_public_directory(config, 'fanstatic/ckanext-agls')
         tk.add_resource('fanstatic', 'ckanext-agls')
+
+        here = os.path.dirname(__file__)
+
+        with open(os.path.join(here, 'languages.json')) as languages:
+            config['iso638.2'] = json.load(languages)
         # config['licenses_group_url'] = 'http://%(ckan.site_url)/licenses.json'
 
+    # def is_fallback(self):
+    #     # Return True to register this plugin as the default handler for
+    #     # package types not handled by any other IDatasetForm plugin.
+    #     return True
 
-    def is_fallback(self):
-        # Return True to register this plugin as the default handler for
-        # package types not handled by any other IDatasetForm plugin.
-        return True
-
-    def package_types(self):
-        # This plugin doesn't handle any special package types, it just
-        # registers itself as the default (above).
-        return []
+    # def package_types(self):
+    #     # This plugin doesn't handle any special package types, it just
+    #     # registers itself as the default (above).
+    #     return []
 
 
-    def create_package_schema(self):
-        schema = super(AGLSDatasetPlugin, self).create_package_schema()
-        schema = self._modify_package_schema(schema)
-        return schema
+    # def create_package_schema(self):
+    #     schema = super(AGLSDatasetPlugin, self).create_package_schema()
+    #     schema = self._modify_package_schema(schema)
+    #     return schema
 
-    def update_package_schema(self):
-        schema = super(AGLSDatasetPlugin, self).update_package_schema()
-        schema = self._modify_package_schema(schema)
-        return schema
+    # def update_package_schema(self):
+    #     schema = super(AGLSDatasetPlugin, self).update_package_schema()
+    #     schema = self._modify_package_schema(schema)
+    #     return schema
 
-    def show_package_schema(self):
-        schema = super(AGLSDatasetPlugin, self).show_package_schema()
+    # def show_package_schema(self):
+    #     schema = super(AGLSDatasetPlugin, self).show_package_schema()
 
-        # Don't show vocab tags mixed in with normal 'free' tags
-        # (e.g. on dataset pages, or on the search page)
-        schema['tags']['__extras'].append(tk.get_converter('free_tags_only'))
+    #     # Don't show vocab tags mixed in with normal 'free' tags
+    #     # (e.g. on dataset pages, or on the search page)
+    #     schema['tags']['__extras'].append(tk.get_converter('free_tags_only'))
 
-        # Add our custom_text field to the dataset schema.
-        # ignore_missing == optional
-        # ignore_empty == mandatory but not for viewing
-        # !!! always convert_from_extras first
-        schema.update({
+    #     # Add our custom_text field to the dataset schema.
+    #     # ignore_missing == optional
+    #     # ignore_empty == mandatory but not for viewing
+    #     # !!! always convert_from_extras first
+    #     schema.update({
 
-            'contact_point': [tk.get_converter('convert_from_extras'),
-                              tk.get_validator('ignore_empty')],
-            'contact_info': [tk.get_converter('convert_from_extras'),
-                             tk.get_validator('ignore_missing')],
-            'unpublished': [tk.get_converter('convert_from_extras'),
-                             tk.get_validator('ignore_missing')],
-            'spatial_coverage': [tk.get_converter('convert_from_extras'),
-                                 tk.get_validator('ignore_empty')],
-            'spatial': [tk.get_converter('convert_from_extras'),
-                        tk.get_validator('ignore_empty')],
-            'jurisdiction': [tk.get_converter('convert_from_extras'),
-                             tk.get_validator('ignore_empty')],
-            'temporal_coverage_from': [tk.get_converter('convert_from_extras'),
-                                       tk.get_validator('ignore_empty')],
-            'temporal_coverage_to': [tk.get_converter('convert_from_extras'),
-                                     tk.get_validator('ignore_missing')],
-            'data_state': [tk.get_converter('convert_from_extras'),
-                           tk.get_validator('ignore_empty')],
-            'update_freq': [tk.get_converter('convert_from_extras'),
-                            tk.get_validator('ignore_empty')],
-            'data_model': [tk.get_converter('convert_from_extras'),
-                           tk.get_validator('ignore_missing')],
-            'language': [tk.get_converter('convert_from_extras'),
-                           tk.get_validator('ignore_missing')],
-            'geospatial_topic': [
-                tk.get_converter('convert_from_tags')('geospatial_topics'),
-                tk.get_validator('ignore_missing')],
-            'field_of_research': [
-                tk.get_converter('convert_from_tags')('fields_of_research'),
-                tk.get_validator('ignore_missing')],
-            # harvesting fields
-             'spatial_harvester': [tk.get_converter('convert_from_extras'),
-             tk.get_validator('ignore_missing')],
-             'harvest_object_id': [tk.get_converter('convert_from_extras'),
-                               tk.get_validator('ignore_missing')],
-            'harvest_source_id': [tk.get_converter('convert_from_extras'),
-                               tk.get_validator('ignore_missing')],
-            'harvest_source_title': [tk.get_converter('convert_from_extras'),
-                               tk.get_validator('ignore_missing')]
-        })
-        return schema
+    #         'contact_point': [tk.get_converter('convert_from_extras'),
+    #                           tk.get_validator('ignore_empty')],
+    #         'contact_info': [tk.get_converter('convert_from_extras'),
+    #                          tk.get_validator('ignore_missing')],
+    #         'unpublished': [tk.get_converter('convert_from_extras'),
+    #                          tk.get_validator('ignore_missing')],
+    #         'spatial_coverage': [tk.get_converter('convert_from_extras'),
+    #                              tk.get_validator('ignore_empty')],
+    #         'spatial': [tk.get_converter('convert_from_extras'),
+    #                     tk.get_validator('ignore_empty')],
+    #         'jurisdiction': [tk.get_converter('convert_from_extras'),
+    #                          tk.get_validator('ignore_empty')],
+    #         'temporal_coverage_from': [tk.get_converter('convert_from_extras'),
+    #                                    tk.get_validator('ignore_empty')],
+    #         'temporal_coverage_to': [tk.get_converter('convert_from_extras'),
+    #                                  tk.get_validator('ignore_missing')],
+    #         'data_state': [tk.get_converter('convert_from_extras'),
+    #                        tk.get_validator('ignore_empty')],
+    #         'update_freq': [tk.get_converter('convert_from_extras'),
+    #                         tk.get_validator('ignore_empty')],
+    #         'data_model': [tk.get_converter('convert_from_extras'),
+    #                        tk.get_validator('ignore_missing')],
+    #         'language': [tk.get_converter('convert_from_extras'),
+    #                        tk.get_validator('ignore_missing')],
+    #         'geospatial_topic': [
+    #             tk.get_converter('convert_from_tags')('geospatial_topics'),
+    #             tk.get_validator('ignore_missing')],
+    #         'field_of_research': [
+    #             tk.get_converter('convert_from_tags')('fields_of_research'),
+    #             tk.get_validator('ignore_missing')],
+    #         # harvesting fields
+    #          'spatial_harvester': [tk.get_converter('convert_from_extras'),
+    #          tk.get_validator('ignore_missing')],
+    #          'harvest_object_id': [tk.get_converter('convert_from_extras'),
+    #                            tk.get_validator('ignore_missing')],
+    #         'harvest_source_id': [tk.get_converter('convert_from_extras'),
+    #                            tk.get_validator('ignore_missing')],
+    #         'harvest_source_title': [tk.get_converter('convert_from_extras'),
+    #                            tk.get_validator('ignore_missing')]
+    #     })
+    #     return schema
 
-    def _modify_package_schema(self, schema):
-        # Add our custom_test metadata field to the schema, this one will use
-        # convert_to_extras instead of convert_to_tags.
-        # ignore_missing == optional
-        # not_empty == mandatory, enforced here while modifying
+    # def _modify_package_schema(self, schema):
+    #     # Add our custom_test metadata field to the schema, this one will use
+    #     # convert_to_extras instead of convert_to_tags.
+    #     # ignore_missing == optional
+    #     # not_empty == mandatory, enforced here while modifying
 
-        schema.update({
-            'contact_point': [tk.get_converter('convert_to_extras'),
-                              tk.get_validator('not_empty')],
-            'contact_info': [tk.get_validator('ignore_missing'),
-                             tk.get_converter('convert_to_extras')],
-            'unpublished': [tk.get_validator('ignore_missing'),
-                             tk.get_converter('convert_to_extras')],
-            'spatial_coverage': [tk.get_converter('convert_to_extras'),
-                                 tk.get_validator('not_empty')],
-            'spatial': [tk.get_validator('ignore_missing'),
-                        tk.get_converter('convert_to_extras')],
-            'jurisdiction': [tk.get_converter('convert_to_extras'),
-                             tk.get_validator('not_empty')],
-            'temporal_coverage_from': [tk.get_converter('convert_to_extras'),
-                                       tk.get_validator('not_empty')],
-            'temporal_coverage_to': [tk.get_validator('ignore_missing'),
-                                     tk.get_converter('convert_to_extras')],
-            'data_state': [tk.get_converter('convert_to_extras'),
-                           tk.get_validator('not_empty')],
-            'update_freq': [tk.get_converter('convert_to_extras'),
-                            tk.get_validator('not_empty')],
-            'data_models': [tk.get_validator('ignore_missing'),
-                            tk.get_converter('convert_to_extras')],
-            'language': [tk.get_validator('ignore_missing'),
-                            tk.get_converter('convert_to_extras')],
-            'geospatial_topic': [
-                tk.get_validator('ignore_missing'),
-                tk.get_converter('convert_to_tags')('geospatial_topics')
-            ],
-            'field_of_research': [
-                tk.get_validator('ignore_missing'),
-                tk.get_converter('convert_to_tags')('fields_of_research')
-            ],
-            # harvesting fields
-             'spatial_harvester': [tk.get_validator('ignore_missing'),
-             tk.get_converter('convert_to_extras')],
-             'harvest_object_id': [tk.get_validator('ignore_missing'),
-                               tk.get_converter('convert_to_extras')],
-            'harvest_source_id': [tk.get_validator('ignore_missing'),
-                               tk.get_converter('convert_to_extras')],
-            'harvest_source_title': [tk.get_validator('ignore_missing'),
-                               tk.get_converter('convert_to_extras')],
+    #     schema.update({
+    #         'contact_point': [tk.get_converter('convert_to_extras'),
+    #                           tk.get_validator('not_empty')],
+    #         'contact_info': [tk.get_validator('ignore_missing'),
+    #                          tk.get_converter('convert_to_extras')],
+    #         'unpublished': [tk.get_validator('ignore_missing'),
+    #                          tk.get_converter('convert_to_extras')],
+    #         'spatial_coverage': [tk.get_converter('convert_to_extras'),
+    #                              tk.get_validator('not_empty')],
+    #         'spatial': [tk.get_validator('ignore_missing'),
+    #                     tk.get_converter('convert_to_extras')],
+    #         'jurisdiction': [tk.get_converter('convert_to_extras'),
+    #                          tk.get_validator('not_empty')],
+    #         'temporal_coverage_from': [tk.get_converter('convert_to_extras'),
+    #                                    tk.get_validator('not_empty')],
+    #         'temporal_coverage_to': [tk.get_validator('ignore_missing'),
+    #                                  tk.get_converter('convert_to_extras')],
+    #         'data_state': [tk.get_converter('convert_to_extras'),
+    #                        tk.get_validator('not_empty')],
+    #         'update_freq': [tk.get_converter('convert_to_extras'),
+    #                         tk.get_validator('not_empty')],
+    #         'data_models': [tk.get_validator('ignore_missing'),
+    #                         tk.get_converter('convert_to_extras')],
+    #         'language': [tk.get_validator('ignore_missing'),
+    #                         tk.get_converter('convert_to_extras')],
+    #         'geospatial_topic': [
+    #             tk.get_validator('ignore_missing'),
+    #             tk.get_converter('convert_to_tags')('geospatial_topics')
+    #         ],
+    #         'field_of_research': [
+    #             tk.get_validator('ignore_missing'),
+    #             tk.get_converter('convert_to_tags')('fields_of_research')
+    #         ],
+    #         # harvesting fields
+    #          'spatial_harvester': [tk.get_validator('ignore_missing'),
+    #          tk.get_converter('convert_to_extras')],
+    #          'harvest_object_id': [tk.get_validator('ignore_missing'),
+    #                            tk.get_converter('convert_to_extras')],
+    #         'harvest_source_id': [tk.get_validator('ignore_missing'),
+    #                            tk.get_converter('convert_to_extras')],
+    #         'harvest_source_title': [tk.get_validator('ignore_missing'),
+    #                            tk.get_converter('convert_to_extras')],
 
-        })
-        return schema
+    #     })
+    #     return schema
+#
