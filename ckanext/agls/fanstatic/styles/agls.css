@@ -1,0 +1,10 @@
+#field-update_freq,
+#s2id_field-tag_string,
+#s2id_field-spatial_coverage,
+#s2id_field-license_id {
+	width: 100% !important;
+}
+
+.select2-container-multi .select2-choices .select2-search-field input {
+	height: 20px;
+}

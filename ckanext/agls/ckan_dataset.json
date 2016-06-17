@@ -37,6 +37,7 @@
       "label": "License",
       "display_property": "dc:rights",
       "form_snippet": "license.html",
+      "required": true,
       "form_attrs": {
         "data-module": "autocomplete"
       },
@@ -44,11 +45,10 @@
     },
     {
       "field_name": "unpublished",
-      "form_snippet": "multiple_checkbox.html",
+      "label": "Unpublished",
+      "form_snippet": "checkbox_agls.html",
       "validators": "boolean_validator",
-      "choices": [
-        {"label": "Unpublished", "value": "True"}
-      ],
+      "form_value": "true",
       "help_text": "Whether this dataset is unpublished ie. there are no public data files or links available"
     },
 
@@ -76,13 +76,13 @@
       "help_text": "What is the temporal coverage of your dataset? Please choose a single date or a from and to date.",
       "form_placeholder": "The date at which timespan the dataset relates to starts eg. 2014-01-01",
       "required": true,
-      "preset": "temporal_field"
+      "form_snippet": "input_default_value.html"
     },
     {
       "field_name": "temporal_coverage_to",
       "label": "Temporal Coverage To",
-      "form_placeholder": "The date at which timespan the dataset relates to ends (if known) eg. 2014-12-31",
-      "preset": "temporal_field"
+      "form_snippet": "input_default_value.html",
+      "form_placeholder": "The date at which timespan the dataset relates to ends (if known) eg. 2014-12-31"
     },
     {
       "field_name": "language",
@@ -105,11 +105,10 @@
     },
     {
       "field_name": "contact_info",
-      "form_snippet": "multiple_checkbox.html",
+      "label": "Expose User Contact Information",
+      "form_snippet": "checkbox_agls.html",
       "validators": "boolean_validator",
-      "choices": [
-        {"label": "Expose User Contact Information", "value": "True"}
-      ],
+      "form_value": "true",
       "help_text": "Whether the user contact details should be public as well as the organisation contact details."
     },
     {
@@ -122,6 +121,8 @@
       "field_name": "author",
       "label": "Publisher",
       "required": true,
+      "form_snippet": "input_default_value.html",
+      "form_value": "data.broker@environment.nsw.gov.au",
       "form_placeholder": "Email address for questions about content of dataset",
       "validators": "scheming_required",
       "display_property": "dc:creator"
@@ -130,6 +131,8 @@
       "field_name": "contact_point",
       "label": "Contact",
       "required": true,
+      "form_snippet": "input_default_value.html",
+      "form_value": "data.broker@environment.nsw.gov.au",
       "form_placeholder": "Email address for questions about content of dataset",
       "validators": "scheming_required",
       "display_property": "dc:creator",
@@ -139,6 +142,8 @@
     {
       "field_name": "jurisdiction",
       "label": "Jurisdiction",
+      "form_snippet": "input_default_value.html",
+      "form_value": "Commonwealth of Australia",
       "required": true,
       "validators": "scheming_required"
     },
@@ -147,6 +152,7 @@
       "field_name": "geospatial_topic",
       "label": "Geospatial Topic",
       "preset": "geospatial_topic",
+      "output_validators": "custom_output_validator",
       "help_text": "The high level ISO19115 topics. Optional but recommended."
     },
 
@@ -155,12 +161,13 @@
       "label": "Data Models",
       "form_snippet": "markdown.html",
       "form_placeholder": "Information on any relevant data models, ontologies, taxonomies etc specific to this dataset.",
-      "help_text": "Please add any links to information on relevant data models, ontologies, taxonomies etc specific to your dataset. You can upload data models to the data.gov.au data model repository."
+      "help_text": "Please add any links to information on relevant data models, ontologies, taxonomies etc specific to your dataset. You can upload data models to the <a href='' target='_blank'>data.gov.au data model repository</a>."
     },
     {
       "field_name": "field_of_research",
       "label": "Field of Research (optional)",
       "preset": "field_of_research",
+      "output_validators": "custom_output_validator",
       "help_text": "The Australian and New Zealand Standard Research Classification (ANZSRC), 2008 defined field or fields of research relevant to the dataset."
     },
 

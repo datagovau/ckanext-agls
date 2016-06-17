@@ -1,0 +1,7 @@
+{% import 'macros/form.html' as form %}
+
+{% set field_val = field.field_name %}
+
+{% call form.input(field.field_name, label=h.scheming_language_text(field.label), id='field-' + field.field_name,
+value=data.get(field.field_name) or field.form_value, classes=['control-full'], placeholder=field.form_placeholder, is_required=field.required) %}
+{% endcall %}

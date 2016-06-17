@@ -10,6 +10,11 @@ import datetime
 from shapely.geometry import asShape
 from pylons import config
 
+def custom_output_validator(key, data, errors, context):
+    value = data.get(key)
+    value = value.replace('{', '').replace('}', '').replace(',"', ', ').replace('"', '').replace(',', ', ')
+    data[key] = value
+
 def get_group_select_list():
     result = []
     user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
@@ -129,6 +134,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     # plugins.implements(plugins.IDatasetForm, inherit=False)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IRoutes, inherit=True)
+    plugins.implements(plugins.IValidators)
 
     def before_map(self, map):
         map.connect('/dataset/{id}/gmd',
@@ -149,6 +155,9 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                 'groups': groups, 'group_id': group_id,
                 'is_site': is_site, 'get_now': get_now,
                 'iso_languages_list': iso_languages_list}
+
+    def get_validators(self):
+        return { 'custom_output_validator': custom_output_validator }            
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so

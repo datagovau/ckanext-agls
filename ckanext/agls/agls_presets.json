@@ -68,10 +68,9 @@
           "preset_name": "data_status",
           "values": {
             "form_snippet": "select.html",
-            "validators": "boolean_validator",
             "choices": [
-              {"value": "true", "label": "Active"},
-              {"value": "false", "label": "Inactive"}
+              {"value": "active", "label": "Active"},
+              {"value": "inactive", "label": "Inactive"}
             ]
           }
         },
