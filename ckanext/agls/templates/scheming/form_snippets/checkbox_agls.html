@@ -2,7 +2,7 @@
 
 <div class="control-group{{ " " ~ classes | join(" ") }}{% if error %} error{% endif %}">
     <div class="controls">
-      <label class="checkbox" for="{{ id or name }}">
+      <label class="checkbox" for="{{ field.field_name }}">
         <input id="{{ field.field_name }}" type="checkbox" name="{{ field.field_name }}" value="{{ field.form_value | empty_and_escape }}" {{ "checked " if field.form_value in data[field.field_name] }} />
         {{ h.scheming_language_text(field.label) }}
       </label>

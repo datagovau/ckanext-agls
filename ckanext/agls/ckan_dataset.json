@@ -143,7 +143,7 @@
       "field_name": "jurisdiction",
       "label": "Jurisdiction",
       "form_snippet": "input_default_value.html",
-      "form_value": "Commonwealth of Australia",
+      "form_value": "",
       "required": true,
       "validators": "scheming_required"
     },
@@ -169,15 +169,7 @@
       "preset": "field_of_research",
       "output_validators": "custom_output_validator",
       "help_text": "The Australian and New Zealand Standard Research Classification (ANZSRC), 2008 defined field or fields of research relevant to the dataset."
-    },
-
-    {
-      "field_name": "maintainer",
-      "label": "Maintainer",
-      "form_snippet": "hidden.html",
-      "display_property": "dc:contributor"
     }
-
   ],
   "resource_fields": [
     {

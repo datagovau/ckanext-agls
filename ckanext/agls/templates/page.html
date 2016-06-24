@@ -24,7 +24,7 @@
         var m = re.exec(gazURL);
         if (m != null) {
             gazID = m[1];
-            $.getJSON("/data/api/2/util/gazetteer/latlon?q=" + gazID, function (data){
+            $.getJSON(ckan.url("/api/2/util/gazetteer/latlon?q=" + gazID), function (data){
                 if (data.geojson != undefined) {
                     $('#spatial').val(data.geojson);
                 }
@@ -34,13 +34,25 @@
             var m2 = re2.exec(gazURL);
             if (m2 != null) {
                 gazID = m2[0];
-                $.getJSON("/data/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
+                $.getJSON(ckan.url("/api/2/util/gazetteer/latlon?q=" + gazID), function (data) {
                     if (data.geojson != undefined) {
                         $('#spatial').val(data.geojson);
                     }
                 })
             }
         }
+    }
+    function jurisdictionOrg(idOrg) {
+        $.getJSON(ckan.url("/api/3/action/organization_show?id=" + idOrg), function (data) {
+            console.log(data['result']['title']);
+            var extras = data['result']['extras'];
+            for (var i=0; i < extras.length; i++) {
+                if (extras[i].key === 'jurisdiction') {
+                    console.log(extras[i].value);
+                    $('#field-jurisdiction').val(extras[i].value);
+                }
+            }
+        })
     }
     var prev_handler = window.onload;
     window.onload = function () {
@@ -56,7 +68,9 @@
                 $( "#field-temporal_coverage_from" ).datepicker();
                 $( "#field-temporal_coverage_to" ).datepicker();
             });
-
+            $("#field-organizations").change(function (e) {
+                jurisdictionOrg(e.target.value);
+            });
         };
 
     </script>
