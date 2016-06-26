@@ -1,4 +1,27 @@
 {% ckan_extends %}
+
+ {% set pkg = c.pkg_dict %}
+
+{%- block meta -%}
+    <meta name="DCTERMS.Language" scheme="RFC3066" content="en"/>
+    <meta name="DCTERMS.Type" scheme="AGLSTERMS.Document" content="dataset"/>
+    <meta name="DCTERMS.Creator" scheme="AGLSTERMS.AglsAgent" content="{{ pkg['organization']['title'] }}"/>
+    <meta name="DCTERMS.Modified" scheme="DCTERMS.ISO8601" content="{{ pkg['metadata_modified'] }}"/>
+    <meta name="DCTERMS.Published" scheme="DCTERMS.ISO8601" content="{{ pkg['metadata_created'] }}"/>
+    <meta name="DCTERMS.Source.URI" content="{{ pkg.url }}"/>
+    <meta name="DCTERMS.License" content="{{ pkg['license_url'] }}"/>
+    <meta name="DCTERMS.Coverage.Temporal" content="{{ pkg.temporal_coverage }}"/>
+    <meta name="DCTERMS.Coverage.Spatial" content="{{ pkg.spatial_coverage }}"/>
+    <meta name="AGLSTERMS.Jurisdiction" scheme="AGLSTERMS.AglsJuri" content="{{ pkg.jurisdiction }}"/>
+    <meta name="DCAT.Theme" scheme="VO" content="{% for x in pkg.groups %}{{ x['title'] }},{% endfor %}"/>
+    <meta name="DCTERMS.Identifier"
+          content="{{ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True) }}"/>
+    <meta name="DCTERMS.Title" content="{{ pkg['title'] }}"/>
+    <meta name="DCTERMS.Description" scheme="" content="{{ pkg['notes'] }}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    {{ super() }}
+{% endblock %}
+
 {% block scripts %}
     <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
@@ -42,16 +65,18 @@
             }
         }
     }
-    function jurisdictionOrg(idOrg) {
+    function setValueIfOrg(idOrg) {
         $.getJSON(ckan.url("/api/3/action/organization_show?id=" + idOrg), function (data) {
-            console.log(data['result']['title']);
+            var orgTitle = data['result']['title'];
             var extras = data['result']['extras'];
             for (var i=0; i < extras.length; i++) {
                 if (extras[i].key === 'jurisdiction') {
-                    console.log(extras[i].value);
                     $('#field-jurisdiction').val(extras[i].value);
-                }
+                } else  if (extras[i].key === 'email') {
+                    $('#field-contact_point').val(extras[i].value);
+                } 
             }
+            $('#field-author').val(orgTitle);
         })
     }
     var prev_handler = window.onload;
@@ -69,7 +94,7 @@
                 $( "#field-temporal_coverage_to" ).datepicker();
             });
             $("#field-organizations").change(function (e) {
-                jurisdictionOrg(e.target.value);
+                setValueIfOrg(e.target.value);
             });
         };
 

@@ -1,4 +1,12 @@
 {% import 'macros/form.html' as form %}
+{% if data.groups %}
+    <div class="control-group"> <label class="control-label">AGIFT Themes</label> <div class="controls"> 
+    {% for group in data.groups %} 
+        <label class="checkbox" for="field-group-{{ loop.index0 }}"> 
+        <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{ loop.index0 }}__id" value="{{ group.id }}" checked="checked"/> {{ group.title }} </label> 
+    {% endfor %} </div> </div> 
+{% endif %}
+{% set group_name = 'groups__%s__id' % data.groups|length %}
 <div class="control-group control-full">
 
     <label class="control-label" for="field-group">Add AGIFT Function/Theme</label>

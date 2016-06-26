@@ -122,7 +122,7 @@
       "label": "Publisher",
       "required": true,
       "form_snippet": "input_default_value.html",
-      "form_value": "data.broker@environment.nsw.gov.au",
+      "form_value": "",
       "form_placeholder": "Email address for questions about content of dataset",
       "validators": "scheming_required",
       "display_property": "dc:creator"
@@ -132,7 +132,7 @@
       "label": "Contact",
       "required": true,
       "form_snippet": "input_default_value.html",
-      "form_value": "data.broker@environment.nsw.gov.au",
+      "form_value": "",
       "form_placeholder": "Email address for questions about content of dataset",
       "validators": "scheming_required",
       "display_property": "dc:creator",
