@@ -10,6 +10,11 @@ import uuid
 import functools
 from ckan.logic.validators import boolean_validator
 from ckan.lib.munge import munge_name
+from datetime import datetime
+from ConfigParser import ConfigParser
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from ckan.model import Package, PackageRevision
 
 uuid3 = functools.partial(uuid.uuid3, uuid.NAMESPACE_DNS)
 
@@ -21,9 +26,10 @@ log.addHandler(logHandler)
 
 parser = ArgumentParser()
 parser.add_argument(
-    '--content', '-c', required=True, metavar='file.csv',
+    '--content', '-C', required=True, metavar='file.csv',
     help='file containing metadata')
 
+parser.add_argument('--config', '-c', required=True)
 parser.add_argument('--host', '-H', required=True)
 parser.add_argument('--api-key', '-A', required=True)
 parser.add_argument(
@@ -41,6 +47,12 @@ parser.add_argument(
     help='Log levels: 10 - DEBUG, 50 - FATAL')
 
 args = parser.parse_args()
+config = ConfigParser()
+config.read([args.config])
+db_url = config.get('app:main', 'sqlalchemy.url')
+engine = create_engine(db_url)
+Session = sessionmaker(bind=engine)
+
 log.setLevel(args.log_level)
 semaphore = BoundedSemaphore(args.threads)
 languages = load(open(
@@ -91,8 +103,6 @@ class Importer(Thread):
         return code
 
     def _dataset_to_pkg(self):
-        added, modified = loads(
-            self.dataset['[dateadded, date modified]'])
         pkg = dict(
             author=self.dataset['publisher'],
             contact_info=not boolean_validator(
@@ -110,8 +120,6 @@ class Importer(Thread):
             jurisdiction=self.dataset['jurisdiction'],
             language=self._get_language(self.dataset['language']),
             license_id=self.dataset['license'],
-            metadata_created=added,
-            metadata_modified=modified,
             name=munge_name(self.dataset['title']),
             notes=self.dataset['description'],
             owner_org=self._get_org_id(self.dataset['organisation']),
@@ -155,6 +163,22 @@ class Importer(Thread):
                     data=dumps({'name': mn, 'title': group})
                 )
 
+    def _update_dates(self, id):
+        added, modified = map(datetime.fromtimestamp, loads(
+            self.dataset['[dateadded, date modified]']))
+        s = Session()
+        s.query(Package).filter_by(id=id).update(
+            {
+                'metadata_modified': modified
+            }
+        )
+        rev = s.query(PackageRevision).filter_by(id=id).order_by(
+            PackageRevision.revision_timestamp.asc()).first()
+        rev.revision_timestamp = added
+
+        s.commit()
+        s.close()
+
     def _import_dataset(self):
         do_something = False
         pkg = self._dataset_to_pkg()
@@ -184,6 +208,7 @@ class Importer(Thread):
                 },
                 data=pkg_str
             )
+            self._update_dates(pkg['id'])
             log.debug(req.content)
 
 
