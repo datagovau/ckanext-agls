@@ -13,7 +13,7 @@
 
     <span class="label label-inverse format" style="float: right;">
         <img src="/data/json-icon.png"/ alt=" ">
-                <a  href="/data/api/3/action/{{ h.url_for('package_show', id=c.pkg.id) }}">JSON</a>
+                <a  href="{{ h.url_for(controller='api', action='action', logic_function='package_show', ver=3, id=c.pkg.id) }}">JSON</a>
       </span>&nbsp;
     <span class="label label-inverse format" style="float: right;margin-right: 10px;">
 <img src="/data/rdf-icon.png" alt=" "/>
@@ -51,7 +51,7 @@
             </tr>
             <tr>
                 <th scope="row" class="dataset-label">Type</th>
-                <td class="dataset-details" property="dc:type">{{pkg.type or 'Dataset'}}</td>
+                <td class="dataset-details" property="dc:type">{{pkg.dctype or 'Dataset'}}</td>
             </tr>
             <tr>
                 <th scope="row" class="dataset-label">Language</th>

@@ -100,9 +100,9 @@ value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['co
     {{ form.input('language', label=_('Language'), id='field-language',
 placeholder=_('If not English, language should be assigned a value'),
 value=data.language or 'English', error=errors.language, classes=['control-full']) }}
-    {% call form.select('type', label=_('Type'), id='field-type',
+    {% call form.select('dctype', label=_('Type'), id='field-dctype',
 
-selected = data.type or 'Dataset', options=
+selected = data.dctype or 'Dataset', options=
 [{'value': 'Dataset', 'text': 'Dataset'},
 {'value': 'Collection', 'text': 'Collection'},
 {'value': 'Event', 'text': 'Event'},

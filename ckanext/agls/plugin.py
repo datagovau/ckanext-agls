@@ -173,12 +173,94 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
 
     def create_package_schema(self):
         schema = super(AGLSDatasetPlugin, self).create_package_schema()
-        schema = self._modify_package_schema(schema)
+        if c.userobj.sysadmin:
+            schema.update({
+                'notes': [tk.get_validator('not_empty')],
+                'contact_point':  [tk.get_validator('ignore_missing'),
+                                   tk.get_converter('convert_to_extras')],
+                'contact_info': [tk.get_validator('ignore_missing'),
+                                 tk.get_converter('convert_to_extras')],
+                'spatial_coverage': [tk.get_validator('ignore_missing'),
+                                     tk.get_converter('convert_to_extras')],
+                'spatial': [tk.get_validator('ignore_missing'),
+                            tk.get_converter('convert_to_extras')],
+                'jurisdiction': [tk.get_validator('ignore_missing'),
+                                 tk.get_converter('convert_to_extras')],
+                'temporal_coverage_from': [tk.get_validator('ignore_missing'),
+                                           tk.get_converter('convert_to_extras')],
+                'temporal_coverage_to': [tk.get_validator('ignore_missing'),
+                                         tk.get_converter('convert_to_extras')],
+                'data_granularity': [tk.get_validator('ignore_missing'),
+                                     tk.get_converter('convert_to_extras')],
+                'data_state':  [tk.get_validator('ignore_missing'),
+                                tk.get_converter('convert_to_extras')],
+                'update_freq':  [tk.get_validator('ignore_missing'),
+                                 tk.get_converter('convert_to_extras')],
+
+                'data_models': [tk.get_validator('ignore_missing'),
+                                tk.get_converter('convert_to_extras')],
+                'language': [tk.get_validator('ignore_missing'),
+                             tk.get_converter('convert_to_extras')],
+                'geospatial_topic': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_tags')('geospatial_topics')
+                ],
+                'field_of_research': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_tags')('fields_of_research')
+                ],
+            'dctype': [tk.get_converter('convert_to_extras'),
+                           tk.get_validator('ignore_missing')],
+
+            })
+        else:
+            schema = self._modify_package_schema(schema)
         return schema
 
     def update_package_schema(self):
         schema = super(AGLSDatasetPlugin, self).update_package_schema()
-        schema = self._modify_package_schema(schema)
+        if c.userobj.sysadmin:
+            schema.update({
+                'notes': [tk.get_validator('not_empty')],
+                'contact_point':  [tk.get_validator('ignore_missing'),
+                                   tk.get_converter('convert_to_extras')],
+                'contact_info': [tk.get_validator('ignore_missing'),
+                                 tk.get_converter('convert_to_extras')],
+                'spatial_coverage': [tk.get_validator('ignore_missing'),
+                                     tk.get_converter('convert_to_extras')],
+                'spatial': [tk.get_validator('ignore_missing'),
+                            tk.get_converter('convert_to_extras')],
+                'jurisdiction': [tk.get_validator('ignore_missing'),
+                                 tk.get_converter('convert_to_extras')],
+                'temporal_coverage_from': [tk.get_validator('ignore_missing'),
+                                           tk.get_converter('convert_to_extras')],
+                'temporal_coverage_to': [tk.get_validator('ignore_missing'),
+                                         tk.get_converter('convert_to_extras')],
+                'data_granularity': [tk.get_validator('ignore_missing'),
+                                     tk.get_converter('convert_to_extras')],
+                'data_state':  [tk.get_validator('ignore_missing'),
+                                tk.get_converter('convert_to_extras')],
+                'update_freq':  [tk.get_validator('ignore_missing'),
+                                 tk.get_converter('convert_to_extras')],
+
+                'data_models': [tk.get_validator('ignore_missing'),
+                                tk.get_converter('convert_to_extras')],
+                'language': [tk.get_validator('ignore_missing'),
+                             tk.get_converter('convert_to_extras')],
+                'geospatial_topic': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_tags')('geospatial_topics')
+                ],
+                'field_of_research': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_tags')('fields_of_research')
+                ],
+            'dctype': [tk.get_converter('convert_to_extras'),
+                           tk.get_validator('ignore_missing')],
+
+            })
+        else:
+            schema = self._modify_package_schema(schema)
         return schema
 
     def show_package_schema(self):
@@ -216,7 +298,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                            tk.get_validator('ignore_missing')],
             'language': [tk.get_converter('convert_from_extras'),
                            tk.get_validator('ignore_missing')],
-            'type': [tk.get_converter('convert_from_extras'),
+            'dctype': [tk.get_converter('convert_from_extras'),
                            tk.get_validator('ignore_missing')],
             'geospatial_topic': [
                 tk.get_converter('convert_from_tags')('geospatial_topics'),
@@ -267,7 +349,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                             tk.get_converter('convert_to_extras')],
             'language': [tk.get_validator('ignore_missing'),
                             tk.get_converter('convert_to_extras')],
-            'type': [tk.get_converter('convert_from_extras'),
+            'dctype': [tk.get_converter('convert_to_extras'),
                            tk.get_validator('ignore_missing')],
             'geospatial_topic': [
                 tk.get_validator('ignore_missing'),
