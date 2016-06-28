@@ -1,20 +1,23 @@
 #! /usr/bin/env python
-from csv import DictReader
-import os
 from argparse import ArgumentParser
-from threading import Thread, BoundedSemaphore
-import logging
-import requests
-from json import dumps, loads, load
-import uuid
-import functools
-from ckan.logic.validators import boolean_validator
 from ckan.lib.munge import munge_name
-from datetime import datetime
+from ckan.logic.validators import boolean_validator
+from ckan.model import Package, PackageRevision
 from ConfigParser import ConfigParser
+from csv import DictReader
+from datetime import datetime
+from json import dumps, loads, load
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from ckan.model import Package, PackageRevision
+from threading import Thread, BoundedSemaphore, RLock
+import functools
+import logging
+import os
+import re
+import requests
+import uuid
+
+cc_by = re.compile(r'cc\w+by', re.I)
 
 uuid3 = functools.partial(uuid.uuid3, uuid.NAMESPACE_DNS)
 
@@ -23,6 +26,8 @@ logHandler = logging.StreamHandler()
 logHandler.setLevel(logging.DEBUG)
 
 log.addHandler(logHandler)
+
+group_check_lock = RLock()
 
 parser = ArgumentParser()
 parser.add_argument(
@@ -65,6 +70,8 @@ API_KEY = args.api_key
 HOST = args.host
 DATA_URL = 'https://data.cese.nsw.gov.au'
 
+org_cache = {}
+group_cache = set()
 
 def action_url(action):
     return HOST.strip('/') + '/api/3/action/' + action
@@ -89,18 +96,30 @@ class Importer(Thread):
         mn = munge_name(org_name)
         if mn in org_mapping:
             return org_mapping[mn]
+        if mn in org_cache:
+            return org_cache[mn]
         org_dict = requests.get(
             action_url('organization_show'),
             params={'id': mn}
         )
         if org_dict.ok:
-            return org_dict.json()['result']['id']
+            org_id = org_dict.json()['result']['id']
+            org_cache[mn] = org_id
+            return org_id
         log.error(org_dict.content)
         raise AttributeError('Organization %s not found' % mn)
 
     def _get_language(self, language):
-        code = languages.keys()[languages.values().index(language)]
+
+        code = languages.keys()[
+            languages.values().index(language)] if language else ''
         return code
+
+    def _get_license(self, license):
+        if cc_by.match(license):
+            return 'cc-by'
+        # Fallback value
+        return 'cc-by'
 
     def _dataset_to_pkg(self):
         pkg = dict(
@@ -119,7 +138,7 @@ class Importer(Thread):
             id=str(uuid3(self.dataset['title'])),
             jurisdiction=self.dataset['jurisdiction'],
             language=self._get_language(self.dataset['language']),
-            license_id=self.dataset['license'],
+            license_id=self._get_license(self.dataset['license']),
             name=munge_name(self.dataset['title']),
             notes=self.dataset['description'],
             owner_org=self._get_org_id(self.dataset['organisation']),
@@ -137,41 +156,59 @@ class Importer(Thread):
         )
 
         if self.dataset['socrata id']:
-            pkg['resources'] = [{
-                'url': (DATA_URL + '/resource/' +
-                        self.dataset['socrata id'] + '.csv'),
+            format = 'csv'
+            csv_res = {
                 'name': self.dataset['title'],
-                'format': 'csv'
-            }]
+                'format': format
+            }
+            csv_res_name = self.dataset['socrata id'] + '.csv'
+            csv_res_url = DATA_URL + '/resource/' + csv_res_name
+
+            csv_res['url'] = csv_res_name
+            csv_res['id'] = str(uuid3(pkg['id'] + csv_res_name))
+            socrata_file = requests.get(csv_res_url, stream=True).raw
+            socrata_file.name = csv_res_name
+            pkg['upload'] = (
+                'upload',
+                socrata_file
+            )
+            pkg['resources'] = [csv_res]
         return pkg
 
     def _check_groups(self):
         for group in self.dataset['category'].split(','):
             group = group.strip()
             mn = munge_name(group)
-            existing = requests.get(
-                action_url('group_show'),
-                params={'id': mn}
-            )
-            if not existing.ok:
-                requests.post(
-                    action_url('group_create'),
-                    headers={
-                        'Authorization': API_KEY,
-                        'Content-type': 'application/json'
-                    },
-                    data=dumps({'name': mn, 'title': group})
+            if mn in group_cache:
+                continue
+            with group_check_lock:
+                existing = requests.get(
+                    action_url('group_show'),
+                    headers={'Authorization': API_KEY},
+                    params={'id': mn}
                 )
+                if not existing.ok:
+                    log.info(
+                        '[{0:^10}] Creating group <{1}>'.format(self.name, mn))
+                    requests.post(
+                        action_url('group_create'),
+                        headers={
+                            'Authorization': API_KEY,
+                            'Content-type': 'application/json'
+                        },
+                        data=dumps({'name': mn, 'title': group})
+                    )
+                    group_cache.add(mn)
 
     def _update_dates(self, id):
+        dates = self.dataset['[dateadded, date modified]']
+        if not dates:
+            return
         added, modified = map(datetime.fromtimestamp, loads(
-            self.dataset['[dateadded, date modified]']))
+            dates))
         s = Session()
-        s.query(Package).filter_by(id=id).update(
-            {
-                'metadata_modified': modified
-            }
-        )
+        # s.query(Package).filter_by(id=id).update(
+        #     {'metadata_modified': modified})
         rev = s.query(PackageRevision).filter_by(id=id).order_by(
             PackageRevision.revision_timestamp.asc()).first()
         rev.revision_timestamp = added
@@ -182,6 +219,8 @@ class Importer(Thread):
     def _import_dataset(self):
         do_something = False
         pkg = self._dataset_to_pkg()
+        resources = pkg.get('resources', [])
+        upload = pkg.pop('upload', None)
         self._check_groups()
         pkg_str = dumps(pkg)
         result = requests.get(
@@ -208,6 +247,14 @@ class Importer(Thread):
                 },
                 data=pkg_str
             )
+            for resource in resources:
+                resource.pop('url')
+                requests.post(
+                    action_url('resource_update'),
+                    headers={'Authorization': API_KEY},
+                    data=resource,
+                    files=[upload]
+                )
             self._update_dates(pkg['id'])
             log.debug(req.content)
 
@@ -224,4 +271,4 @@ with open(args.content, 'r') as content:
         log.debug('[{0:^10}] Semaphore lock aquired'.format(thread.name))
         semaphore.acquire()
         thread.start()
-        break
+        # break
