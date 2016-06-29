@@ -108,7 +108,7 @@
                 </tr>
             {% endif %}
 
-            {% if pkg.get('contact_info') and pkg.get('contact_info') == 'True' %}
+            {% if pkg.get('contact_info') and pkg.get('contact_info') == 'true' %}
             {% set contact = h.get_user_full(pkg.maintainer) %}
             {%  if contact %}
             <tr>

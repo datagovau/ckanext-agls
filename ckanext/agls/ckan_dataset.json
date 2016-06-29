@@ -147,7 +147,11 @@
       "required": true,
       "validators": "scheming_required"
     },
-
+    {
+      "field_name": "maintainer",
+      "label": "maintainer",
+      "form_snippet": "maintainer.html"
+    },
     {
       "field_name": "geospatial_topic",
       "label": "Geospatial Topic",
