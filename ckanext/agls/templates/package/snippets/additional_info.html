@@ -144,6 +144,12 @@
                     <td class="dataset-details" property="dct:spatial"> {{ pkg.spatial_coverage }}</td>
                 </tr>
             {% endif %}
+            {% if pkg.get('theme') %}
+                <tr>
+                    <th scope="row" class="dataset-label">Theme</th>
+                    <td class="dataset-details" property="agls:function"> {{ pkg.theme }}</td>
+                </tr>
+            {% endif %}
             {% if pkg.get('jurisdiction') %}
                 <tr>
                     <th scope="row" class="dataset-label">Jurisdiction</th>
