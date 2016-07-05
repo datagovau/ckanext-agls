@@ -1,5 +1,7 @@
 {% import 'macros/form.html' as form %}
-{% set data_theme = data[field.field_name].split(',')%}
+{% if data[field.field_name] %}
+    {% set data_theme = data[field.field_name].split(',')%}
+{% endif %}
 <div class="control-group control-full">
     <label class="control-label" for="field-group">Theme</label>
 
