@@ -14,21 +14,22 @@ import requests
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
+from pylons import config
 
 
 class AGLSController(PackageController):
     @jsonp.jsonpify
     def geo_autocomplete(self):
         q = request.params.get('q', '')
+        rows = config.get('ckan.agls.gazetter_rows') or '200'
         record_list = []
         if q:
             r = requests.get("http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:*"+q+"*"\
-                             "&fq=feature_code:POPL or feature_code:LOCB or feature_code:SUB or feature_code:URBN or feature_code:STAT or feature_code:CONT").json()
-
+                             "&rows="+rows+"&fq=feature_code:POPL or feature_code:LOCB or feature_code:SUB or feature_code:URBN or feature_code:STAT or feature_code:CONT").json()
             for record in r['response']['docs']:
-		if record.get('authority_id') != 'AHO':
-	                result_dict = {'name': record.get('id')+": "+record.get('name')}
-	                record_list.append(result_dict)
+                if record.get('authority_id') != 'AHO':
+                    result_dict = {'name': record.get('id')+": "+record.get('name')}
+                    record_list.append(result_dict)
         return record_list
 
     @jsonp.jsonpify

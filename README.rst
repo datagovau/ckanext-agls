@@ -21,6 +21,8 @@ Set configuration options in ini file::
 
   ckan.plugins = agls scheming_datasets
 
+  ckan.agls.gazetter_rows = the number of returned search results of Geospatial Coverage or 200 on default
+
   scheming.dataset_schemas = ckanext.agls:ckan_dataset.json
 
   scheming.presets = ckanext.agls:agls_presets.json
