@@ -115,7 +115,7 @@
       "label": "Theme",
       "field_name": "theme",
       "preset": "theme",
-      "output_validators": "custom_output_validator_theme"
+      "output_validators": "custom_output_validator"
     },
     {
       "field_name": "author",

@@ -17,11 +17,6 @@ def custom_output_validator(key, data, errors, context):
     value = value.replace('{', '').replace('}', '').replace(',"', ', ').replace('"', '').replace(',', ', ')
     data[key] = value
 
-def custom_output_validator_theme(key, data, errors, context):
-    value = data.get(key)
-    value = value.replace('[', '').replace(']', '').replace("u'", '').replace("'", '').replace(',', ', ').replace('{', '').replace('}', '')
-    data[key] = value
-
 def get_group_select_list():
     result = []
     user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
@@ -136,27 +131,24 @@ def create_fields_theme():
         data = {'name': 'fields_theme'}
         vocab = tk.get_action('vocabulary_create')(context, data)
         log.info("Success create vocab")
-        for tag in groups():
-            data = {'name': tag['title'], 'vocabulary_id': vocab['id']}
+        for tag in ('Law and Order', 'Education and Training', 'Health', 'Social and Community Services', 'Recreation and Culture', 'Primary Industries',
+                    'Business and Industrial Development', 'Government Administration', 'Finance', 'Land and Resource Management',
+                    'Infrastructure and Communications', 'Conservation and Environment', 'Labour', 'Emergency Management'):
+            data = {'name': tag, 'vocabulary_id': vocab['id']}
             tk.get_action('tag_create')(context, data)
             log.info('tag_create = %s', data)
 
+
 def fields_theme():
-    #create_fields_theme()
+    create_fields_theme()
     #delete_tags_fields_theme()
     #delete_fields_theme()
-    out = []
-    for tag in groups():
-        out.append(tag['title'])
-    return out
-    """
     try:
         tag_list = tk.get_action('tag_list')
         fields_theme = tag_list(data_dict={'vocabulary_id': 'fields_theme', 'all_fields': False})
-        log.info('tag_list = %s, type = %s', fields_theme, type(fields_theme))
         return fields_theme
     except tk.ObjectNotFound:
-        return None"""    
+        return None
 
 
 def spatial_bound(spatial_str):
@@ -220,8 +212,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                 'iso_languages_list': iso_languages_list}
 
     def get_validators(self):
-        return { 'custom_output_validator': custom_output_validator,
-                 'custom_output_validator_theme': custom_output_validator_theme }            
+        return { 'custom_output_validator': custom_output_validator }
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
