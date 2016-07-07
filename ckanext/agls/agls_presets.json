@@ -15,6 +15,17 @@
             }
           }
         },
+        {
+          "preset_name": "theme",
+          "values": {
+            "form_snippet": "agift.html",
+            "validators": "scheming_required",
+            "form_attrs": {
+              "data-module": "autocomplete",
+              "multiple": "multiple"
+            }
+          }
+        },
          {
           "preset_name": "geospatial_topic",
           "values": {

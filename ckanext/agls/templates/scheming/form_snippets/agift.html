@@ -1,21 +1,18 @@
 {% import 'macros/form.html' as form %}
-{% if data.groups %}
-    <div class="control-group"> <label class="control-label">AGIFT Themes</label> <div class="controls"> 
-    {% for group in data.groups %} 
-        <label class="checkbox" for="field-group-{{ loop.index0 }}"> 
-        <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{ loop.index0 }}__id" value="{{ group.id }}" checked="checked"/> {{ group.title }} </label> 
-    {% endfor %} </div> </div> 
+{% if data[field.field_name] %}
+    {% set data_theme = data[field.field_name].split(',')%}
 {% endif %}
-{% set group_name = 'groups__%s__id' % data.groups|length %}
 <div class="control-group control-full">
-
-    <label class="control-label" for="field-group">Add AGIFT Function/Theme</label>
+    <label class="control-label" for="field-group">Theme</label>
 
     <div class="controls">
-        <select id="field-group" name="{{ group_name }}" data-module="autocomplete">
-            <option value="">Please Select</option>
-            {% for group in h.groups() %}
-                <option value="{{ group.id }}">{{ group.title }}</option>
+        <select id="field-group" name="{{ field.field_name }}" multiple data-module="autocomplete">
+            {% for group in h.fields_theme() %}
+                <option value="{{ group }}"
+                    {% for item in data_theme %}
+                        {% if group == item.strip() %}selected="selected"{% endif %}
+                    {% endfor%}>
+                    {{ group }}</option>
             {% endfor %}
         </select>
         <br/>

@@ -112,10 +112,10 @@
       "help_text": "Whether the user contact details should be public as well as the organisation contact details."
     },
     {
-      "label": "Add AGIFT Function/Theme",
-      "field_name": "agift",
-      "form_snippet": "agift.html",
-      "display_snippet": null
+      "label": "Theme",
+      "field_name": "theme",
+      "preset": "theme",
+      "output_validators": "custom_output_validator_theme"
     },
     {
       "field_name": "author",
@@ -147,7 +147,11 @@
       "required": true,
       "validators": "scheming_required"
     },
-
+    {
+      "field_name": "maintainer",
+      "label": "maintainer",
+      "form_snippet": "maintainer.html"
+    },
     {
       "field_name": "geospatial_topic",
       "label": "Geospatial Topic",

@@ -9,10 +9,17 @@ import ckan.model as model
 import datetime
 from shapely.geometry import asShape
 from pylons import config
+import logging
+log = logging.getLogger(__name__)
 
 def custom_output_validator(key, data, errors, context):
     value = data.get(key)
     value = value.replace('{', '').replace('}', '').replace(',"', ', ').replace('"', '').replace(',', ', ')
+    data[key] = value
+
+def custom_output_validator_theme(key, data, errors, context):
+    value = data.get(key)
+    value = value.replace('[', '').replace(']', '').replace("u'", '').replace("'", '').replace(',', ', ').replace('{', '').replace('}', '')
     data[key] = value
 
 def get_group_select_list():
@@ -96,6 +103,61 @@ def fields_of_research():
     except tk.ObjectNotFound:
         return None
 
+def delete_fields_theme():
+    user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    vocab = model.Vocabulary.get('fields_theme')
+    if vocab:
+        log.info("Found Fields Theme, please wait...")
+        data = {'id': vocab.id}
+        vocab = tk.get_action('vocabulary_delete')(context, data)
+        log.info("Success delete vocab")
+
+def delete_tags_fields_theme():
+    user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    vocab = model.Vocabulary.get('fields_theme')
+    tag_list = tk.get_action('tag_list')
+    fields_theme = tag_list(data_dict={'vocabulary_id': 'fields_theme'})
+    log.info('fields_theme_tags = %s, type = %s', fields_theme, type(fields_theme))
+    for tag in fields_theme:
+        data = {'id': tag, 'vocabulary_id': vocab.id}
+        tk.get_action('tag_delete')(context, data)
+        log.info('tag_delete = %s', data)
+        log.info('tag = %s, type = %s, vocab = %s', tag, type(tag), vocab.id)
+
+
+def create_fields_theme():
+    user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
+    context = {'user': user['name']}
+    vocab = model.Vocabulary.get('fields_theme')
+    if not vocab:
+        log.info("Loading Fields Theme for the first time, please wait...")
+        data = {'name': 'fields_theme'}
+        vocab = tk.get_action('vocabulary_create')(context, data)
+        log.info("Success create vocab")
+        for tag in groups():
+            data = {'name': tag['title'], 'vocabulary_id': vocab['id']}
+            tk.get_action('tag_create')(context, data)
+            log.info('tag_create = %s', data)
+
+def fields_theme():
+    #create_fields_theme()
+    #delete_tags_fields_theme()
+    #delete_fields_theme()
+    out = []
+    for tag in groups():
+        out.append(tag['title'])
+    return out
+    """
+    try:
+        tag_list = tk.get_action('tag_list')
+        fields_theme = tag_list(data_dict={'vocabulary_id': 'fields_theme', 'all_fields': False})
+        log.info('tag_list = %s, type = %s', fields_theme, type(fields_theme))
+        return fields_theme
+    except tk.ObjectNotFound:
+        return None"""    
+
 
 def spatial_bound(spatial_str):
     if spatial_str and spatial_str != '':
@@ -148,6 +210,7 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     def get_helpers(self):
         return {'fields_of_research': fields_of_research,
                 'geospatial_topics': geospatial_topics,
+                'fields_theme': fields_theme,
                 'get_group_select_list': get_group_select_list,
                 'spatial_bound': spatial_bound,
                 'get_user_full': get_user_full,
@@ -157,7 +220,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                 'iso_languages_list': iso_languages_list}
 
     def get_validators(self):
-        return { 'custom_output_validator': custom_output_validator }            
+        return { 'custom_output_validator': custom_output_validator,
+                 'custom_output_validator_theme': custom_output_validator_theme }            
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so

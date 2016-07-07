@@ -12,7 +12,7 @@
 
     <span class="label label-inverse" style="float: right;">
         <img src="{{ h.url_for_static('/json-icon.png') }}"/>
-                <a style="color: lightgrey;" href="/api/3/action/{{ h.url_for('package_show', id=c.pkg.id) }}">JSON</a>
+                <a style="color: lightgrey;" href="{{ h.url_for(controller='api', ver=3, action='action', logic_function='package_show', id=c.pkg.id) }}">JSON</a>
       </span>&nbsp;
     <span class="label label-inverse" style="float: right;margin-right: 10px;">
 <img src="{{ h.url_for_static('/rdf-icon.png') }}"/>
