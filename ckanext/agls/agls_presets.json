@@ -95,11 +95,12 @@
               {"value": "daily",      "label": "Daily"},
               {"value": "weekly",     "label": "Weekly"},
               {"value": "monthly",    "label": "Monthly"},
-              {"value": "biennially",  "label": "Biennially"},
-              {"value": "biannually",  "label": "Biannually"},
-              {"value": "annually",  "label": "Annually"},
+              {"value": "biennial",  "label": "Biennially"},
+              {"value": "biannual",  "label": "Biannually"},
+              {"value": "annual",  "label": "Annually"},
               {"value": "infrequently",  "label": "Infrequently"},
               {"value": "never",  "label": "Never"},
+              {"value": "as required",  "label": "As required"},
               {"value": "other",  "label": "Other (specify in dataset description/notes)"}
 
             ]
