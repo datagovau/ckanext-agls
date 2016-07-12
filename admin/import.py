@@ -142,6 +142,10 @@ class Importer(Thread):
         return 'cc-by'
 
     def _dataset_to_pkg(self):
+        theme = self.dataset['theme']
+        if theme == 'EDUCATION':
+            theme = 'Vocational Education & Training (VET)'
+
         pkg = dict(
             author=self.dataset['publisher'],
             contact_info=boolean_validator(
@@ -149,8 +153,8 @@ class Importer(Thread):
             contact_point=self.dataset['contact email'],
             data_model=self.dataset['data models'],
             data_state=self.dataset['data status'].lower(),
-            field_of_research=self.dataset['field of research'][
-                self.dataset['field of research'].index(' ')+1:],
+            # field_of_research=self.dataset['field of research'][
+            #     self.dataset['field of research'].index(' ')+1:],
             geospatial_topic=self.dataset['geospatial topic'].title().replace(
                 ' And ', ' and '),
             groups=[
@@ -171,7 +175,7 @@ class Importer(Thread):
                     self.dataset['tags'].replace("'", '"'))],
             temporal_coverage_from=self.dataset['temporal coverage from'],
             temporal_coverage_to=self.dataset['temporal coverage to'],
-            theme=self.dataset['theme'],
+            theme=theme,
             title=self.dataset['title'],
             update_freq=self.dataset['update frequency'].lower()
         )
