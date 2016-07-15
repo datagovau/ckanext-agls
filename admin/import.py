@@ -160,7 +160,7 @@ class Importer(Thread):
             groups=[
                 {'name': munge_name(group.strip())}
                 for group in self.dataset['category'].lower().split(',')],
-            id=str(uuid3(self.dataset['title'])),
+            id=str(uuid3(self.dataset['title'] + self.dataset['socrata id'])),
             jurisdiction=self.dataset['jurisdiction'],
             language=self._get_language(self.dataset['language']),
             license_id=self._get_license(self.dataset['license']),
