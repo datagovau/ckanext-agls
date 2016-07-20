@@ -209,8 +209,10 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                     tk.get_validator('ignore_missing'),
                     tk.get_converter('convert_to_tags')('fields_of_research')
                 ],
-            'dctype': [tk.get_converter('convert_to_extras'),
-                           tk.get_validator('ignore_missing')],
+            'dctype': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras'),
+                 ],
 
             })
         else:
@@ -255,8 +257,9 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                     tk.get_validator('ignore_missing'),
                     tk.get_converter('convert_to_tags')('fields_of_research')
                 ],
-            'dctype': [tk.get_converter('convert_to_extras'),
-                           tk.get_validator('ignore_missing')],
+            'dctype': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')]
 
             })
         else:
@@ -349,8 +352,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                             tk.get_converter('convert_to_extras')],
             'language': [tk.get_validator('ignore_missing'),
                             tk.get_converter('convert_to_extras')],
-            'dctype': [tk.get_converter('convert_to_extras'),
-                           tk.get_validator('ignore_missing')],
+            'dctype': [tk.get_validator('ignore_missing'),
+                     tk.get_converter('convert_to_extras')],
             'geospatial_topic': [
                 tk.get_validator('ignore_missing'),
                 tk.get_converter('convert_to_tags')('geospatial_topics')
