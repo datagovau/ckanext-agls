@@ -10,19 +10,18 @@
           </span>
         {% endif %}
 
-    <span class="label label-inverse" style="float: right;">
+    <span class="label label-inverse label-inverse-json">
         <img src="{{ h.url_for_static('/json-icon.png') }}"/>
                 <a style="color: lightgrey;" href="{{ h.url_for(controller='api', ver=3, action='action', logic_function='package_show', id=c.pkg.id) }}">JSON</a>
       </span>&nbsp;
-    <span class="label label-inverse" style="float: right;margin-right: 10px;">
-<img src="{{ h.url_for_static('/rdf-icon.png') }}"/>
+    <span class="label label-inverse label-inverse-rdf">
+        <img src="{{ h.url_for_static('/rdf-icon.png') }}"/>
         <a style="color: lightgrey;" href="{{ h.url_for('dataset_read', id=c.pkg.id) }}.rdf">RDF</a>
       </span>&nbsp;
-    <span class="label label-inverse" style="float: right; margin-right: 10px;margin-left: 10px;">
+    <span class="label label-inverse label-inverse-xml">
         <i class="icon-file-alt"></i>
         <a style="color: lightgrey;" href="{{ h.url_for('dataset_read', id=c.pkg.id) }}/gmd">ISO19115/ISO19139 XML</a>
-      </span>
-
+    </span>
     {{ super() }}
 {% endblock %}
 
