@@ -8,3 +8,16 @@
 .select2-container-multi .select2-choices .select2-search-field input {
 	height: 20px;
 }
+
+.label-inverse-json {
+	float: right;
+}
+.label-inverse-rdf {
+	float: right;
+	margin-right: 10px;
+}
+.label-inverse-xml {
+	float: right;
+	margin-right: 10px;
+	margin-left: 10px;
+}
