@@ -32,7 +32,7 @@
     <gmd:contact>
         <gmd:CI_ResponsibleParty>
             <gmd:organisationName py:if="c.pkg_dict.get('organization', None) is not None">
-                <gco:CharacterString>${ c.pkg_dict['organization'].get('title', 'Not Listed') }</gco:CharacterString>
+                <gco:CharacterString>${ c.pkg_dict['organization']['title'] }</gco:CharacterString>
             </gmd:organisationName>
             <contactInfo>
                 <CI_Contact>
@@ -101,7 +101,7 @@
                     </identifier>
                     <citedResponsibleParty>
                         <CI_ResponsibleParty>
-                            <individualName py:if="c.pkg_dict.get('organization', None) is not None>
+                            <individualName py:if="c.pkg_dict.get('organization', None) is not None">
                                 <gco:CharacterString>${ c.pkg_dict['organization']['title'] }</gco:CharacterString>
                             </individualName>
                             <role>
