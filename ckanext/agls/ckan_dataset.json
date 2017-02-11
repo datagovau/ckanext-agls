@@ -23,7 +23,9 @@
       "label": "Description",
       "display_property": "dc:description",
       "form_snippet": "markdown.html",
-      "form_placeholder": "eg. Some useful notes about the data"
+      "form_placeholder": "eg. Some useful notes about the data",
+      "required": true,
+      "validators": "scheming_required"
     },
     {
       "field_name": "tag_string",
@@ -173,6 +175,16 @@
       "preset": "field_of_research",
       "output_validators": "custom_output_validator",
       "help_text": "The Australian and New Zealand Standard Research Classification (ANZSRC), 2008 defined field or fields of research relevant to the dataset."
+    },
+    {
+      "field_name": "syndicated_id",
+      "form_snippet": "hidden.html",
+      "initial_value": "null"
+    },
+    {
+      "field_name": "syndicate",
+      "form_snippet": "hidden.html",
+      "initial_value": "true"
     }
   ],
   "resource_fields": [
