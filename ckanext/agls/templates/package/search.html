@@ -8,12 +8,12 @@
           'remove_field': c.remove_field }
         %}
         {% set sorting = [
-          (_('Relevance'), 'extras_harvest_portal asc, score desc, metadata_modified desc'),
+          (_('Relevance'), 'score desc, metadata_modified desc'),
           (_('Source Data Portal'), 'extras_harvest_portal asc'),
-          (_('Name Ascending'), 'extras_harvest_portal asc, title_string asc'),
-          (_('Name Descending'), 'extras_harvest_portal asc, title_string desc'),
-          (_('Last Modified'), 'extras_harvest_portal asc, metadata_modified desc'),
-          (_('Popular'), 'extras_harvest_portal asc, views_recent desc') if g.tracking_enabled else (false, false) ]
+          (_('Name Ascending'), 'title_string asc'),
+          (_('Name Descending'), 'title_string desc'),
+          (_('Last Modified'), 'metadata_modified desc'),
+          (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
         %}
         {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, fields=c.fields %}
       {% endblock %}
