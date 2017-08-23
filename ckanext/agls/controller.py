@@ -52,7 +52,6 @@ class AGLSController(PackageController):
                 return result_dict
         return {}
 
-
     def gmd(self, id):
         format = 'html'
 
@@ -103,7 +102,7 @@ class AGLSController(PackageController):
 
         self._setup_template_variables(context, {'id': id},
                                        package_type=package_type)
-        template = 'package/read.gmd'
+        template = 'package/read_xml.html'
 
         try:
             return base.render(template, extra_vars={'dataset_type': package_type})
