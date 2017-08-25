@@ -93,7 +93,6 @@ class AGLSController(PackageController):
 
         # used by disqus plugin
         c.current_package_id = c.pkg.id
-        c.related_count = c.pkg.related_count
 
         # can the resources be previewed?
         for resource in c.pkg_dict['resources']:
@@ -102,7 +101,7 @@ class AGLSController(PackageController):
 
         self._setup_template_variables(context, {'id': id},
                                        package_type=package_type)
-        template = 'package/read_xml.html'
+        template = 'package/read.gmd'
 
         try:
             return base.render(template, extra_vars={'dataset_type': package_type})
