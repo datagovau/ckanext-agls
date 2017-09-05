@@ -29,10 +29,14 @@ Example:
           </span>
         {% endif %}
    {% if h.get_pkg_dict_extra(package,'harvest_portal') %}
-          <span class="dataset-private label label-inverse">
-            <i class="icon-link"></i>
-            From {{h.get_pkg_dict_extra(package,'harvest_portal')}}
-          </span>
+          {% set external_url = h.get_pkg_dict_extra(package,'harvest_url') %}
+          {% set domain_url = external_url.split('/dataset/')[0] %}
+          <a href="{{ domain_url }}" target="_blank">
+            <span class="dataset-private label label-inverse">
+              <i class="icon-link"></i>
+              From {{h.get_pkg_dict_extra(package,'harvest_portal')}}
+            </span>
+          </a>
           <a href="{{h.get_pkg_dict_extra(package,'harvest_url')}}"  data-portal="{{h.get_pkg_dict_extra(package,'harvest_portal')}}" class="searchpartnership-url-analytics" target="_blank"> {{h.truncate(title, truncate_title)}} </a>
         {% else %}
 
