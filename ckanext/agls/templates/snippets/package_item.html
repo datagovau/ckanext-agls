@@ -31,7 +31,7 @@ Example:
    {% if h.get_pkg_dict_extra(package,'harvest_portal') %}
           {% set external_url = h.get_pkg_dict_extra(package,'harvest_url') %}
           {% set domain_url = external_url.split('/dataset/')[0] %}
-          <a href="{{ domain_url }}" target="_blank">
+          <a class="dataset-label-inverse" href="{{ domain_url }}" target="_blank">
             <span class="dataset-private label label-inverse">
               <i class="icon-link"></i>
               From {{h.get_pkg_dict_extra(package,'harvest_portal')}}
