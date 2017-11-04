@@ -21,7 +21,7 @@ def get_group_select_list():
     return result
 
 def group_id():
-    id =  request.params.get('group') or request.params.get('groups__0__id')
+    id = request.params.get('grp') or request.params.get('groups__0__id')
     return id
 
 # vocab setup
