@@ -251,6 +251,9 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                 tk.get_converter('convert_from_tags')('fields_of_research'),
                 tk.get_validator('ignore_missing')],
         })
+        schema['resources'].update({
+            'url': [tk.get_converter('not_empty'), unicode, tk.get_converter('remove_whitespace')]
+        })
         return schema
 
     def _modify_package_schema(self, schema):
@@ -295,5 +298,8 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
                 tk.get_converter('convert_to_tags')('fields_of_research')
             ],
 
+        })
+        schema['resources'].update({
+            'url': [tk.get_converter('not_empty'), unicode, tk.get_converter('remove_whitespace')]
         })
         return schema
