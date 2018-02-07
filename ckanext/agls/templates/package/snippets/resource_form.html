@@ -1,0 +1,6 @@
+{% ckan_extends %}
+
+{% block basic_fields_name %}
+    {% call form.input('name', id='field-name', label=_('Name'), placeholder=_('Leave blank to use the default uploaded file name or enter a new name.'), value=data.name, error=errors.name, classes=['control-full']) %}
+    {% endcall %}
+{% endblock %}
