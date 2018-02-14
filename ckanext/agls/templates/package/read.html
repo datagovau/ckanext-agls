@@ -104,7 +104,8 @@
             {%else %}{%  if pkg.get('metadata_created') %}
                 <tr>
                     <th scope="row" class="dataset-label">Date Published</th>
-                    <td class="dataset-details" property="dct:issued">{{ h.render_datetime(pkg.metadata_created.split("T")[0],date_format) }}</td>
+                    <td class="dataset-details" property="dct:issued">
+                        {% snippet 'snippets/agls_local_friendly_datetime.html', datetime_obj=pkg.metadata_created, pattern='DD-MM-YYYY' %}</td>
                 </tr>
             {% endif %}
  {% endif %}
@@ -117,7 +118,8 @@
             {% else %} {% if pkg.get('metadata_modified') %}
                 <tr>
                     <th scope="row" class="dataset-label">Page Updated</th>
-                    <td class="dataset-details" property="dct:updated">{{ h.render_datetime(pkg.metadata_modified.split("T")[0],date_format) }}</td>
+                    <td class="dataset-details" property="dct:updated">
+                        {% snippet 'snippets/agls_local_friendly_datetime.html', datetime_obj=pkg.metadata_modified, pattern='DD-MM-YYYY' %}</td>
                 </tr>
             {% endif %}
  {% endif %}
