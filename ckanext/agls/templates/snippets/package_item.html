@@ -24,13 +24,13 @@ Example:
       <h3 class="dataset-heading">
         {% if package.private %}
           <span class="dataset-private label label-inverse">
-            <i class="icon-lock"></i>
+            <i class="fa fa-lock"></i>
             {{ _('Private') }}
           </span>
         {% endif %}
    {% if h.get_pkg_dict_extra(package,'harvest_portal') %}
           <span class="dataset-private label label-inverse">
-            <i class="icon-link"></i>
+            <i class="fa-link"></i>
             From {{h.get_pkg_dict_extra(package,'harvest_portal')}}
           </span>
           <a href="{{h.get_pkg_dict_extra(package,'harvest_url')}}"  data-portal="{{h.get_pkg_dict_extra(package,'harvest_portal')}}" class="searchpartnership-url-analytics" target="_blank"> {{h.truncate(title, truncate_title)}} </a>
