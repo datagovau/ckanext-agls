@@ -30,7 +30,7 @@ Example:
         {% endif %}
    {% if h.get_pkg_dict_extra(package,'harvest_portal') %}
           <span class="dataset-private label label-inverse">
-            <i class="fa-link"></i>
+            <i class="fa fa-link"></i>
             From {{h.get_pkg_dict_extra(package,'harvest_portal')}}
           </span>
           <a href="{{h.get_pkg_dict_extra(package,'harvest_url')}}"  data-portal="{{h.get_pkg_dict_extra(package,'harvest_portal')}}" class="searchpartnership-url-analytics" target="_blank"> {{h.truncate(title, truncate_title)}} </a>
