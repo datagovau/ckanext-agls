@@ -121,7 +121,7 @@
                     <th scope="row" class="dataset-label">Contact Point</th>
                     <td class="dataset-details" property="dcat:contactPoint">
                         <div about="http://" typeof="v:VCard">
-                            <span property="v:fn">{{ pkg.organization.title }}</span><br/>
+                            <span property="v:fn">{{ pkg.get('author') or pkg.organization.title }}</span><br/>
                             {% set org_full = h.get_org_full(pkg.organization.id) %}
                             {% if h.get_pkg_dict_extra(org_full,'telephone') %}
                             <span rel="v:tel">
