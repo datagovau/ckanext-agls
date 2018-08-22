@@ -39,16 +39,19 @@ class AGLSController(PackageController):
         if q:
             r = requests.get("http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=id:"+q).json()
 
-            for record in r['response']['docs']:
-                locationParts = record['location'].split(',')
-                latitude = locationParts[0]
-                longitude = locationParts[1]
-                result_dict = {'id': record.get('id'),
-                               'name': record.get('id')+": "+record.get('name'),
-                               'latitude': latitude,
-                               'longitude': longitude,
-                               'geojson': '{"type": "Point","coordinates": ['+ longitude+ ','+latitude+']}'}
-                return result_dict
+            try:
+                for record in r['response']['docs']:
+                    locationParts = record['location'].split(',')
+                    latitude = locationParts[0]
+                    longitude = locationParts[1]
+                    result_dict = {'id': record.get('id'),
+                                   'name': record.get('id')+": "+record.get('name'),
+                                   'latitude': latitude,
+                                   'longitude': longitude,
+                                   'geojson': '{"type": "Point","coordinates": ['+ longitude+ ','+latitude+']}'}
+                    return result_dict
+            except:
+                pass
         return {}
 
 
@@ -93,7 +96,10 @@ class AGLSController(PackageController):
 
         # used by disqus plugin
         c.current_package_id = c.pkg.id
-        c.related_count = c.pkg.related_count
+        try:
+            c.related_count = c.pkg.related_count
+        except:
+            c.related_count = 0
 
         # can the resources be previewed?
         for resource in c.pkg_dict['resources']:

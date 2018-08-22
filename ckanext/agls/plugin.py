@@ -21,7 +21,7 @@ def get_group_select_list():
     return result
 
 def group_id():
-    id =  request.params.get('group') or request.params.get('groups__0__id')
+    id = request.params.get('grp') or request.params.get('groups__0__id')
     return id
 
 # vocab setup
@@ -150,7 +150,6 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
         tk.add_public_directory(config, 'theme/public')
         tk.add_public_directory(config, 'fanstatic/ckanext-agls')
         tk.add_resource('fanstatic', 'ckanext-agls')
-        # config['licenses_group_url'] = 'http://%(ckan.site_url)/licenses.json'
 
 
     def is_fallback(self):
