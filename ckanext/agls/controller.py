@@ -1,4 +1,3 @@
-
 from ckan.common import _, request, c, response
 from ckan.controllers.package import PackageController
 import ckan.logic as logic
@@ -11,6 +10,7 @@ import ckan.lib.render
 import ckan.lib.base as base
 import ckan.lib.jsonp as jsonp
 import requests
+
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
@@ -22,13 +22,13 @@ class AGLSController(PackageController):
         q = request.params.get('q', '')
         record_list = []
         if q:
-            r = requests.get("http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:*"+q+"*"\
-                             "&fq=feature_code:POPL or feature_code:LOCB or feature_code:SUB or feature_code:URBN or feature_code:STAT or feature_code:CONT").json()
+            r = requests.get("http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:*" + q + "*" 
+                              "&fq=feature_code:POPL or feature_code:LOCB or feature_code:SUB or feature_code:URBN or feature_code:STAT or feature_code:CONT").json()
 
-            for record in r['response']['docs']:
-		if record.get('authority_id') != 'AHO':
-	                result_dict = {'name': record.get('id')+": "+record.get('name')}
-	                record_list.append(result_dict)
+            for record in r.get('response', {'docs': []})['docs']:
+                if record.get('authority_id') != 'AHO':
+                    result_dict = {'name': record.get('id') + ": " + record.get('name')}
+                    record_list.append(result_dict)
         return record_list
 
     @jsonp.jsonpify
@@ -37,23 +37,22 @@ class AGLSController(PackageController):
         limit = request.params.get('limit', 1)
         record_list = []
         if q:
-            r = requests.get("http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=id:"+q).json()
+            r = requests.get("http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=id:" + q).json()
 
             try:
-                for record in r['response']['docs']:
+                for record in r.get('response', {'docs': []})['docs']:
                     locationParts = record['location'].split(',')
                     latitude = locationParts[0]
                     longitude = locationParts[1]
                     result_dict = {'id': record.get('id'),
-                                   'name': record.get('id')+": "+record.get('name'),
+                                   'name': record.get('id') + ": " + record.get('name'),
                                    'latitude': latitude,
                                    'longitude': longitude,
-                                   'geojson': '{"type": "Point","coordinates": ['+ longitude+ ','+latitude+']}'}
+                                   'geojson': '{"type": "Point","coordinates": [' + longitude + ',' + latitude + ']}'}
                     return result_dict
             except:
                 pass
         return {}
-
 
     def gmd(self, id):
         format = 'html'
