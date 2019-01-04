@@ -30,7 +30,7 @@
     <meta name="DCTERMS.Title" content="{{ pkg['title'] }}"/>
     <meta name="DCTERMS.Description" scheme="" content="{{ pkg['notes'] }}"/>
     <meta name="twitter:card" content="summary" />
-    <meta property="og:url" content="{{ pkg.url }}"/>
+    <meta property="og:url" content="{{ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True) }}"/>
     <meta property="og:title" content="{{ pkg['title'] }}"/>
     <meta property="dataset" content="{{ pkg['title'] }}"/>
     <meta property="og:description" content="{{ pkg['notes'] }}" />
