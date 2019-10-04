@@ -11,3 +11,24 @@
      is_upload_enabled=h.uploads_enabled(), is_url=data.url and not is_upload, is_upload=is_upload,
      upload_label=_('Data'), url_label=_('URL'), placeholder=_('http://example.com/external-data.csv'), field_name='name') }}
 {% endblock %}
+
+{% block basic_fields_format %}
+  <div class="control-group control-full">
+    <label class="control-label" for="field-format"><span title="This field is required"
+        class="control-required"></span>Format</label>
+    <div class="controls">
+      <select id="field-format" name="format" data-module="autocomplete">
+        <option value="">Please Select</option>
+
+        {% for format in h.formats() %}
+        <option value="{{ format }}">{{ format }}</option>
+        {% endfor %}
+      </select>
+
+      <span class="info-block info-block-small">
+        <i class="icon-info-sign"></i>
+        {{ _('This will be guessed automatically. Leave blank if you wish') }}
+      </span>
+    </div>
+</div>
+{% endblock %}

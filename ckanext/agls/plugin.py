@@ -1,5 +1,6 @@
 import ckan.plugins as plugins
 import ckan.logic as logic
+import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
 import csv
 import os
@@ -62,7 +63,14 @@ def groups():
     out = map(convert_to_dict, query.all())
     return out
 
-
+def formats():
+    """
+    returns set of portal default resource formats
+    """
+    defined_formats = set(map(lambda (_1, format, _3): format, h.resource_formats().values()))
+    sorted_formats = sorted(defined_formats, key=lambda format: format.upper())
+    return sorted_formats
+    
 def create_fields_of_research():
 
     user = tk.get_action('get_site_user')({'ignore_auth': True}, {})
@@ -170,8 +178,9 @@ class AGLSDatasetPlugin(plugins.SingletonPlugin,
     def get_helpers(self):
         return {'fields_of_research': fields_of_research, 'geospatial_topics': geospatial_topics,
                 'get_group_select_list': get_group_select_list, 'spatial_bound': spatial_bound,
-                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 'group_id': group_id,
-		'is_hosted': is_hosted, 'get_pkg_obj_extra': get_pkg_obj_extra, 'get_popular_tags': get_popular_tags}
+                'get_user_full': get_user_full, 'get_org_full': get_org_full, 'groups': groups, 
+                'formats': formats, 'group_id': group_id, 'is_hosted': is_hosted, 
+                'get_pkg_obj_extra': get_pkg_obj_extra, 'get_popular_tags': get_popular_tags}
 
     def update_config(self, config):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
