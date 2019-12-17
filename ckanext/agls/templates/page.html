@@ -55,6 +55,7 @@
             gazSearch($("#field-spatial_coverage").val());
             $(function() {
                 $( "#field-temporal_coverage-from" ).kalendae({format:"YYYY-MM-DD"});
+                $( "#field-temporal_coverage-from" ).attr('autocomplete', 'none');
                 $( "#field-temporal_coverage-from").focusout(function() {
                     var date = moment($( "#field-temporal_coverage-from").val());
                     if (date.format("YYYY-MM-DD") == 'Invalid date') {
@@ -65,6 +66,7 @@
                 });
 
                 $( "#field-temporal_coverage-to" ).kalendae({format:"YYYY-MM-DD"});
+                $( "#field-temporal_coverage-to" ).attr('autocomplete', 'none');
                 $( "#field-temporal_coverage-to").focusout(function() {
                     var date = moment($( "#field-temporal_coverage-to").val());
                     if (date.format("YYYY-MM-DD") == 'Invalid date') {
