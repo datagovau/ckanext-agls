@@ -76,9 +76,9 @@ class AGLSController(PackageController):
                 try:
                     date = h.date_str_to_datetime(revision_ref)
                     context['revision_date'] = date
-                except TypeError, e:
+                except TypeError as e:
                     base.abort(400, _('Invalid revision format: %r') % e.args)
-                except ValueError, e:
+                except ValueError as e:
                     base.abort(400, _('Invalid revision format: %r') % e.args)
         elif len(split) > 2:
             base.abort(400, _('Invalid revision format: %r') %

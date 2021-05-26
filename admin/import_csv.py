@@ -46,13 +46,13 @@ with open('Organisation to Jurisdiction for Gazetteer.csv', 'rb') as csvfile:
                     org_spatial = col.strip()
                 y += 1
             x += 1
-            print org_name
-            print x
+            print(org_name)
+            print(x)
             data[org_name]= {'org_jurisdiction':org_jurisdiction, 'org_spatial':org_spatial}
 
     for org in ckan.action.organization_list(all_fields=True, include_extras=True):
             if org['title'] in data:
-                print "Found "+org['title']
+                print("Found "+org['title'])
                 del org['packages']
                 update = False
                 if not 'extras' in org:
@@ -67,13 +67,13 @@ with open('Organisation to Jurisdiction for Gazetteer.csv', 'rb') as csvfile:
                 try:
                     if update:
                         pkg = ckan.call_action('organization_update', org)  # create a new dataset?
-                        print org['name'] + " updated"
-                except ckanapi.ValidationError, e:
-                    print org
-                    print e
+                        print(org['name'] + " updated")
+                except ckanapi.ValidationError as e:
+                    print(org)
+                    print(e)
                     if len(e.error_dict) == 2 and 'name' in e.error_dict and e.error_dict['name'][0] == 'That URL is already in use.':
                         pass
                     else:
-                        raise StandardError(e)
+                        raise Exception(e)
                 except ckanapi.NotAuthorized:
-                    raise StandardError('Access denied, check your CKAN API Key is correct')
+                    raise Exception('Access denied, check your CKAN API Key is correct')

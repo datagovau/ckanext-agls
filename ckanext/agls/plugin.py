@@ -61,7 +61,7 @@ def groups():
             out[k] = getattr(user, k)
         return out
 
-    out = map(convert_to_dict, query.all())
+    out = list(map(convert_to_dict, query.all()))
     return out
 
 
@@ -71,7 +71,7 @@ def create_fields_of_research():
     context = {'user': user['name']}
     vocab = model.Vocabulary.get('fields_of_research')
     if not vocab:
-        print "Loading ABS Fields of Research for the first time, please wait..."
+        print("Loading ABS Fields of Research for the first time, please wait...")
         data = {'name': 'fields_of_research'}
         vocab = tk.get_action('vocabulary_create')(context, data)
         with open(os.path.dirname(os.path.abspath(__file__)) + '/ABS Fields Of Research.csv', 'rb') as csvfile:
@@ -79,7 +79,7 @@ def create_fields_of_research():
             for row in forcsv:
                 data = {'name': row[1].strip().replace(',', '')[:100], 'vocabulary_id': vocab['id']}
                 tk.get_action('tag_create')(context, data)
-        print "ABS Fields of Research loaded"
+        print("ABS Fields of Research loaded")
 
 
 def fields_of_research():
