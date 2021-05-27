@@ -4,11 +4,11 @@ import ckan.plugins.toolkit as tk
 import csv
 import os
 import json
-from ckan.common import OrderedDict, _, json, request, c, g, response
+from ckan.common import _, json, request
 import ckan.model as model
 import datetime
 from shapely.geometry import asShape
-from pylons import config
+from ckan.common import config
 
 def get_group_select_list():
     result = []
