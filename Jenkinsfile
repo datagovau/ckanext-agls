@@ -5,7 +5,6 @@ pipeline {
     agent none
     triggers {
         pollSCM( '* * * * *')
-	    cron( CRON_TAB) 
     }
 
     options {
