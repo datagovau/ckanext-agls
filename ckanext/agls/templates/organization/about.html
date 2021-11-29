@@ -1,4 +1,4 @@
 {% ckan_extends %}
   {% block organization_extras %}
-    {% snippet 'snippets/additional_info.html', extras = h.sorted_extras(c.group_dict.extras) %}
+    {% snippet 'snippets/additional_info.html', extras = h.sorted_extras(group_dict.extras) %}
   {% endblock %}

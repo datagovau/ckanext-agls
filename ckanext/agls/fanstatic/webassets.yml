@@ -1,0 +1,8 @@
+main:
+  filter: rjsmin
+  output: ckanext-agls/%(version)s_main.js
+  extra:
+    preload:
+      - base/main
+  contents:
+    jquery-ui.js

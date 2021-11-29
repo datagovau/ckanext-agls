@@ -3,9 +3,9 @@
 {% block links -%}
     {{ super() }}
     <link rel="alternate" type="application/json"
-          href="{{ h.url_for('/api/3/action/package_show', id=c.pkg.id, qualified=True) }}"/>
+          href="{{ h.url_for('api.action', ver=3, logic_function='package_show', id=pkg.id, qualified=True) }}"/>
     <link rel="alternate" type="application/vnd.iso.19139+xml"
-          href="{{ h.url_for(controller='package', action='read', id=pkg.id, qualified=True) }}/gmd"/>
+          href="{{ h.url_for('dataset.read', id=pkg.id, qualified=True) }}/gmd"/>
 
     <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
     <link rel="schema.AGLSTERMS" href="http://www.agls.gov.au/agls/terms/"/>
@@ -21,20 +21,14 @@
     <meta name="DCTERMS.Published" scheme="DCTERMS.ISO8601" content="{{ pkg['metadata_created'] }}"/>
     <meta name="DCTERMS.Source.URI" content="{{ pkg.url }}"/>
     <meta name="DCTERMS.License" content="{{ pkg['license_url'] }}"/>
-    <meta name="DCTERMS.Coverage.Temporal" content="{{ pkg.temporal_coverage }}"/>
+    <meta name="DCTERMS.Coverage.Temporal" content="{{ pkg.temporal_coverage-from if pkg.get('temporal_coverage-from') }}{{ ' - ' + pkg.temporal_coverage-to if pkg.get('temporal_coverage-to') }}"/>
     <meta name="DCTERMS.Coverage.Spatial" content="{{ pkg.spatial_coverage }}"/>
     <meta name="AGLSTERMS.Jurisdiction" scheme="AGLSTERMS.AglsJuri" content="{{ pkg.jurisdiction }}"/>
     <meta name="DCAT.Theme" scheme="VO" content="{% for x in pkg.groups %}{{ x['title'] }},{% endfor %}"/>
     <meta name="DCTERMS.Identifier"
-          content="{{ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True) }}"/>
+          content="{{ h.url_for('dataset.read',id=pkg['name'], qualified=True) }}"/>
     <meta name="DCTERMS.Title" content="{{ pkg['title'] }}"/>
     <meta name="DCTERMS.Description" scheme="" content="{{ pkg['notes'] }}"/>
-    <meta name="twitter:card" content="summary" />
-    <meta property="og:url" content="{{ h.url_for(controller='package',action='read',id=c.pkg_dict['name'], qualified=True) }}"/>
-    <meta property="og:title" content="{{ pkg['title'] }}"/>
-    <meta property="dataset" content="{{ pkg['title'] }}"/>
-    <meta property="og:description" content="{{ pkg['notes'] }}" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 {% endblock -%}
-

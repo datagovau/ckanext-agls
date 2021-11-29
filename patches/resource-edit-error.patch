@@ -1,0 +1,33 @@
+diff --git a/ckan/logic/action/create.py b/ckan/logic/action/create.py
+index 29ae102..8364cbe 100644
+--- a/ckan/logic/action/create.py
++++ b/ckan/logic/action/create.py
+@@ -269,7 +269,11 @@ def resource_create(context, data_dict):
+         _get_action('package_update')(context, pkg_dict)
+         context.pop('defer_commit')
+     except ValidationError, e:
+-        errors = e.error_dict['resources'][-1]
++        if 'resources' in e.error_dict:
++            errors = e.error_dict['resources'][-1]
++        else:
++            errors = ["Please ensure the metadata details of the dataset are completed and saved before trying to add files/resources " + str(e.error_dict)]
++
+         raise ValidationError(errors)
+ 
+     ## Get out resource_id resource from model as it will not appear in
+diff --git a/ckan/logic/action/update.py b/ckan/logic/action/update.py
+index a0b80db..57b910c 100644
+--- a/ckan/logic/action/update.py
++++ b/ckan/logic/action/update.py
+@@ -230,7 +230,10 @@ def resource_update(context, data_dict):
+         pkg_dict = _get_action('package_update')(context, pkg_dict)
+         context.pop('defer_commit')
+     except ValidationError, e:
+-        errors = e.error_dict['resources'][n]
++        if 'resources' in e.error_dict:
++            errors = e.error_dict['resources'][-1]
++        else:
++            errors = ["Please ensure the metadata details of the dataset are completed and saved before trying to add files/resources " + json.dumps(e.error_dict)]
+         raise ValidationError(errors)
+ 
+     upload.upload(id, uploader.get_max_resource_size())

@@ -17,10 +17,10 @@
     {% if not org_full %}
      {% set org_full = {'extras':{}} %}
     {% endif %}
-    {% call form.input('author', label=_('Author'), id='field-author',
-placeholder=_('Name of the Author of dataset'),
-value=data.author, error=errors.author, classes=['control-full'], is_required=true) %}
-    Name of authoring Agency/Organisation (if different from publisher
+    {% call form.input('author', label=_('Publisher'), id='field-publisher',
+placeholder=_('Email address for questions about content of dataset'),
+value=data.author or org_full.title, error=errors.maintainer, classes=['control-full'], is_required=true) %}
+    Name of Agency/publishing organisation.
     {% endcall %}
 
     {{ form.input('contact_point', label=_('Contact'), id='field-contact_point',

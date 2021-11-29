@@ -1,0 +1,18 @@
+{% import 'macros/form.html' as form %}
+
+<div class="control-group control-full">
+    <label class="control-label" for="field-{{ field.field_name }}">{{ field.label }}</label>
+
+    <div class="controls">
+
+    <select id="field-{{ field.field_name }}" name="{{ field.field_name }}" multiple data-module="autocomplete">
+        <!-- <![endif]-->
+        <option value=""></option>
+        {% for topic in h.geospatial_topics() %}
+            <option value="{{ topic }}"
+                    {% if topic in data[field.field_name] %}selected="selected"{% endif %}>{{ topic }}</option>
+        {% endfor %}
+    </select>
+
+</div>
+</div>

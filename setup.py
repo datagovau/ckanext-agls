@@ -14,7 +14,7 @@ setup(
 	url='',
 	license='',
 	packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-	namespace_packages=['ckanext', 'ckanext.agls'],
+	namespace_packages=['ckanext'],
 	include_package_data=True,
 	zip_safe=False,
 	install_requires=[],
@@ -25,5 +25,7 @@ setup(
 
 	[paste.paster_command]
         initdb = ckanext.agls.command:InitDB
+        [ckan.click_command]
+        agls = ckanext.agls.cli:agls
 	""",
 )

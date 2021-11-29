@@ -14,6 +14,20 @@ To install this package, from your CKAN virtualenv, run the following from your 
 
 Then activate it by setting ``ckan.plugins = agls`` in your main ``ini``-file.
 
+Configuration
+=============
+
+Set configuration options in ini file::
+
+  ckan.plugins = agls scheming_datasets
+
+  ckan.agls.gazetter_rows = the number of returned search results of Geospatial Coverage or 200 on default
+
+  scheming.dataset_schemas = ckanext.agls:ckan_dataset.json
+
+  scheming.presets = ckanext.agls:agls_presets.json
+				     ckanext.scheming:presets.json
+
 Notes
 ===========
 https://github.com/geonetwork/schema-plugins/blob/master/iso19139.anzlic/templates/ANZLICMinimum.xml

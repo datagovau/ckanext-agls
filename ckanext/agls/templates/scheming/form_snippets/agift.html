@@ -1,0 +1,23 @@
+{% import 'macros/form.html' as form %}
+{% if data[field.field_name] %}
+    {% set data_theme = data[field.field_name].split(',')%}
+{% endif %}
+<div class="control-group control-full">
+    <label class="control-label" for="field-group">Theme</label>
+
+    <div class="controls">
+        <select id="field-group" name="{{ field.field_name }}" multiple data-module="autocomplete">
+            {% for group in h.fields_theme() %}
+                <option value="{{ group }}"
+                    {% for item in data_theme %}
+                        {% if group == item.strip() %}selected="selected"{% endif %}
+                    {% endfor%}>
+                    {{ group }}</option>
+            {% endfor %}
+        </select>
+        <br/>
+        The <a target="_blank" href="http://agift.naa.gov.au">AGIFT</a> top level government function to which the
+        resource relates.
+
+    </div>
+</div>

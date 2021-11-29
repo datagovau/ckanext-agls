@@ -61,6 +61,12 @@ value=data.data_model, error=errors.data_model, classes=['control-full']) %}
 
     </div>
 
+    {% call form.select('data_level', label=_('Data Level'), id='field-data_level', selected=data.data_level, options=
+        [{'value': 'state_level', 'text': 'State-level'},
+        {'value': 'school_level', 'text': 'School-level'},
+        {'value': 'region_level', 'text': 'Region-level'}], error=errors.data_level, classes=['control-full']) %}
+    {% endcall %}
+
     {{ super() }}
 
 {% endblock %}

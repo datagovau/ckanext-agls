@@ -1,32 +1,8 @@
-{% ckan_extends %}
+ {% set pkg = pkg_dict or c.pkg_dict %}
+ {% set schema = h.scheming_get_dataset_schema('dataset') %}
+ {% set data_level = h.scheming_field_by_name(schema.dataset_fields, 'data_level') %}
 
-
-{% block package_description %}
-
-  {% if h.get_pkg_dict_extra(pkg,'harvest_source_title') %}
-          <span class="dataset-private label label-inverse">
-            <i class="fa fa-link"></i>
-            From {{h.get_pkg_dict_extra(pkg,'harvest_source_title') }}
-          </span>
-        {% endif %}
-
-    <span class="label label-inverse label-inverse-json">
-        <img src="{{ h.url_for_static('/json-icon.png') }}"/>
-                <a style="color: lightgrey;" href="{{ h.url_for('api.action', ver=3, logic_function='package_show', id=pkg.id) }}">JSON</a>
-      </span>&nbsp;
-    <span class="label label-inverse label-inverse-rdf">
-        <img src="{{ h.url_for_static('/rdf-icon.png') }}"/>
-        <a style="color: lightgrey;" href="{{ h.url_for('dataset_read', id=pkg.id) }}.rdf">RDF</a>
-      </span>&nbsp;
-    <span class="label label-inverse label-inverse-xml">
-        <i class="fa fa-file"></i>
-        <a style="color: lightgrey;" href="{{ h.url_for('dataset_read', id=pkg.id) }}/gmd">ISO19115/ISO19139 XML</a>
-    </span>
-    {{ super() }}
-{% endblock %}
-
-{% block package_additional_info %}
-    <section class="additional-info" prefix="dc: http://purl.org/dc/elements/1.1/ dcat: http://www.w3.org/ns/dcat#
+ <section class="additional-info" prefix="dc: http://purl.org/dc/elements/1.1/ dcat: http://www.w3.org/ns/dcat#
          dcam: http://purl.org/dc/dcam/
          aglsterms: http://www.agls.gov.au/agls/terms/
          agentterms: http://www.agls.gov.au/agls/agentterms/
@@ -120,15 +96,7 @@
                     <td class="dataset-details" property="dcat:contactPoint">
                         <div about="http://" typeof="v:VCard">
                             <span property="v:fn">{{ pkg.organization.title }}</span><br/>
-                            {% set org_full = h.get_org_full(pkg.organization.id) %}
-                            {% if h.get_pkg_dict_extra(org_full,'telephone') %}
-                            <span rel="v:tel">
-                                <span typeof="v:Tel v:Home">
-                                    <span property="rdf:value">{{ h.get_pkg_dict_extra(org_full,'telephone') }}</span>
-                                </span>
-                            </span><br/>
-                            {% endif %}
-                    <span property="v:email"> {{ h.mail_to(email_address=pkg.contact_point, name=pkg.contact_point) }}</span>
+                            <span property="v:email"> {{ h.mail_to(email_address=pkg.contact_point, name=pkg.contact_point) }}</span>
                         </div>
                     </td>
                 </tr>
@@ -157,6 +125,12 @@
                     <td class="dataset-details" property="dct:spatial"> {{ pkg.spatial_coverage }}</td>
                 </tr>
             {% endif %}
+            {% if pkg.get('theme') %}
+                <tr>
+                    <th scope="row" class="dataset-label">Theme</th>
+                    <td class="dataset-details" property="agls:function"> {{ pkg.theme }}</td>
+                </tr>
+            {% endif %}
             {% if pkg.get('jurisdiction') %}
                 <tr>
                     <th scope="row" class="dataset-label">Jurisdiction</th>
@@ -175,30 +149,39 @@
                     <td class="dataset-details"> {{ g.site_title }}</td>
                 </tr>
             {% endif %}
-         {% if pkg.get('organization') %}
+            {% if pkg.get('organization') %}
 
             <tr>
                 <th scope="row" class="dataset-label">Publisher/Agency</th>
                 <td class="dataset-details" property="dc:publisher">{{ pkg.organization.title }}
                 </td>
             </tr>
- {% endif %}
+            {% endif %}
 
-            {% if pkg.get('field_of_research') %}
+	    {% block agls_field_of_research %}
+		{% if pkg.get('field_of_research') %}
+                    <tr>
+			<th scope="row" class="dataset-label">Fields of Research</th>
+			<td class="dataset-details"> {{ pkg.field_of_research }}</td>
+                    </tr>
+		{% endif %}
+	    {% endblock agls_field_of_research %}
+
+            {% if pkg.get('data_level') %}
                 <tr>
-                    <th scope="row" class="dataset-label">Fields of Research</th>
-                    <td class="dataset-details"> {{ pkg.field_of_research|join(", ") }}</td>
+                    <th scope="row" class="dataset-label">Data Level</th>
+                    <td class="dataset-details"> {{ h.scheming_choices_label(h.scheming_field_choices(data_level),pkg.data_level) }}</td>
                 </tr>
             {% endif %}
-            {% if pkg.get('geospatial_topic') %}
-                <tr>
-                    <th scope="row" class="dataset-label">Geospatial Topics</th>
-                    <td class="dataset-details"> {{ pkg.geospatial_topic|join(", ") }}</td>
-                </tr>
-            {% endif %}
+	    {% block agls_geospatial_topic %}
+		{% if pkg.get('geospatial_topic') %}
+                    <tr>
+			<th scope="row" class="dataset-label">Geospatial Topics</th>
+			<td class="dataset-details"> {{ pkg.geospatial_topic }}</td>
+                    </tr>
+		{% endif %}
+	    {% endblock agls_geospatial_topic %}
+
             </tbody>
         </table>
     </section>
-
-
-{% endblock %}
