@@ -108,12 +108,12 @@
                     <td class="dataset-detail">{{pkg.data_granularity }}</td>
                 </tr>
             {% endif %}
-            {% if pkg.get('temporal_coverage-from') %}
+            {% if pkg.get('temporal_coverage_from') %}
                 <tr>
                     <th scope="row" class="dataset-label">Temporal Coverage</th>
-                    <td class="dataset-details" property="dct:temporal"> {{ pkg.temporal_coverage-from }}
-  {% if pkg.get('temporal_coverage-to')  %}
-- {{pkg.temporal_coverage-to }}
+                    <td class="dataset-details" property="dct:temporal"> {{ pkg.temporal_coverage_from }}
+  {% if pkg.get('temporal_coverage_to')  %}
+- {{pkg.temporal_coverage_to }}
 {% endif %}
 </td>
                 </tr>

@@ -1,0 +1,225 @@
+{
+  "scheming_version": 1,
+  "dataset_type": "dataset",
+  "about": "A reimplementation of the default CKAN dataset schema",
+  "about_url": "http://github.com/ckan/ckanext-scheming",
+  "dataset_fields": [
+    {
+      "field_name": "title",
+      "label": "Title",
+      "required": true,
+      "display_property": "dc:title",
+      "preset": "title",
+      "form_placeholder": "eg. A descriptive title"
+    },
+    {
+      "field_name": "name",
+      "label": "URL",
+      "preset": "dataset_slug",
+      "form_placeholder": "eg. my-dataset"
+    },
+    {
+      "field_name": "notes",
+      "label": "Description",
+      "display_property": "dc:description",
+      "form_snippet": "markdown.html",
+      "form_placeholder": "eg. Some useful notes about the data",
+      "required": true,
+      "validators": "scheming_required"
+    },
+    {
+      "field_name": "tag_string",
+      "label": "Keywords",
+      "display_property": "dc:keyword",
+      "preset": "tag_string_autocomplete",
+      "form_placeholder": "eg. economy, mental health, government"
+    },
+    {
+      "field_name": "license_id",
+      "label": "License",
+      "display_property": "dc:rights",
+      "form_snippet": "license.html",
+      "required": true,
+      "form_attrs": {
+        "data-module": "autocomplete"
+      },
+      "help_text": "License definitions and additional information can be found at <a href='http://opendefinition.org/'>opendefinition.org</a>"
+    },
+    {
+      "field_name": "unpublished",
+      "label": "Unpublished",
+      "form_snippet": "checkbox_agls.html",
+      "validators": "boolean_validator",
+      "form_value": "true",
+      "help_text": "Whether this dataset is unpublished ie. there are no public data files or links available"
+    },
+
+    {
+      "field_name": "owner_org",
+      "label": "Organization",
+      "preset": "dataset_organization"
+    },
+    {
+      "field_name": "spatial",
+      "label": "Spatial",
+      "form_snippet": "hidden.html"
+    },
+    {
+      "field_name": "spatial_coverage",
+      "form_placeholder": "The geographical area covered by the data. Eg: Canberra (GA1487)",
+      "label": "Geospatial Coverage",
+      "required": true,
+      "help_text": "Please input one of the following: 1) a point/polygon/bounding box; 2) an administrative boundary API; or 3) a location name and ID from the <a href='https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au#Extent'>National Gazetteer</a>.",
+      "preset": "spatial_coverage"
+    },
+    {
+      "field_name": "temporal_coverage_from",
+      "label": "Temporal Coverage From",
+      "help_text": "What is the temporal coverage of your dataset? Please choose a single date or a from and to date.",
+      "form_placeholder": "The date at which timespan the dataset relates to starts eg. 2014-01-01",
+      "required": true,
+      "form_snippet": "input_default_value.html"
+    },
+    {
+      "field_name": "temporal_coverage_to",
+      "label": "Temporal Coverage To",
+      "form_snippet": "input_default_value.html",
+      "form_placeholder": "The date at which timespan the dataset relates to ends (if known) eg. 2014-12-31"
+    },
+    {
+      "field_name": "language",
+      "label": "Language",
+      "preset": "language_string_autocomplete"
+    },
+
+    {
+      "field_name": "data_state",
+      "label": "Data Status",
+      "required": true,
+      "preset": "data_status"
+    },
+    {
+      "field_name": "update_freq",
+      "label": "Update Frequency",
+      "display_property": "dct:accrualPeriodocity",
+      "required": true,
+      "preset": "update_frequency"
+    },
+    {
+      "label": "Theme",
+      "field_name": "theme",
+      "preset": "theme",
+      "output_validators": "custom_output_validator"
+    },
+    {
+      "field_name": "author",
+      "label": "Publisher",
+      "required": true,
+      "form_snippet": "input_default_value.html",
+      "form_value": "",
+      "form_placeholder": "Email address for questions about content of dataset",
+      "validators": "scheming_required",
+      "display_property": "dc:creator"
+    },
+    {
+      "field_name": "contact_point",
+      "label": "Contact",
+      "required": true,
+      "form_snippet": "input_default_value.html",
+      "form_value": "",
+      "form_placeholder": "Email address for questions about content of dataset",
+      "validators": "scheming_required",
+      "display_property": "dc:creator",
+      "display_snippet": "email.html",
+      "display_email_name_field": "author"
+    },
+    {
+      "field_name": "jurisdiction",
+      "label": "Jurisdiction",
+      "form_snippet": "input_default_value.html",
+      "form_value": "",
+      "required": true,
+      "validators": "scheming_required"
+    },
+    {
+      "field_name": "maintainer",
+      "label": "maintainer",
+      "form_snippet": "maintainer.html"
+    },
+    {
+      "field_name": "geospatial_topic",
+      "label": "Geospatial Topic",
+      "preset": "geospatial_topic",
+      "output_validators": "custom_output_validator",
+      "help_text": "The high level ISO19115 topics. Optional but recommended."
+    },
+
+    {
+      "field_name": "data_model",
+      "label": "Data Models",
+      "form_snippet": "markdown.html",
+      "form_placeholder": "Information on any relevant data models, ontologies, taxonomies etc specific to this dataset.",
+      "help_text": "Please add any links to information on relevant data models, ontologies, taxonomies etc specific to your dataset. You can upload data models to the <a href='' target='_blank'>data.gov.au data model repository</a>."
+    },
+    {
+      "field_name": "field_of_research",
+      "label": "Field of Research (optional)",
+      "preset": "field_of_research",
+      "output_validators": "custom_output_validator",
+      "help_text": "The Australian and New Zealand Standard Research Classification (ANZSRC), 2008 defined field or fields of research relevant to the dataset."
+    },
+    {
+      "field_name": "data_level",
+      "label": "Data Level",
+      "preset": "select",
+      "validators": "",
+      "choices": [
+        {
+          "value": "state_level",
+          "label": "State-level"
+        },
+        {
+          "value": "school_level",
+          "label": "School-level"
+        },
+        {
+          "value": "region_level",
+          "label": "Region-level"
+        }
+      ]
+    },
+    {
+      "field_name": "syndicated_id",
+      "form_snippet": "hidden.html",
+      "initial_value": "null"
+    },
+    {
+      "field_name": "syndicate",
+      "form_snippet": "hidden.html",
+      "initial_value": "true"
+    }
+  ],
+  "resource_fields": [
+    {
+      "field_name": "url",
+      "label": "URL",
+      "preset": "resource_url_upload"
+    },
+    {
+      "field_name": "name",
+      "label": "Name",
+      "form_placeholder": "eg. January 2011 Gold Prices"
+    },
+    {
+      "field_name": "description",
+      "label": "Description",
+      "form_snippet": "markdown.html",
+      "form_placeholder": "Some useful notes about the data"
+    },
+    {
+      "field_name": "format",
+      "label": "Format",
+      "preset": "resource_format_autocomplete"
+    }
+  ]
+}

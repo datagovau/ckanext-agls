@@ -34,12 +34,14 @@ Example:
             From {{h.get_pkg_dict_extra(package,'harvest_portal')}}
           </span>
           <a href="{{h.get_pkg_dict_extra(package,'harvest_url')}}"  data-portal="{{h.get_pkg_dict_extra(package,'harvest_portal')}}" class="searchpartnership-url-analytics" target="_blank"> {{h.truncate(title, truncate_title)}} </a>
-        {% else %}
-          {% if package.get('unpublished', '').startswith('True') %}
-          <span class="dataset-private label label-info">{{ _('Unpublished') }}</span>
+   {% else %}
+	  {% set unpublished = package.get('unpublished', '') %}
+
+          {% if unpublished == 1 or (unpublished is string and unpublished.startswith('True')) %}
+              <span class="dataset-private label label-info">{{ _('Unpublished') }}</span>
 
           {% endif %}
-        {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
+        {{ h.link_to(h.truncate(title, truncate_title), h.url_for('dataset.read', id=package.name)) }}
         {% endif %}
           {% if package.get('state', '').startswith('draft') %}
           <span class="label label-info">{{ _('Draft') }}</span>
@@ -57,17 +59,22 @@ Example:
       {% endif %}
     </div>
     {% if package.resources and not hide_resources %}
-      <ul class="dataset-resources unstyled">
+      <ul class="dataset-resources list-unstyled">
         {% for resource in h.dict_list_reduce(package.resources, 'format') %}
           <li>
-   {% if h.get_pkg_dict_extra(package,'harvest_portal') %}
- <a href="{{h.get_pkg_dict_extra(package,'harvest_url')}}" class="label searchpartnership-url-analytics" data-portal="{{h.get_pkg_dict_extra(package,'harvest_portal')}}" data-format="{{ resource.lower() }}">{{ resource }}</a>
-{% else %}
-            <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label" data-format="{{ resource.lower() }}">{{ resource }}</a>
-{% endif %}
+            {% if h.get_pkg_dict_extra(package,'harvest_portal') %}
+              <a href="{{h.get_pkg_dict_extra(package,'harvest_url')}}" class="label searchpartnership-url-analytics" data-portal="{{h.get_pkg_dict_extra(package,'harvest_portal')}}" data-format="{{ resource.lower() }}">{{ resource }}</a>
+            {% else %}
+              <a href="{{ h.url_for('dataset.read', id=package.name) }}" class="label" data-format="{{ resource.lower() }}">{{ resource }}</a>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>
+    {% endif %}
+    {% if package.get('data_level') and data_level %}
+      <a href="{{ h.url_for('dataset.read', id=package.name) }}" class="label dataset-data-level {{ package.data_level }}">
+        {{ h.scheming_choices_label(h.scheming_field_choices(data_level), package.data_level) }}
+      </a>
     {% endif %}
   {% endblock %}
 </li>

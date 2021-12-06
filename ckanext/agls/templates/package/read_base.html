@@ -21,7 +21,7 @@
     <meta name="DCTERMS.Published" scheme="DCTERMS.ISO8601" content="{{ pkg['metadata_created'] }}"/>
     <meta name="DCTERMS.Source.URI" content="{{ pkg.url }}"/>
     <meta name="DCTERMS.License" content="{{ pkg['license_url'] }}"/>
-    <meta name="DCTERMS.Coverage.Temporal" content="{{ pkg.temporal_coverage-from if pkg.get('temporal_coverage-from') }}{{ ' - ' + pkg.temporal_coverage-to if pkg.get('temporal_coverage-to') }}"/>
+    <meta name="DCTERMS.Coverage.Temporal" content="{{ pkg.temporal_coverage_from if pkg.get('temporal_coverage_from') }}{{ ' - ' + pkg.temporal_coverage_to if pkg.get('temporal_coverage_to') }}"/>
     <meta name="DCTERMS.Coverage.Spatial" content="{{ pkg.spatial_coverage }}"/>
     <meta name="AGLSTERMS.Jurisdiction" scheme="AGLSTERMS.AglsJuri" content="{{ pkg.jurisdiction }}"/>
     <meta name="DCAT.Theme" scheme="VO" content="{% for x in pkg.groups %}{{ x['title'] }},{% endfor %}"/>

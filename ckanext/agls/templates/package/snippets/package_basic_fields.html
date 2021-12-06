@@ -74,17 +74,17 @@ Please input one of the following: 1) a point/polygon/bounding box; 2) an admini
 {% endif %}
 
     <input type="hidden" id='spatial' name="spatial" value="{{ data.spatial }}" />
-    {% call form.input('temporal_coverage-from', label=_('Temporal Coverage From'), id='field-temporal_coverage-from',
+    {% call form.input('temporal_coverage_from', label=_('Temporal Coverage From'), id='field-temporal_coverage-from',
 placeholder=_('The date at which timespan the dataset relates to starts eg. 2014-01-01'),
-value=data.temporal_coverage-from or data.temporal_coverage or h.get_pkg_dict_extra(data,'temporal_coverage'), error=errors.temporal_coverage-from, classes=['control-full'], is_required='true') %}
+value=data.temporal_coverage_from or data.temporal_coverage or h.get_pkg_dict_extra(data,'temporal_coverage'), error=errors.temporal_coverage_from, classes=['control-full'], is_required='true') %}
         <br/>
         What is the temporal coverage of your dataset? Please choose a single date or a from and to date.
 
     {% endcall %}
 
-    {{ form.input('temporal_coverage-to', label=_('Temporal Coverage To'), id='field-temporal_coverage-to',
+    {{ form.input('temporal_coverage_to', label=_('Temporal Coverage To'), id='field-temporal_coverage-to',
 placeholder=_('The date at which timespan the dataset relates to ends (if known) eg. 2014-12-31'),
-value=data.temporal_coverage-to, error=errors.temporal_coverage-to, classes=['control-full']) }}
+value=data.temporal_coverage_to, error=errors.temporal_coverage_to, classes=['control-full']) }}
 
     {{ form.input('language', label=_('Language'), id='field-language',
 placeholder=_('If not English, language should be assigned a value'),

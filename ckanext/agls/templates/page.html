@@ -1,62 +1,104 @@
 {% ckan_extends %}
+
 {% block scripts %}
     <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-{% resource 'ckanext-agls/styles/jquery-ui.js' %}
+    <style>
+     #field-update_freq,
+     #s2id_field-tag_string,
+     #s2id_field-spatial_coverage,
+     #s2id_field-license_id {
+	 width: 100% !important;
+     }
+
+     .select2-container-multi .select2-choices .select2-search-field input {
+	 height: 20px;
+     }
+
+     .label-inverse-json {
+	 float: right;
+     }
+     .label-inverse-rdf {
+	 float: right;
+	 margin-right: 10px;
+     }
+     .label-inverse-xml {
+	 float: right;
+	 margin-right: 10px;
+	 margin-left: 10px;
+     }
+    </style>
+    {% asset 'ckanext-agls/main' %}
     {{ super() }}
     <style>
-        .form-horizontal .controls {
-            font-size: 0.8em;
-            line-height: 15px;
-        }
-        .form-horizontal .controls *{
-            font-size: 14px;
+     .form-horizontal .controls {
+         font-size: 0.8em;
+         line-height: 15px;
+     }
+     .form-horizontal .controls *{
+         font-size: 14px;
 
-        }
-        .form-horizontal .controls a{
-            font-size: 0.8em;
-        }
+     }
+     .form-horizontal .controls a{
+         font-size: 0.8em;
+     }
     </style>
     <script>
-    function gazSearch(gazURL) {
-        var re = new RegExp("submit1=(.*\\d)(&|$)");
-        var m = re.exec(gazURL);
-        if (m != null) {
-            gazID = m[1];
-            $.getJSON("/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
-                if (data.geojson != undefined) {
-                    $('#spatial').val(data.geojson);
-                }
-            })
-        } else {
-            var re2 = new RegExp("[a-zA-Z].*\\d");
-            var m2 = re2.exec(gazURL);
-            if (m2 != null) {
-                gazID = m2[0];
-                $.getJSON("/api/2/util/gazetteer/latlon?q=" + gazID, function (data) {
-                    if (data.geojson != undefined) {
-                        $('#spatial').val(data.geojson);
-                    }
-                })
-            }
-        }
-    }
-    var prev_handler = window.onload;
-    window_onload = function () {
-        if (prev_handler) {
-            prev_handler();
-        }
-            $("#field-spatial_coverage").change(function (e) {
-                gazURL = e.target.value;
-                gazSearch(gazURL);
-            });
-            gazSearch($("#field-spatial_coverage").val());
-            $(function() {
-                $( "#field-temporal_coverage-from" ).datepicker();
-                $( "#field-temporal_coverage-to" ).datepicker();
-            });
-
-        };
+     function gazSearch(gazURL) {
+         var re = new RegExp("submit1=(.*\\d)(&|$)");
+         var m = re.exec(gazURL);
+         if (m != null) {
+             gazID = m[1];
+             $.getJSON(ckan.url("/api/2/util/gazetteer/latlon?q=" + gazID), function (data){
+                 if (data.geojson != undefined) {
+                     $('#spatial').val(data.geojson);
+                 }
+             })
+         } else {
+             var re2 = new RegExp("[a-zA-Z].*\\d");
+             var m2 = re2.exec(gazURL);
+             if (m2 != null) {
+                 gazID = m2[0];
+                 $.getJSON(ckan.url("/api/2/util/gazetteer/latlon?q=" + gazID), function (data) {
+                     if (data.geojson != undefined) {
+                         $('#spatial').val(data.geojson);
+                     }
+                 })
+             }
+         }
+     }
+     function setValueIfOrg(idOrg) {
+         $.getJSON(ckan.url("/api/3/action/organization_show?id=" + idOrg), function (data) {
+             var orgTitle = data['result']['title'];
+             var extras = data['result']['extras'];
+             for (var i=0; i < extras.length; i++) {
+                 if (extras[i].key === 'jurisdiction') {
+                     $('#field-jurisdiction').val(extras[i].value);
+                 } else  if (extras[i].key === 'email') {
+                     $('#field-contact_point').val(extras[i].value);
+                 }
+             }
+             $('#field-author').val(orgTitle);
+         })
+     }
+     var prev_handler = window.onload;
+     window.onload = function () {
+         if (prev_handler) {
+             prev_handler();
+         }
+         $("#field-spatial_coverage").change(function (e) {
+             gazURL = e.target.value;
+             gazSearch(gazURL);
+         });
+         gazSearch($("#field-spatial_coverage").val());
+         $(function() {
+             $( "#field-temporal_coverage_from" ).not("[type=date]").datepicker();
+             $( "#field-temporal_coverage_to" ).not("[type=date]").datepicker();
+         });
+         $("#field-organizations").change(function (e) {
+             setValueIfOrg(e.target.value);
+         });
+     };
 
     </script>
 

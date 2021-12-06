@@ -1,0 +1,30 @@
+[
+    {
+        "domain_content": true,
+        "domain_data": false,
+        "domain_software": false,
+        "family": "",
+        "id": "other-open",
+        "is_generic": true,
+        "is_okd_compliant": true,
+        "is_osi_compliant": false,
+        "maintainer": "",
+        "status": "active",
+        "title": "Other (Open)",
+        "url": ""
+    },
+    {
+        "domain_content": true,
+        "domain_data": false,
+        "domain_software": false,
+        "family": "",
+        "id": "cc-by",
+        "is_okd_compliant": true,
+        "is_osi_compliant": false,
+        "maintainer": "",
+        "status": "active",
+        "title": "Creative Commons Attribution 3.0 Australia",
+        "url": "http://creativecommons.org/licenses/by/3.0/au/"
+    }
+
+]
