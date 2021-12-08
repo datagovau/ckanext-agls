@@ -1,10 +1,7 @@
-*.egg-info
-*.pyc
-*.swp
-*.swo
+# Ignore invisible
+.*
 *~
-#*
-.#*
-build/
-dist/
-distribute-*
+!.gitignore
+#
+# WARNING: Automatically copied from dga-tools
+#
